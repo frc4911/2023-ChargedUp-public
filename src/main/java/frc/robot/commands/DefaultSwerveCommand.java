@@ -1,0 +1,49 @@
+package frc.robot.commands;
+
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Swerve;
+
+public class DefaultSwerveCommand extends CommandBase {
+ 
+    private final Swerve mSwerve;
+
+    private final DoubleSupplier mTranslationXSupplier;
+    private final DoubleSupplier mTranslationYSupplier;
+    private final DoubleSupplier mRotationSupplier;
+
+    public DefaultSwerveCommand(Swerve swerveSubsystem, DoubleSupplier translationXSupplier,
+            DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
+        this.mSwerve = swerveSubsystem;
+        this.mTranslationXSupplier = translationXSupplier;
+        this.mTranslationYSupplier = translationYSupplier;
+        this.mRotationSupplier = rotationSupplier;
+
+        addRequirements(swerveSubsystem);
+    }
+
+    @Override
+    public void execute() {
+        // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of
+        // field-oriented movement
+        mSwerve.setTeleopInputs(
+                mTranslationXSupplier.getAsDouble(),
+                mTranslationYSupplier.getAsDouble(),
+                mRotationSupplier.getAsDouble(),
+                false,
+                true,
+                false);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        mSwerve.setTeleopInputs(
+                0.0,
+                0.0,
+                0.0,
+                false,
+                true,
+                false);
+    }
+}
