@@ -3,17 +3,17 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultSwerveCommand extends CommandBase {
  
-    private final Swerve mSwerve;
+    private final SwerveSubsystem mSwerve;
 
     private final DoubleSupplier mTranslationXSupplier;
     private final DoubleSupplier mTranslationYSupplier;
     private final DoubleSupplier mRotationSupplier;
 
-    public DefaultSwerveCommand(Swerve swerveSubsystem, DoubleSupplier translationXSupplier,
+    public DefaultSwerveCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier translationXSupplier,
             DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
         this.mSwerve = swerveSubsystem;
         this.mTranslationXSupplier = translationXSupplier;
