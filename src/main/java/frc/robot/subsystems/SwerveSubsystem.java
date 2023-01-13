@@ -24,7 +24,10 @@ import frc.robot.sensors.IMU;
 import libraries.cyberlib.utils.HolonomicDriveSignal;
 import libraries.cyberlib.utils.Util;
 
-public class Swerve implements Subsystem {
+/**
+ * Subsystem for controlling Driving.
+ */
+public final class SwerveSubsystem implements Subsystem {
 
     public enum ControlState {
         NEUTRAL, MANUAL, DISABLED, PATH_FOLLOWING, VISION_AIM
@@ -77,7 +80,7 @@ public class Swerve implements Subsystem {
     private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0, 0); // 1.5
     private SlewRateLimiter rotationLimiter = new SlewRateLimiter(2, 0);
 
-    public Swerve() {
+    public SwerveSubsystem() {
         mRobotConfiguration = RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2022);
 
         mSwerveConfiguration = mRobotConfiguration.getSwerveConfiguration();
@@ -112,7 +115,7 @@ public class Swerve implements Subsystem {
 
     @Override
     public void periodic() {
-        synchronized (Swerve.this) {
+        synchronized (SwerveSubsystem.this) {
             lastUpdateTimestamp = Timer.getFPGATimestamp();
 
             readPeriodicInputs();            

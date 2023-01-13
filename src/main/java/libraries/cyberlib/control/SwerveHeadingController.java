@@ -1,7 +1,7 @@
 package libraries.cyberlib.control;
 
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.SwerveSubsystem;
 import libraries.cheesylib.util.SynchronousPIDF;
 
 /**
@@ -9,7 +9,7 @@ import libraries.cheesylib.util.SynchronousPIDF;
  */
 public class SwerveHeadingController {
     private static SwerveHeadingController mInstance;
-    private static Swerve mSwerve = null;
+    private static SwerveSubsystem mSwerve = null;
 
     public static SwerveHeadingController getInstance() {
         if (mInstance == null) {
