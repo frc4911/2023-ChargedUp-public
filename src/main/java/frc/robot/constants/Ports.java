@@ -1,6 +1,10 @@
 package frc.robot.constants;
 
-public class Ports {
+public final class Ports {
+    
+    /** Private constructor to prevent instances. */
+    private Ports() {}
+
     // Drive
     public static final int FRONT_RIGHT_DRIVE = 0;
     public static final int FRONT_RIGHT_STEER = 4;
