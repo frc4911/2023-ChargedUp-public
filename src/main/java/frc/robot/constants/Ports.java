@@ -25,6 +25,8 @@ public class Ports {
     public static final int BACK_LEFT_CANCODER   = 2;
     public static final int BACK_RIGHT_CANCODER  = 3;
 
+    public static final int CLIMB_SOLENOID_PORT = 1;
+
     public static final int PIGEON = 0;
     public static final int PRESSURE_SENSOR = 2; //Analog Input
 }
