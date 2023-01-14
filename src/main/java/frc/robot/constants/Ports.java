@@ -25,6 +25,14 @@ public class Ports {
     public static final int BACK_LEFT_CANCODER   = 2;
     public static final int BACK_RIGHT_CANCODER  = 3;
 
+    //Arm Subsystem Motors
+    public static final int SHOULDER_MOTOR_1 = 10;
+    public static final int SHOULDER_MOTOR_2 = 11;
+    public static final int SHOULDER_MOTOR_3 = 12;
+    public static final int SHOULDER_MOTOR_4 = 13;
+    public static final int WRIST_MOTOR = 14;
+
+
     public static final int PIGEON = 0;
     public static final int PRESSURE_SENSOR = 2; //Analog Input
 }
