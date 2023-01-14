@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
- * Subsystem for controlling the Claw.
+ * Subsystem for handling vision.
  */
-public final class ClawSubsystem implements Subsystem {
+public class VisionSubsystem implements Subsystem {
     
 }
