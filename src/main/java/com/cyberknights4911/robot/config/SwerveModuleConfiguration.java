@@ -1,4 +1,4 @@
-package frc.robot.config;
+package com.cyberknights4911.robot.config;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
