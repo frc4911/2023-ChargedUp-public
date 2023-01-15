@@ -1,12 +1,13 @@
-package frc.robot.config;
+package com.cyberknights4911.robot.config;
 
-import static frc.robot.constants.Constants.kMK4_L2iDriveReduction;
-import static frc.robot.constants.Constants.kMK4_L2iSteerReduction;
-import static frc.robot.constants.Constants.kMK4_L2iWheelDiameter;
+import static com.cyberknights4911.robot.constants.Constants.kMK4_L2iDriveReduction;
+import static com.cyberknights4911.robot.constants.Constants.kMK4_L2iSteerReduction;
+import static com.cyberknights4911.robot.constants.Constants.kMK4_L2iWheelDiameter;
+
+import com.cyberknights4911.robot.constants.Ports;
+import com.cyberknights4911.robot.sensors.IMU.ImuType;
 
 import edu.wpi.first.math.util.Units;
-import frc.robot.constants.Ports;
-import frc.robot.sensors.IMU.ImuType;
 
 public class Robot2022 implements RobotConfiguration {
     

@@ -1,4 +1,4 @@
-package frc.robot.sensors;
+package com.cyberknights4911.robot.sensors;
 
 import libraries.cheesylib.geometry.Rotation2d;
 
