@@ -1,7 +1,7 @@
-package frc.robot.config;
+package com.cyberknights4911.robot.config;
 
-import frc.robot.constants.Constants;
-import frc.robot.sensors.IMU.ImuType;
+import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.sensors.IMU.ImuType;
 
 public interface RobotConfiguration {
     public SwerveConfiguration getSwerveConfiguration();

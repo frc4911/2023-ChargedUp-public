@@ -1,4 +1,4 @@
-package frc.robot.config;
+package com.cyberknights4911.robot.config;
 
 import java.util.Arrays;
 import java.util.List;

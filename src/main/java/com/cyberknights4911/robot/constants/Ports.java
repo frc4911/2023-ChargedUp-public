@@ -1,6 +1,10 @@
-package frc.robot.constants;
+package com.cyberknights4911.robot.constants;
 
-public class Ports {
+public final class Ports {
+    
+    /** Private constructor to prevent instances. */
+    private Ports() {}
+
     // Drive
     public static final int FRONT_RIGHT_DRIVE = 0;
     public static final int FRONT_RIGHT_STEER = 4;
@@ -32,6 +36,7 @@ public class Ports {
     public static final int SHOULDER_MOTOR_4 = 13;
     public static final int WRIST_MOTOR = 14;
 
+    public static final int HOOD_MOTOR = 12;
 
     public static final int PIGEON = 0;
     public static final int PRESSURE_SENSOR = 2; //Analog Input

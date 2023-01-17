@@ -1,4 +1,7 @@
-package frc.robot.subsystems;
+package com.cyberknights4911.robot.subsystems;
+
+import com.cyberknights4911.robot.config.SwerveModuleConfiguration;
+import com.cyberknights4911.robot.constants.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -11,8 +14,6 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import libraries.cheesylib.geometry.Rotation2d;
 import libraries.cyberlib.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.constants.Constants;
-import frc.robot.config.SwerveModuleConfiguration;
 import libraries.cheesylib.control.FramePeriodSwitch;
 import libraries.cheesylib.drivers.TalonFXFactory;
 import libraries.cyberlib.utils.Angles;
