@@ -16,6 +16,7 @@ import libraries.cheesylib.geometry.Pose2d;
 import libraries.cheesylib.geometry.Pose2dWithCurvature;
 import libraries.cheesylib.geometry.Rotation2d;
 import libraries.cheesylib.geometry.Translation2d;
+import libraries.cheesylib.trajectory.TrajectoryIterator;
 import libraries.cheesylib.trajectory.timing.TimedState;
 import libraries.cyberlib.kinematics.ChassisSpeeds;
 import libraries.cyberlib.kinematics.SwerveDriveKinematics;
@@ -452,14 +453,14 @@ public final class SwerveSubsystem implements Subsystem {
      *
      * @param trajectory The trajectory to follow.
      */
-    // public synchronized void setTrajectory(TrajectoryIterator<TimedState<Pose2dWithCurvature>> trajectory) {
-    //     if (mMotionPlanner != null) {
-    //         mOverrideTrajectory = false;
-    //         mMotionPlanner.reset();
-    //         mMotionPlanner.setTrajectory(trajectory);
-    //         mControlState = ControlState.PATH_FOLLOWING;
-    //     }
-    // }
+    public synchronized void setTrajectory(TrajectoryIterator<TimedState<Pose2dWithCurvature>> trajectory) {
+         if (mMotionPlanner != null) {
+             mOverrideTrajectory = false;
+             mMotionPlanner.reset();
+             mMotionPlanner.setTrajectory(trajectory);
+             mControlState = ControlState.PATH_FOLLOWING;
+         }
+     }
 
     public void overrideTrajectory(boolean value) {
         mOverrideTrajectory = value;
