@@ -441,11 +441,10 @@ public final class SwerveSubsystem implements Subsystem {
      * @return true if done; otherwise false.
      */
     public boolean isDoneWithTrajectory() {
-        // if (mMotionPlanner == null || mControlState != ControlState.PATH_FOLLOWING) {
-        //     return true;
-        // }
-        // return mMotionPlanner.isDone() || mOverrideTrajectory;
-        return true;
+        if (mMotionPlanner == null || mControlState != ControlState.PATH_FOLLOWING) {
+            return true;
+        }
+        return mMotionPlanner.isDone() || mOverrideTrajectory;
     }
 
     /**
