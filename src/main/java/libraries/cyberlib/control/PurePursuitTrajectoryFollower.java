@@ -31,21 +31,21 @@ public class PurePursuitTrajectoryFollower extends TrajectoryFollower<HolonomicD
 
         lastState = trajectory.advance(dt).state();
 
-        double lookahead_time = Constants.kPathLookaheadTime;
+        double lookahead_time = Constants.PATH_LOOKAHEAD_TIME;
         final double kLookaheadSearchDt = 0.01;
 
         TimedState<Pose2dWithCurvature> lookahead_state = trajectory.preview(lookahead_time).state();
         double actual_lookahead_distance = lastState.state().distance(lookahead_state.state());
-        while (actual_lookahead_distance < Constants.kPathMinLookaheadDistance &&
+        while (actual_lookahead_distance < Constants.PATH_MINI_LOOKAHEAD_DISTANCE &&
                 trajectory.getRemainingProgress() > lookahead_time) {
             lookahead_time += kLookaheadSearchDt;
             lookahead_state = trajectory.preview(lookahead_time).state();
             actual_lookahead_distance = lastState.state().distance(lookahead_state.state());
         }
-        if (actual_lookahead_distance < Constants.kPathMinLookaheadDistance) {
+        if (actual_lookahead_distance < Constants.PATH_MINI_LOOKAHEAD_DISTANCE) {
             lookahead_state = new TimedState<>(new Pose2dWithCurvature(lookahead_state.state()
                     .getPose().transformBy(Pose2d.fromTranslation(new Translation2d(
-                            (isReversed(trajectory) ? -1.0 : 1.0) * (Constants.kPathMinLookaheadDistance -
+                            (isReversed(trajectory) ? -1.0 : 1.0) * (Constants.PATH_MINI_LOOKAHEAD_DISTANCE -
                                     actual_lookahead_distance),
                             0.0))),
                     0.0), lookahead_state.t(), lookahead_state.velocity(), lookahead_state.acceleration());

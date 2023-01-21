@@ -52,9 +52,9 @@ public class SwerveDriveModule {
 
         System.out.println("SwerveDriveModule " + mModuleName + "," + mConfig.kSteerMotorSlot0Kp);
 
-        mDriveMotor = TalonFXFactory.createDefaultTalon(mConfig.kDriveMotorTalonId, Constants.kCanivoreName);
-        mSteerMotor = TalonFXFactory.createDefaultTalon(mConfig.kSteerMotorTalonId, Constants.kCanivoreName);
-        mCANCoder = new CANCoder(constants.kCANCoderId, Constants.kCanivoreName);
+        mDriveMotor = TalonFXFactory.createDefaultTalon(mConfig.kDriveMotorTalonId, Constants.CANIVORE_NAME);
+        mSteerMotor = TalonFXFactory.createDefaultTalon(mConfig.kSteerMotorTalonId, Constants.CANIVORE_NAME);
+        mCANCoder = new CANCoder(constants.kCANCoderId, Constants.CANIVORE_NAME);
         configCancoder();
         configureMotors();
 
@@ -69,7 +69,7 @@ public class SwerveDriveModule {
         config.magnetOffsetDegrees = mConfig.kCANCoderOffsetDegrees;
         config.sensorDirection = false; // TODO - Make cancoder direction configurable through robot config files
 
-        mCANCoder.configAllSettings(config, Constants.kLongCANTimeoutMs);
+        mCANCoder.configAllSettings(config, Constants.LONG_CAN_TIMEOUTS_MS);
 
         // mCANCoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults,
         //         mConfig.kCANCoderStatusFramePeriodVbatAndFaults);
@@ -86,21 +86,21 @@ public class SwerveDriveModule {
         commonMotorConfig(mSteerMotor, "Steer");
 
         mSteerMotor.setInverted(mConfig.kInvertSteerMotor);
-        mSteerMotor.configMotionAcceleration(0.9 * mConfig.kSteerTicksPerUnitVelocity * 0.25, Constants.kLongCANTimeoutMs);
-        mSteerMotor.configMotionCruiseVelocity(0.9 * mConfig.kSteerTicksPerUnitVelocity,Constants.kLongCANTimeoutMs);
-        mSteerMotor.configVelocityMeasurementPeriod(mConfig.kSteerMotorVelocityMeasurementPeriod, Constants.kLongCANTimeoutMs);
-        mSteerMotor.configVelocityMeasurementWindow(mConfig.kSteerMotorVelocityMeasurementWindow, Constants.kLongCANTimeoutMs);
+        mSteerMotor.configMotionAcceleration(0.9 * mConfig.kSteerTicksPerUnitVelocity * 0.25, Constants.LONG_CAN_TIMEOUTS_MS);
+        mSteerMotor.configMotionCruiseVelocity(0.9 * mConfig.kSteerTicksPerUnitVelocity,Constants.LONG_CAN_TIMEOUTS_MS);
+        mSteerMotor.configVelocityMeasurementPeriod(mConfig.kSteerMotorVelocityMeasurementPeriod, Constants.LONG_CAN_TIMEOUTS_MS);
+        mSteerMotor.configVelocityMeasurementWindow(mConfig.kSteerMotorVelocityMeasurementWindow, Constants.LONG_CAN_TIMEOUTS_MS);
         mSteerMotor.selectProfileSlot(0, 0);
 
         // Slot 0 is for normal use (tuned for fx integrated encoder)
-        mSteerMotor.config_kP(0, mConfig.kSteerMotorSlot0Kp, Constants.kLongCANTimeoutMs);
-        mSteerMotor.config_kI(0, mConfig.kSteerMotorSlot0Ki, Constants.kLongCANTimeoutMs);
-        mSteerMotor.config_kD(0, mConfig.kSteerMotorSlot0Kd, Constants.kLongCANTimeoutMs);
-        mSteerMotor.config_kF(0, mConfig.kSteerMotorSlot0Kf, Constants.kLongCANTimeoutMs);
-        mSteerMotor.config_IntegralZone(0, mConfig.kSteerMotorSlot0IZone, Constants.kLongCANTimeoutMs);
+        mSteerMotor.config_kP(0, mConfig.kSteerMotorSlot0Kp, Constants.LONG_CAN_TIMEOUTS_MS);
+        mSteerMotor.config_kI(0, mConfig.kSteerMotorSlot0Ki, Constants.LONG_CAN_TIMEOUTS_MS);
+        mSteerMotor.config_kD(0, mConfig.kSteerMotorSlot0Kd, Constants.LONG_CAN_TIMEOUTS_MS);
+        mSteerMotor.config_kF(0, mConfig.kSteerMotorSlot0Kf, Constants.LONG_CAN_TIMEOUTS_MS);
+        mSteerMotor.config_IntegralZone(0, mConfig.kSteerMotorSlot0IZone, Constants.LONG_CAN_TIMEOUTS_MS);
 
         mDriveMotor.setInverted(mConfig.kInvertDrive);
-        mDriveMotor.configOpenloopRamp(0.3, Constants.kLongCANTimeoutMs); // Increase if swerve acceleration is too fast
+        mDriveMotor.configOpenloopRamp(0.3, Constants.LONG_CAN_TIMEOUTS_MS); // Increase if swerve acceleration is too fast
 
         FramePeriodSwitch.configStatorCurrentLimitPermanent(mDriveMotor, new StatorCurrentLimitConfiguration(true, 90, 90, 0));
     }

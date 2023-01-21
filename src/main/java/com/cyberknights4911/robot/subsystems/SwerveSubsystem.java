@@ -163,7 +163,7 @@ public final class SwerveSubsystem implements Subsystem {
     }
 
     public synchronized void zeroSensors() {
-        zeroSensors(Constants.kRobotStartingPose);
+        zeroSensors(Constants.ROBOT_STARTING_POSE);
     }
 
     public void toggleThroughDriveModes() {
