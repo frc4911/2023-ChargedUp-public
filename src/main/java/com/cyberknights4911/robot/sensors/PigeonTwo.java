@@ -14,7 +14,7 @@ public class PigeonTwo implements IMU{
 
     private PigeonTwo() {
         try {
-            pigeon = new Pigeon2(Ports.PIGEON, Constants.kCanivoreName);
+            pigeon = new Pigeon2(Ports.PIGEON, Constants.CANIVORE_NAME);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -57,7 +57,7 @@ public class PigeonTwo implements IMU{
 
     @Override
     public void setAngle(double angleInDegrees) {
-        pigeon.setYaw(-angleInDegrees, Constants.kLongCANTimeoutMs);
+        pigeon.setYaw(-angleInDegrees, Constants.LONG_CAN_TIMEOUTS_MS);
         System.out.println("Pigeon angle set to: " + angleInDegrees);
     }
 

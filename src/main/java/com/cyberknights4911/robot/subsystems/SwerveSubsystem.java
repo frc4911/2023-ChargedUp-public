@@ -6,14 +6,18 @@ import java.util.List;
 import com.cyberknights4911.robot.config.RobotConfiguration;
 import com.cyberknights4911.robot.config.SwerveConfiguration;
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.planners.DriveMotionPlanner;
 import com.cyberknights4911.robot.sensors.IMU;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import libraries.cheesylib.geometry.Pose2d;
+import libraries.cheesylib.geometry.Pose2dWithCurvature;
 import libraries.cheesylib.geometry.Rotation2d;
 import libraries.cheesylib.geometry.Translation2d;
+import libraries.cheesylib.trajectory.TrajectoryIterator;
+import libraries.cheesylib.trajectory.timing.TimedState;
 import libraries.cyberlib.kinematics.ChassisSpeeds;
 import libraries.cyberlib.kinematics.SwerveDriveKinematics;
 import libraries.cyberlib.kinematics.SwerveDriveOdometry;
@@ -74,7 +78,7 @@ public final class SwerveSubsystem implements Subsystem {
    private double lastAimTimestamp = -1.0;
 
    // Trajectory following
-//    private static DriveMotionPlanner mMotionPlanner;
+    private static DriveMotionPlanner mMotionPlanner;
    private boolean mOverrideTrajectory = false;
 
     private SlewRateLimiter forwardLimiter = new SlewRateLimiter(3.0, 0); // 1.5
@@ -159,7 +163,7 @@ public final class SwerveSubsystem implements Subsystem {
     }
 
     public synchronized void zeroSensors() {
-        zeroSensors(Constants.kRobotStartingPose);
+        zeroSensors(Constants.ROBOT_STARTING_POSE);
     }
 
     public void toggleThroughDriveModes() {
@@ -438,11 +442,10 @@ public final class SwerveSubsystem implements Subsystem {
      * @return true if done; otherwise false.
      */
     public boolean isDoneWithTrajectory() {
-        // if (mMotionPlanner == null || mControlState != ControlState.PATH_FOLLOWING) {
-        //     return true;
-        // }
-        // return mMotionPlanner.isDone() || mOverrideTrajectory;
-        return true;
+        if (mMotionPlanner == null || mControlState != ControlState.PATH_FOLLOWING) {
+            return true;
+        }
+        return mMotionPlanner.isDone() || mOverrideTrajectory;
     }
 
     /**
@@ -450,14 +453,14 @@ public final class SwerveSubsystem implements Subsystem {
      *
      * @param trajectory The trajectory to follow.
      */
-    // public synchronized void setTrajectory(TrajectoryIterator<TimedState<Pose2dWithCurvature>> trajectory) {
-    //     if (mMotionPlanner != null) {
-    //         mOverrideTrajectory = false;
-    //         mMotionPlanner.reset();
-    //         mMotionPlanner.setTrajectory(trajectory);
-    //         mControlState = ControlState.PATH_FOLLOWING;
-    //     }
-    // }
+    public synchronized void setTrajectory(TrajectoryIterator<TimedState<Pose2dWithCurvature>> trajectory) {
+         if (mMotionPlanner != null) {
+             mOverrideTrajectory = false;
+             mMotionPlanner.reset();
+             mMotionPlanner.setTrajectory(trajectory);
+             mControlState = ControlState.PATH_FOLLOWING;
+         }
+     }
 
     public void overrideTrajectory(boolean value) {
         mOverrideTrajectory = value;
@@ -466,16 +469,16 @@ public final class SwerveSubsystem implements Subsystem {
     private void updatePathFollower(double now) {
         HolonomicDriveSignal driveSignal = null;
         if (mControlState == ControlState.PATH_FOLLOWING) {
-            // // Get updated drive signal
-            // var trajectorySignal = mMotionPlanner.update(now, mPeriodicIO.robotPose, mPeriodicIO.chassisSpeeds);
-            // mPeriodicIO.error = mMotionPlanner.error();
-            // mPeriodicIO.path_setpoint = mMotionPlanner.setpoint();
+            // Get updated drive signal
+            var trajectorySignal = mMotionPlanner.update(now, mPeriodicIO.robotPose, mPeriodicIO.chassisSpeeds);
+            mPeriodicIO.error = mMotionPlanner.error();
+            mPeriodicIO.path_setpoint = mMotionPlanner.setpoint();
 
-            // if (!mOverrideTrajectory) {
-            //     if (trajectorySignal != null) {
-            //         driveSignal = trajectorySignal;
-            //     }
-            // }
+            if (!mOverrideTrajectory) {
+                if (trajectorySignal != null) {
+                    driveSignal = trajectorySignal;
+                }
+            }
             setPathFollowingVelocity(driveSignal);
         } else {
             DriverStation.reportError("Swerve is not in path following state.", false);
@@ -612,6 +615,7 @@ public final class SwerveSubsystem implements Subsystem {
     }
 
     public static class PeriodicIO {
+        public TimedState<Pose2dWithCurvature> path_setpoint;
         // LOGGING
         public int schedDeltaDesired;
         public double schedDeltaActual;
