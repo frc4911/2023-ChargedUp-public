@@ -15,11 +15,17 @@ import libraries.cheesylib.drivers.TalonFXFactory;
  * Subsystem for controlling the arm.
  */
 public final class ArmSubsystem implements Subsystem {
+
     private TalonFX mShoulderMotor1;
     private TalonFX mShoulderMotor2;
     private TalonFX mShoulderMotor3;
     private TalonFX mShoulderMotor4;
     private TalonFX mWristMotor;
+
+    //In ticks can be changed to be in degrees
+    //Makes it run much faster because it does not need to be precise
+    private double ARM_ERROR = 100;
+    private double WRIST_ERROR = 100;
 
     public enum ArmPositions {
         STOWED(0),
@@ -59,18 +65,18 @@ public final class ArmSubsystem implements Subsystem {
     public void configMotors() {
 
         //SHOULDER CONFIGURATION
-        TalonFXConfiguration ShoulderConfiguration = new TalonFXConfiguration();
-        ShoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        ShoulderConfiguration.supplyCurrLimit.enable = true;
-        ShoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        ShoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
-        ShoulderConfiguration.slot0.kI = 0.0;
-        ShoulderConfiguration.slot0.kD = 0.0;
+        TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
+        shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        shoulderConfiguration.supplyCurrLimit.enable = true;
+        shoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
+        shoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
+        shoulderConfiguration.slot0.kI = 0.0;
+        shoulderConfiguration.slot0.kD = 0.0;
 
-        mShoulderMotor1.configAllSettings(ShoulderConfiguration);
-        mShoulderMotor2.configAllSettings(ShoulderConfiguration);
-        mShoulderMotor3.configAllSettings(ShoulderConfiguration);
-        mShoulderMotor4.configAllSettings(ShoulderConfiguration);
+        mShoulderMotor1.configAllSettings(shoulderConfiguration);
+        mShoulderMotor2.configAllSettings(shoulderConfiguration);
+        mShoulderMotor3.configAllSettings(shoulderConfiguration);
+        mShoulderMotor4.configAllSettings(shoulderConfiguration);
 
         mShoulderMotor3.setInverted(true);
         mShoulderMotor4.setInverted(true);
@@ -79,20 +85,20 @@ public final class ArmSubsystem implements Subsystem {
         mShoulderMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
         //WRIST CONFIGURATION
-        TalonFXConfiguration WristConfiguration = new TalonFXConfiguration();
-        WristConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        WristConfiguration.supplyCurrLimit.enable = true;
-        WristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        WristConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
-        WristConfiguration.slot0.kI = 0.0;
-        WristConfiguration.slot0.kD = 0.0;
+        TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
+        wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        wristConfiguration.supplyCurrLimit.enable = true;
+        wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
+        wristConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
+        wristConfiguration.slot0.kI = 0.0;
+        wristConfiguration.slot0.kD = 0.0;
 
-        mWristMotor.configAllSettings(ShoulderConfiguration);
+        mWristMotor.configAllSettings(shoulderConfiguration);
 
 
     }
 
-    public void setShoulderPositionDesiredPosition(ArmPositions desiredPosition) {
+    public void setShoulderDesiredPosition(ArmPositions desiredPosition) {
         desiredShoulderPosition = desiredPosition;
     }
 
@@ -105,8 +111,22 @@ public final class ArmSubsystem implements Subsystem {
     }
 
     public void moveWrist() {
-        double falconTicks = convertDegreesToTicksWrist(desiredShoulderPosition.get()%180);
+        double falconTicks = desiredWristPosition();
         mWristMotor.set(ControlMode.Position, falconTicks);
+    }
+
+    public double desiredWristPosition() {
+        return convertDegreesToTicksWrist(desiredShoulderPosition.get()%180);
+    }
+
+    public boolean atDesiredPosition() {
+        double wristPosition = mWristMotor.getSelectedSensorPosition();
+        double armPosition = mShoulderMotor1.getSelectedSensorPosition();
+
+        if ((Math.abs(armPosition - desiredShoulderPosition.get()) < ARM_ERROR) && (Math.abs(wristPosition - desiredWristPosition()) < WRIST_ERROR)) {
+            return true;
+        }
+        return false;
     }
 
     public double convertDegreesToTicksShoulder(double degrees) {
