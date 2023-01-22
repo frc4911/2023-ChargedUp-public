@@ -62,7 +62,7 @@ public class SwerveHeadingController {
     }
 
     public boolean isAtGoal() {
-        return mPIDFController.onTarget(Constants.kSwerveHeadingControllerErrorTolerance);
+        return mPIDFController.onTarget(Constants.SWERVE_HEADING_CONTROLLER_ERROR_TOLERANCE);
     }
 
     /**

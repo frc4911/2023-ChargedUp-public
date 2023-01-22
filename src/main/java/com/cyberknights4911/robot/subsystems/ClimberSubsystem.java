@@ -9,19 +9,22 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 /**
  * Subsystem for controlling climbing
  */
-public final class ClimberSubsystem implements Subsystem {
-    private final Solenoid mClimbSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.CLIMB_SOLENOID_PORT);
+public final class ClimberSubsystem implements Subsystem, AutoCloseable {
+    private final Solenoid mClimbSolenoid;
 
-    private boolean extended = false;
+    public ClimberSubsystem() {
+        mClimbSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.CLIMB_SOLENOID_PORT);
+        mClimbSolenoid.set(false);
+    }
 
-    public void setExtended (boolean extended) {
+    public void setExtended(boolean extended) {
 
         mClimbSolenoid.set(extended);
 
     }
-    @Override
-    public void periodic () {
 
-        //TODO(SuperDuperGreen) add periodic code here
+    @Override
+    public void close() throws Exception {
+        mClimbSolenoid.close();
     }
 }
