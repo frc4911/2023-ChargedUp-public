@@ -1,6 +1,6 @@
+from cscore import CameraServer
 from dt_apriltags import Detector
 from networktables import NetworkTables
-from networktables.util import ntproperty
 
 import cv2
 import json
@@ -9,10 +9,14 @@ import numpy
 import os
 import time
 
-camera = cv2.VideoCapture(-1)
+# Taken from https://calibdb.net/
+c270_camera_params = [1419.6926739461624, 1419.204023362152, 624.4230937815905, 317.19888645121466]
+
+# FRC 2023 manual states 6-inch tags, which is this many meters:
+frc_tag_size_meters = 0.1524
 
 at_detector = Detector(families='tag16h5',
-                       nthreads=1,
+                       nthreads=4,
                        quad_decimate=1.0,
                        quad_sigma=0.0,
                        refine_edges=1,
@@ -29,7 +33,7 @@ connected = True
 
 # Mark this as connected
 def connectionListener(connectedUpdate, info):
-    print(info)
+    print(f'Connection success: {info}')
     connected = connectedUpdate
 
 NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
@@ -44,22 +48,48 @@ while True:
 
 table = NetworkTables.getTable(table_name)
 
+# Configure video capture
+CameraServer.enableLogging()
+camera = CameraServer.startAutomaticCapture()
+camera.setResolution(1280, 720)
+sink = CameraServer.getVideo()
+
+# Allocating new images is very expensive, always try to preallocate
+input_img = numpy.zeros(shape=(720, 1280, 3), dtype=numpy.uint8)
+
 # Scan loop
 while True:
-    time.sleep(2)
-    # Read image
-    result, color_img = camera.read()
-    # Convert to greyscale
-    gray_img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
+    time.sleep(5)
+    print("Getting a new image")
 
-# TODO(riley) Determine tag size value here
-# TODO(riley) Determine camera_params and set them here to make transform pose available
-# https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
-    tags = at_detector.detect(gray_img, estimate_tag_pose=False, camera_params=None, tag_size=None)
+    # Read a new image
+    capture_time, input_img = sink.grabFrame(input_img)
+
+    # Check for errors
+    if capture_time == 0:
+        print("Error getting image")
+        continue
+
+    # Convert to greyscale
+    gray_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
+
+    tags = at_detector.detect(gray_img,
+                              estimate_tag_pose=True,
+                              camera_params=c270_camera_params,
+                              tag_size=frc_tag_size_meters)
 
     # iterate through detected tags
     for tag in tags:
-        # TODO(rbrewer) filter tags on hamming and/or decision margin
+        # Filter out likely false positives
+        if (tag.decision_margin < 10):
+            print(f'rejecting tag {tag.tag_id} with low decision margin of: {tag.decision_margin}')
+            continue
+        # Only tags 0-7 are used in the game
+        if (tag.tag_id >= 7):
+            print(f'rejecting tag {tag.tag_id} with invalid id')
+            continue
+
+        # Build JSON message
         data = {}
         data['id'] = tag.tag_id
         data['hamming'] = tag.hamming
@@ -67,8 +97,9 @@ while True:
         data['center'] = tag.center.tolist()
         data['corners'] = tag.corners.tolist()
         # data['pose_R'] = tag.poseR.tolist()
-        # data['pose_t'] = tag.poset.tolist()
+        data['pose_t'] = tag.pose_t.tolist()
+
+        print(f'sending tag {tag.tag_id} to roboRIO')
+        table.putString(str(tag.tag_id), json.dumps(data))
+
         print(json.dumps(data))
-        # TODO(rbrewer) send tag_id + pose_t via network table
-        # https://robotpy.readthedocs.io/projects/pynetworktables/en/stable/examples.html#ntproperty-example
-        # Something like table.putNumberArray(tag.tag_id, tag.poset.tolist())
