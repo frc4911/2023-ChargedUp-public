@@ -2,10 +2,13 @@ package com.cyberknights4911.robot.vision;
 
 import java.util.EnumSet;
 
-import edu.wpi.first.networktables.DoubleArrayTopic;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringTopic;
 
 /**
  * This is responsible for fetching april tags remotely (via NetworTables) and converting them into
@@ -15,10 +18,12 @@ public final class NetworkMessenger {
     private static final String APRILTAG_TABLE_NAME = "APRIL_TAGS";
     private final NetworkTableInstance networkTables;
     private final NetworkTable aprilTagTable;
+    private final ObjectMapper mapper;
 
     public NetworkMessenger(NetworkTableInstance networkTables) {
         this.networkTables = networkTables;
         this.aprilTagTable = networkTables.getTable(APRILTAG_TABLE_NAME);
+        mapper = new ObjectMapper();
     }
 
     /**
@@ -26,12 +31,12 @@ public final class NetworkMessenger {
      * @param tagId the id of the tag.
      */
     public void subscribe(int tagId) {
-        DoubleArrayTopic tagOneTopic = this.aprilTagTable.getDoubleArrayTopic(String.valueOf(tagId));
+        StringTopic tagOneTopic = this.aprilTagTable.getStringTopic(String.valueOf(tagId));
         this.networkTables.addListener(
             tagOneTopic,
             EnumSet.of(NetworkTableEvent.Kind.kValueAll),
             (tableEvent) -> {
-                onTagValue(tagId, tableEvent.valueData.value.getDoubleArray());
+                onTagValue(tagId, tableEvent.valueData.value.getString());
             }
         );
     }
@@ -41,11 +46,16 @@ public final class NetworkMessenger {
      * @param tagId The id of the tag
      * @param translation The 3d translation of the AprilTag.
      */
-    private void onTagValue(int tagId, double[] translation) {
-        if (translation.length != 3) {
+    private void onTagValue(int tagId, String tagJson) {
+        if (tagJson.isEmpty()) {
             throw new RuntimeException("Invalid tag!");
         }
-        AprilTag foundTag = new AprilTag(tagId, translation[0], translation[1], translation[2]);
-        // TODO: Do something depending on the state of the robot and the tag id.
+        try {
+            AprilTag foundTag = mapper.readValue(tagJson, AprilTag.class);
+            // TODO: Do something depending on the state of the robot and the tag id.
+        } catch (JsonProcessingException e) {
+            // TODO report this error better
+            e.printStackTrace();
+        }
     }
 }

@@ -98,6 +98,7 @@ while True:
         data['corners'] = tag.corners.tolist()
         # data['pose_R'] = tag.poseR.tolist()
         data['pose_t'] = tag.pose_t.tolist()
+        # data['pose_err'] = tag.pose_err.tolist()
 
         print(f'sending tag {tag.tag_id} to roboRIO')
         table.putString(str(tag.tag_id), json.dumps(data))
