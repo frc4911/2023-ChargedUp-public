@@ -6,6 +6,7 @@ package com.cyberknights4911.robot;
 
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.ClawSubsystem;
+import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,7 +29,7 @@ public class RobotContainer {
       new CommandXboxController(Constants.OPERATOR_CONTROLLER_PORT);
 
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
-
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -61,7 +62,13 @@ public class RobotContainer {
     );
     // Bind Left Trigger to collect cone
     // Bind D-pad down to climb wheel lock
+    driverController.povDown().onTrue(
+      Commands.runOnce(() -> swerveSubsystem.setBrakeMode(true))
+    );
     // Bind Start to reset wheels
+    driverController.povDown().onTrue(
+      Commands.runOnce(() -> {/*TODO reset wheels*/})
+    );
 
     // OPERATOR
     // Bind A to L2
