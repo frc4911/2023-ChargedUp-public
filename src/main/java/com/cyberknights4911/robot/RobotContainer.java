@@ -84,11 +84,11 @@ public class RobotContainer {
     // OPERATOR
     // Bind A to L2
     operatorController.a().onTrue(
-      Commands.runOnce(()-> armSubsystem.movetoL2(), armSubsystem)
+      Commands.runOnce(()-> armSubsystem.moveToL2(), armSubsystem)
     );
     // Bind X to L3
     operatorController.a().onTrue(
-      Commands.runOnce(()-> armSubsystem.movetoL3(), armSubsystem)
+      Commands.runOnce(()-> armSubsystem.moveToL3(), armSubsystem)
     );
     // Bind Y to Climb Deploy
     operatorController.y().onTrue(
