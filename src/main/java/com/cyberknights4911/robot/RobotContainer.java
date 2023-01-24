@@ -65,6 +65,13 @@ public class RobotContainer {
         )
     );
     // Bind Left Trigger to collect cone
+    driverController.leftTrigger().onTrue(
+      Commands.sequence(
+        Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        
+        )
+    );
     // Bind D-pad down to climb wheel lock
     driverController.povDown().onTrue(
       Commands.runOnce(() -> swerveSubsystem.setBrakeMode(true))
