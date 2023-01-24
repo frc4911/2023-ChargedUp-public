@@ -1,5 +1,7 @@
 package com.cyberknights4911.robot.constants;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.math.util.Units;
 import libraries.cheesylib.geometry.Pose2d;
 //import frc.robot.limelight.CameraResolution;
@@ -94,4 +96,53 @@ public class Constants {
 
     // Controller port
     public static final int DRIVER_CONTROLLER_PORT = 0;
+
+    public static class Swerve {
+        private Swerve() {}
+
+        //TODO: This must be tuned to specific robot
+        public static final double TRACK_WIDTH = Units.inchesToMeters(22);
+        public static final double WHEEL_BASE = Units.inchesToMeters(22);
+
+        public static final boolean INVERT_GYRO = false;
+
+        /* Meters per Second */
+        public static final double MAX_SPEED = 4.5; //TODO: This must be tuned to specific robot
+            
+        /* Swerve Current Limiting */
+        public static final int ANGLE_CONTINUOUS_CURRENT_LIMIT = 25;
+        public static final int ANGLE_PEAK_CURRENT_LIMIT = 40;
+        public static final double ANGLE_PEAK_CURRENT_DURATION = 0.1;
+        public static final boolean ANGLE_ENABLE_CURRENT_LIMIT = true;
+
+        public static final int DRIVE_CONTINUOUS_CURRENT_LIMIT = 35;
+        public static final int DRIVE_PEAK_CURRENT_LIMIT = 60;
+        public static final double DRIVE_PEAK_CURRENT_DURATION = 0.1;
+        public static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
+
+        /*
+        * These values are used by the drive falcon to ramp in open loop and closed loop driving.
+        * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
+        */
+        public static final double OPEN_LOOP_RAMP = 0.25;
+        public static final double CLOSED_LOOP_RAMP = 0.0;
+        
+        /* Drive Motor PID Values */
+        public static final double DRIVE_KP = 0.05; //TODO: This must be tuned to specific robot
+        public static final double DRIVE_KI = 0.0;
+        public static final double DRIVE_KD = 0.0;
+        public static final double DRIVE_KF = 0.0;
+
+        /* 
+        * Drive Motor Characterization Values.
+        * Divide SYSID values by 12 to convert from volts to percent output for CTRE
+        */
+        public static final double DRIVE_KS = (0.32 / 12); //TODO: This must be tuned to specific robot
+        public static final double DRIVE_KV = (1.51 / 12);
+        public static final double DRIVE_KA = (0.27 / 12);
+
+        /* Neutral Modes */
+        public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
+        public static final NeutralMode DRIVE_NEUTRAL_MODE = NeutralMode.Brake;
+    }
 }
