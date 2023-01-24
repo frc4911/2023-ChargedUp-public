@@ -112,6 +112,15 @@ public class RobotContainer {
       )
     );
     // Bind D-pad down to floor collect
+    operatorController.povDown().onTrue(
+      Commands.sequence(
+        Commands.parallel(
+          Commands.runOnce(() -> clawSubsystem.openClaw(),clawSubsystem),
+          Commands.runOnce(() -> armSubsystem.moveToFloorCollect(),armSubsystem)
+        ),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(),clawSubsystem)
+      )
+    );
   }
 
   /**

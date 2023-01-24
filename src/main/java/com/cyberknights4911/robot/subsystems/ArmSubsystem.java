@@ -21,4 +21,7 @@ public final class ArmSubsystem implements Subsystem {
    public void moveToFrontCollect(){
       
    }
+   public void moveToFloorCollect(){
+      
+   }
 }
