@@ -74,11 +74,11 @@ public class RobotContainer {
     );
     // Bind D-pad down to climb wheel lock
     driverController.povDown().onTrue(
-      Commands.runOnce(() -> swerveSubsystem.setBrakeMode(true))
+      Commands.runOnce(() -> { /*TODO reset wheels*/ })
     );
     // Bind Start to reset wheels
     driverController.povDown().onTrue(
-      Commands.runOnce(() -> {/*TODO reset wheels*/})
+      Commands.runOnce(() -> { /*TODO reset wheels*/ })
     );
 
     // OPERATOR
