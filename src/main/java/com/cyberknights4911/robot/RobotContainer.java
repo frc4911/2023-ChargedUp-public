@@ -74,21 +74,29 @@ public class RobotContainer {
     );
     // Bind D-pad down to climb wheel lock
     driverController.povDown().onTrue(
-      Commands.runOnce(() -> { /*TODO reset wheels*/ })
+      Commands.runOnce(() -> {
+        // TODO: lock wheels
+      })
     );
     // Bind Start to reset wheels
     driverController.povDown().onTrue(
-      Commands.runOnce(() -> { /*TODO reset wheels*/ })
+      Commands.runOnce(() -> {
+        // TODO: reset wheels
+      })
     );
 
     // OPERATOR
     // Bind A to L2
     operatorController.a().onTrue(
-      Commands.runOnce(()-> armSubsystem.moveToL2(), armSubsystem)
+      Commands.runOnce(()-> {
+        // TODO move to L2
+      }, armSubsystem)
     );
     // Bind X to L3
     operatorController.a().onTrue(
-      Commands.runOnce(()-> armSubsystem.moveToL3(), armSubsystem)
+      Commands.runOnce(()-> {
+        // TODO move to L3
+      }, armSubsystem)
     );
     // Bind Y to Climb Deploy
     operatorController.y().onTrue(
@@ -96,36 +104,44 @@ public class RobotContainer {
     );
     // Bind D-pad up to stowed
     operatorController.povUp().onTrue(
-      Commands.runOnce(() -> armSubsystem.stow(), armSubsystem)
+      Commands.runOnce(() -> {
+        // TODO()
+      }, armSubsystem)
     );
     // Bind D-pad right to rear collect
     operatorController.povRight().onTrue(
       Commands.sequence(
         Commands.parallel(
-          Commands.runOnce(() -> clawSubsystem.openClaw(),clawSubsystem),
-          Commands.runOnce(() -> armSubsystem.moveToRearCollect(),armSubsystem)
+          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> {
+            // TODO move to rear collect
+          }, armSubsystem)
         ),
-        Commands.runOnce(() -> clawSubsystem.closeClaw(),clawSubsystem)
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
       )
     );
     // Bind D-pad left to front collect
     operatorController.povLeft().onTrue(
       Commands.sequence(
         Commands.parallel(
-          Commands.runOnce(() -> clawSubsystem.openClaw(),clawSubsystem),
-          Commands.runOnce(() -> armSubsystem.moveToFrontCollect(),armSubsystem)
+          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> {
+            // TODO move to front collect
+          }, armSubsystem)
         ),
-        Commands.runOnce(() -> clawSubsystem.closeClaw(),clawSubsystem)
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
       )
     );
     // Bind D-pad down to floor collect
     operatorController.povDown().onTrue(
       Commands.sequence(
         Commands.parallel(
-          Commands.runOnce(() -> clawSubsystem.openClaw(),clawSubsystem),
-          Commands.runOnce(() -> armSubsystem.moveToFloorCollect(),armSubsystem)
+          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> {
+            // TODO move to floor collect
+          }, armSubsystem)
         ),
-        Commands.runOnce(() -> clawSubsystem.closeClaw(),clawSubsystem)
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
       )
     );
   }
