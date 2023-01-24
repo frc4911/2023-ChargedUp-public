@@ -36,7 +36,7 @@ public class HoodSubsystem implements Subsystem{
     public HoodSubsystem() {
 
         //1 is closest to robot center and the numbering moves out clockwise
-        mHoodMotor = TalonFXFactory.createDefaultTalon(Ports.HOOD_MOTOR, Constants.kCanivoreName);
+        mHoodMotor = TalonFXFactory.createDefaultTalon(Ports.HOOD_MOTOR, Constants.CANIVORE_NAME);
         configMotors();
     }
 
