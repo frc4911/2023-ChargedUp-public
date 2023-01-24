@@ -12,4 +12,7 @@ public final class ArmSubsystem implements Subsystem {
    public void movetoL3(){
     
    } 
+   public void stow(){
+      
+   }
 }

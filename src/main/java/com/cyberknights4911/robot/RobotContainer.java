@@ -7,6 +7,7 @@ package com.cyberknights4911.robot;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.ClawSubsystem;
+import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,7 +29,7 @@ public class RobotContainer {
       new CommandXboxController(Constants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController =
       new CommandXboxController(Constants.OPERATOR_CONTROLLER_PORT);
-
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
@@ -58,8 +59,9 @@ public class RobotContainer {
     // Bind Right Trigger to collect cube
     driverController.rightTrigger().onTrue(
       Commands.sequence(
-        Commands.runOnce(() -> clawSubsystem.openClaw()),
-        Commands.runOnce(() -> clawSubsystem.closeClaw())
+        Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        
         )
     );
     // Bind Left Trigger to collect cone
@@ -82,7 +84,13 @@ public class RobotContainer {
       Commands.runOnce(()-> armSubsystem.movetoL3(), armSubsystem)
     );
     // Bind Y to Climb Deploy
+    operatorController.y().onTrue(
+      Commands.runOnce(() -> climberSubsystem.setExtended(true), climberSubsystem)
+    );
     // Bind D-pad up to stowed
+    operatorController.povUp().onTrue(
+      Commands.runOnce(() -> armSubsystem.stow(), armSubsystem)
+    );
     // Bind D-pad right to rear collect
     // Bind D-pad left to front collect
     // Bind D-pad down to floor collect
