@@ -5,6 +5,7 @@
 package com.cyberknights4911.robot;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.subsystems.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.ClawSubsystem;
 import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
 
@@ -29,6 +30,7 @@ public class RobotContainer {
       new CommandXboxController(Constants.OPERATOR_CONTROLLER_PORT);
 
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,7 +74,13 @@ public class RobotContainer {
 
     // OPERATOR
     // Bind A to L2
+    operatorController.a().onTrue(
+      Commands.runOnce(()-> armSubsystem.movetoL2(), armSubsystem)
+    );
     // Bind X to L3
+    operatorController.a().onTrue(
+      Commands.runOnce(()-> armSubsystem.movetoL3(), armSubsystem)
+    );
     // Bind Y to Climb Deploy
     // Bind D-pad up to stowed
     // Bind D-pad right to rear collect
