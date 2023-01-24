@@ -53,6 +53,12 @@ public class RobotContainer {
     );
     
     // Bind Right Trigger to collect cube
+    driverController.rightTrigger().onTrue(
+      Commands.sequence(
+        Commands.runOnce(() -> clawSubsystem.openClaw()),
+        Commands.runOnce(() -> clawSubsystem.closeClaw())
+        )
+    );
     // Bind Left Trigger to collect cone
     // Bind D-pad down to climb wheel lock
     // Bind Start to reset wheels

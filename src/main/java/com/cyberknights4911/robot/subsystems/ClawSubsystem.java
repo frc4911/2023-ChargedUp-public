@@ -9,4 +9,8 @@ public final class ClawSubsystem implements Subsystem {
     public void openClaw() {
         // TODO make it work
     }
+    public void closeClaw() {
+        // TODO make it also work
+
+    }
 }
