@@ -5,7 +5,10 @@
 package com.cyberknights4911.robot;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.subsystems.ClawSubsystem;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -19,8 +22,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  private final CommandXboxController driverController =
       new CommandXboxController(Constants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController operatorController =
+      new CommandXboxController(Constants.OPERATOR_CONTROLLER_PORT);
+
+  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -39,6 +46,25 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+    // DRIVER
+    // Bind open claw to right bumper
+    driverController.rightBumper().onTrue(
+      Commands.runOnce(() -> clawSubsystem.openClaw())
+    );
+    
+    // Bind Right Trigger to collect cube
+    // Bind Left Trigger to collect cone
+    // Bind D-pad down to climb wheel lock
+    // Bind Start to reset wheels
+
+    // OPERATOR
+    // Bind A to L2
+    // Bind X to L3
+    // Bind Y to Climb Deploy
+    // Bind D-pad up to stowed
+    // Bind D-pad right to rear collect
+    // Bind D-pad left to front collect
+    // Bind D-pad down to floor collect
   }
 
   /**
