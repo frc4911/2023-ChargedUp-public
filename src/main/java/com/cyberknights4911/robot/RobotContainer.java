@@ -92,6 +92,15 @@ public class RobotContainer {
       Commands.runOnce(() -> armSubsystem.stow(), armSubsystem)
     );
     // Bind D-pad right to rear collect
+    operatorController.povRight().onTrue(
+      Commands.sequence(
+        Commands.parallel(
+          Commands.runOnce(() -> clawSubsystem.openClaw(),clawSubsystem),
+          Commands.runOnce(() -> armSubsystem.moveToRearCollect(),armSubsystem)
+        ),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(),clawSubsystem)
+      )
+    );
     // Bind D-pad left to front collect
     // Bind D-pad down to floor collect
   }

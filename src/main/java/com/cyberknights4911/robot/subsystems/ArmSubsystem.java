@@ -15,4 +15,7 @@ public final class ArmSubsystem implements Subsystem {
    public void stow(){
       
    }
+   public void moveToRearCollect(){
+      
+   }
 }
