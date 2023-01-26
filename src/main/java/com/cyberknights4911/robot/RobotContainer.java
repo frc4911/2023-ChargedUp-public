@@ -5,7 +5,13 @@
 package com.cyberknights4911.robot;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.subsystems.ArmSubsystem;
+import com.cyberknights4911.robot.subsystems.ClawSubsystem;
+import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
+import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -19,9 +25,14 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  private final CommandXboxController driverController =
       new CommandXboxController(Constants.DRIVER_CONTROLLER_PORT);
-
+  private final CommandXboxController operatorController =
+      new CommandXboxController(Constants.OPERATOR_CONTROLLER_PORT);
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -39,6 +50,100 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+    // DRIVER
+    // Bind open claw to right bumper
+    driverController.rightBumper().onTrue(
+      Commands.runOnce(() -> clawSubsystem.openClaw())
+    );
+    
+    // Bind Right Trigger to collect cube
+    driverController.rightTrigger().onTrue(
+      Commands.sequence(
+        Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        
+        )
+    );
+    // Bind Left Trigger to collect cone
+    driverController.leftTrigger().onTrue(
+      Commands.sequence(
+        Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        
+        )
+    );
+    // Bind D-pad down to climb wheel lock
+    driverController.povDown().onTrue(
+      Commands.runOnce(() -> {
+        // TODO: lock wheels
+      })
+    );
+    // Bind Start to reset wheels
+    driverController.povDown().onTrue(
+      Commands.runOnce(() -> {
+        // TODO: reset wheels
+      })
+    );
+
+    // OPERATOR
+    // Bind A to L2
+    operatorController.a().onTrue(
+      Commands.runOnce(()-> {
+        // TODO move to L2
+      }, armSubsystem)
+    );
+    // Bind X to L3
+    operatorController.a().onTrue(
+      Commands.runOnce(()-> {
+        // TODO move to L3
+      }, armSubsystem)
+    );
+    // Bind Y to Climb Deploy
+    operatorController.y().onTrue(
+      Commands.runOnce(() -> climberSubsystem.setExtended(true), climberSubsystem)
+    );
+    // Bind D-pad up to stowed
+    operatorController.povUp().onTrue(
+      Commands.runOnce(() -> {
+        // TODO()
+      }, armSubsystem)
+    );
+    // Bind D-pad right to rear collect
+    operatorController.povRight().onTrue(
+      Commands.sequence(
+        Commands.parallel(
+          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> {
+            // TODO move to rear collect
+          }, armSubsystem)
+        ),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+      )
+    );
+    // Bind D-pad left to front collect
+    operatorController.povLeft().onTrue(
+      Commands.sequence(
+        Commands.parallel(
+          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> {
+            // TODO move to front collect
+          }, armSubsystem)
+        ),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+      )
+    );
+    // Bind D-pad down to floor collect
+    operatorController.povDown().onTrue(
+      Commands.sequence(
+        Commands.parallel(
+          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> {
+            // TODO move to floor collect
+          }, armSubsystem)
+        ),
+        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+      )
+    );
   }
 
   /**
