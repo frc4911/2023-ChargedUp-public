@@ -25,6 +25,7 @@ at_detector = Detector(families='tag16h5',
 
 server_ip = '10.49.11.2'
 table_name = 'APRIL_TAGS'
+entry_name = 'DETECTED_TAGS'
 
 NetworkTables.initialize(server_ip)
 
@@ -59,7 +60,7 @@ input_img = numpy.zeros(shape=(720, 1280, 3), dtype=numpy.uint8)
 
 # Scan loop
 while True:
-    time.sleep(5)
+    time.sleep(1)
     print("Getting a new image")
 
     # Read a new image
@@ -78,6 +79,8 @@ while True:
                               camera_params=c270_camera_params,
                               tag_size=frc_tag_size_meters)
 
+    detectedTags = []
+
     # iterate through detected tags
     for tag in tags:
         # Filter out likely false positives
@@ -86,7 +89,7 @@ while True:
             continue
         # Only tags 0-7 are used in the game
         if (tag.tag_id >= 7):
-            print(f'rejecting tag {tag.tag_id} with invalid id')
+            print(f'ignoring tag {tag.tag_id} with invalid id')
             continue
 
         # Build JSON message
@@ -98,9 +101,12 @@ while True:
         data['corners'] = tag.corners.tolist()
         data['pose_R'] = tag.pose_R.tolist()
         data['pose_t'] = tag.pose_t.tolist()
+        # is this useful?
         # data['pose_err'] = tag.pose_err.tolist()
 
-        print(f'sending tag {tag.tag_id} to roboRIO')
-        table.putString(str(tag.tag_id), json.dumps(data))
+        print(f'adding tag {tag.tag_id} to detected list')
+        detectedTags.append(data)
 
-        print(json.dumps(data))
+    jsonMessage = json.dumps(detectedTags)
+    print(f'sending tag collection to robot: {jsonMessage}')
+    table.putString(entry_name, jsonMessage)

@@ -5,6 +5,14 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N3;
+
 /**
  * A simple data class for representing AprilTags.
  * 
@@ -18,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *     "pose_t": [[-0.5612786884816965], [0.34145442852213037], [1.6247312388643178]]
  * }
  */
-public final class AprilTag {
+public final class AprilTagJsonMessage {
     // These are all the tag ids used in the game
     public static final int ID00 = 0;
     public static final int ID01 = 1;
@@ -44,7 +52,7 @@ public final class AprilTag {
     private final double[][] pose_t;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public AprilTag(
+    public AprilTagJsonMessage(
             @JsonProperty("id") int id,
             @JsonProperty("hamming") int hamming,
             @JsonProperty("decision_margin") double decision_margin,
@@ -117,7 +125,7 @@ public final class AprilTag {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AprilTag other = (AprilTag) obj;
+        AprilTagJsonMessage other = (AprilTagJsonMessage) obj;
         if (id != other.id)
             return false;
         if (hamming != other.hamming)
@@ -135,4 +143,27 @@ public final class AprilTag {
         return true;
     }
     
+    /**
+     * Creates an instance AprilTag object from this message.
+     * @return the AprilTag
+     */
+    public AprilTag convertToWpiAprilTag() {
+        Matrix<N3, N3> camMatrix = new Matrix<N3, N3>(Nat.N3(), Nat.N3());
+
+        // pose_R is a 3x3 "camera matrix"
+        for (int i = 0; i < pose_R.length; i++) {
+            double[] row = pose_R[i];
+            for (int j = 0; j < row.length; j++) {
+                camMatrix.set(i, j, pose_R[i][j]);
+            }
+        }
+
+        return new AprilTag(
+            id,
+            new Pose3d(
+                new Translation3d(pose_t[0][0], pose_t[1][0], pose_t[2][0]),
+                new Rotation3d(camMatrix)
+            )
+        );
+    }
 }

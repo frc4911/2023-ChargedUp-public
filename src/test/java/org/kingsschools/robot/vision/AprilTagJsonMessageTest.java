@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.cyberknights4911.robot.vision.AprilTag;
+import com.cyberknights4911.robot.vision.AprilTagJsonMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class AprilTagTest {
+public class AprilTagJsonMessageTest {
 
     private String EXAMPLE_TAG = "{\"id\": 2, \"hamming\": 0, \"decision_margin\": " +
         "55.401695251464844, \"center\": [722.6058091498052, 337.72965839480423], \"corners\": " +
@@ -18,7 +18,7 @@ public class AprilTagTest {
         "[0.7196822756862508, 0.6834572004598715, 0.12224433403071976], [-0.6937706551587282, " +
         "0.7009987521582152, 0.16517574735188578]], \"pose_t\": [[0.04680199236991478], " +
         "[0.00970026867787437], [0.6765868549121506]]}";
-    private AprilTag expectedTag;
+    private AprilTagJsonMessage expectedTag;
 
     ObjectMapper mapper;
 
@@ -52,7 +52,7 @@ public class AprilTagTest {
         pose_t[1][0] = 0.00970026867787437;
         pose_t[2][0] = 0.6765868549121506;
 
-        expectedTag = new AprilTag(
+        expectedTag = new AprilTagJsonMessage(
             2,
             0,
             55.401695251464844,
@@ -64,7 +64,7 @@ public class AprilTagTest {
 
     @Test
     public void testParse() throws Exception {
-        AprilTag parsedTag = mapper.readValue(EXAMPLE_TAG, AprilTag.class);
+        AprilTagJsonMessage parsedTag = mapper.readValue(EXAMPLE_TAG, AprilTagJsonMessage.class);
         assertEquals(expectedTag, parsedTag);
     }
 }
