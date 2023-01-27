@@ -98,9 +98,11 @@ public class RobotContainer {
         // TODO move to L3
       }, armSubsystem)
     );
-    // Bind Y to Climb Deploy
-    operatorController.y().onTrue(
-      Commands.runOnce(() -> climberSubsystem.setExtended(true), climberSubsystem)
+    // Bind Y + Right Bumper to Climb Deploy
+    operatorController.rightBumper().and(
+      operatorController.y().onTrue(
+        Commands.runOnce(() -> climberSubsystem.setExtended(true), climberSubsystem)
+      )
     );
     // Bind D-pad up to stowed
     operatorController.povUp().onTrue(
