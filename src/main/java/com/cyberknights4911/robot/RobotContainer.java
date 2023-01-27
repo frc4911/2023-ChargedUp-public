@@ -6,6 +6,7 @@ package com.cyberknights4911.robot;
 
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem;
+import com.cyberknights4911.robot.subsystems.BobSubsystem;
 import com.cyberknights4911.robot.subsystems.ClawSubsystem;
 import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
@@ -33,6 +34,7 @@ public class RobotContainer {
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final BobSubsystem bobSubsystem = new BobSubsystem();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -144,6 +146,17 @@ public class RobotContainer {
         Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
       )
     );
+    // Bind right trigger to retract Bob
+    operatorController.rightTrigger().onTrue(
+      Commands.runOnce(() -> bobSubsystem.setExtended(false), bobSubsystem)
+
+    );
+     // Bind left trigger to extend Bob
+     operatorController.leftTrigger().onTrue(
+      Commands.runOnce(() -> bobSubsystem.setExtended(true), bobSubsystem)
+      
+    );
+
   }
 
   /**
