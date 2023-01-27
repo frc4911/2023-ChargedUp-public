@@ -96,7 +96,7 @@ while True:
         data['decision_margin'] = tag.decision_margin
         data['center'] = tag.center.tolist()
         data['corners'] = tag.corners.tolist()
-        # data['pose_R'] = tag.poseR.tolist()
+        data['pose_R'] = tag.pose_R.tolist()
         data['pose_t'] = tag.pose_t.tolist()
         # data['pose_err'] = tag.pose_err.tolist()
 

@@ -38,6 +38,8 @@ public final class AprilTag {
     private final double[] center;
 
     private final double[][] corners;
+
+    private final double[][] pose_R;
     
     private final double[][] pose_t;
 
@@ -48,12 +50,14 @@ public final class AprilTag {
             @JsonProperty("decision_margin") double decision_margin,
             @JsonProperty("center") double[] center,
             @JsonProperty("corners") double[][] corners,
+            @JsonProperty("pose_R") double[][] pose_R,
             @JsonProperty("pose_t") double[][] pose_t) {
         this.id = id;
         this.hamming = hamming;
         this.decision_margin = decision_margin;
         this.center = center;
         this.corners = corners;
+        this.pose_R = pose_R;
         this.pose_t = pose_t;
     }
 
@@ -95,6 +99,11 @@ public final class AprilTag {
         return corners;
     }
 
+    /** Rotation matrix of the pose estimate. */
+    public double[][] getPose_R() {
+        return pose_R;
+    }
+
     /** Translation of the pose estimate. */
     public double[][] getPose_t() {
         return pose_t;
@@ -118,6 +127,8 @@ public final class AprilTag {
         if (!Arrays.equals(center, other.center))
             return false;
         if (!Arrays.deepEquals(corners, other.corners))
+            return false;
+        if (!Arrays.deepEquals(pose_R, other.pose_R))
             return false;
         if (!Arrays.deepEquals(pose_t, other.pose_t))
             return false;

@@ -5,6 +5,9 @@ import java.util.EnumSet;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -53,6 +56,10 @@ public final class NetworkMessenger {
         try {
             AprilTag foundTag = mapper.readValue(tagJson, AprilTag.class);
             // TODO: Do something depending on the state of the robot and the tag id.
+            Pose2d tagPose = new Pose2d(
+                new Translation2d(foundTag.getPose_t()[0][0], foundTag.getPose_t()[1][0]),
+                new Rotation2d(foundTag.getPose_R()[0][0], foundTag.getPose_R()[1][0])
+            );
         } catch (JsonProcessingException e) {
             // TODO report this error better
             e.printStackTrace();
