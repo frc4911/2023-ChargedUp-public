@@ -6,6 +6,7 @@ package com.cyberknights4911.robot;
 
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem;
+import com.cyberknights4911.robot.subsystems.BobSubsystem;
 import com.cyberknights4911.robot.subsystems.ClawSubsystem;
 import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
@@ -33,6 +34,7 @@ public class RobotContainer {
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final BobSubsystem bobSubsystem = new BobSubsystem();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -98,9 +100,11 @@ public class RobotContainer {
         // TODO move to L3
       }, armSubsystem)
     );
-    // Bind Y to Climb Deploy
-    operatorController.y().onTrue(
-      Commands.runOnce(() -> climberSubsystem.setExtended(true), climberSubsystem)
+    // Bind Y + Right Bumper to Climb Deploy
+    operatorController.rightBumper().and(
+      operatorController.y().onTrue(
+        Commands.runOnce(() -> climberSubsystem.setExtended(true), climberSubsystem)
+      )
     );
     // Bind D-pad up to stowed
     operatorController.povUp().onTrue(
@@ -144,6 +148,17 @@ public class RobotContainer {
         Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
       )
     );
+    // Bind right trigger to retract Bob
+    operatorController.rightTrigger().onTrue(
+      Commands.runOnce(() -> bobSubsystem.setExtended(false), bobSubsystem)
+
+    );
+     // Bind left trigger to extend Bob
+     operatorController.leftTrigger().onTrue(
+      Commands.runOnce(() -> bobSubsystem.setExtended(true), bobSubsystem)
+      
+    );
+
   }
 
   /**
