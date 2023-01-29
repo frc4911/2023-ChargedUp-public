@@ -10,6 +10,7 @@ import com.cyberknights4911.robot.subsystems.BobSubsystem;
 import com.cyberknights4911.robot.subsystems.ClawSubsystem;
 import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
+import com.cyberknights4911.robot.subsystems.ArmSubsystem.ArmPositions;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -95,13 +96,15 @@ public class RobotContainer {
     // Bind A to L2
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
-        // TODO move to L2
+        armSubsystem.setShoulderDesiredPosition(ArmPositions.CUBE_LEVEL_2);
+        armSubsystem.moveShoulder();
       }, armSubsystem)
     );
     // Bind X to L3
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
-        // TODO move to L3
+        armSubsystem.setShoulderDesiredPosition(ArmPositions.CUBE_LEVEL_3);
+        armSubsystem.moveShoulder();
       }, armSubsystem)
     );
     // Bind Y + Right Bumper to Climb Deploy
