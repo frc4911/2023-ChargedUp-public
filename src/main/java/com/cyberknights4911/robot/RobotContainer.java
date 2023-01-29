@@ -53,6 +53,10 @@ public class RobotContainer {
   private void configureBindings() {
 
     // DRIVER
+    //Bind reset IMU to Y
+    driverController.y().onTrue(
+      Commands.runOnce(() -> swerveSubsystem.setRobotPosition(Constants.ROBOT_STARTING_POSE))
+      );
     // Bind open claw to right bumper
     driverController.rightBumper().onTrue(
       Commands.runOnce(() -> clawSubsystem.openClaw())
