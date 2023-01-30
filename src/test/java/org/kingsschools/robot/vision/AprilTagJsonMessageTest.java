@@ -1,12 +1,15 @@
 package org.kingsschools.robot.vision;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.cyberknights4911.robot.vision.AprilTagJsonMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.wpi.first.apriltag.AprilTag;
 
 public class AprilTagJsonMessageTest {
 
@@ -66,5 +69,18 @@ public class AprilTagJsonMessageTest {
     public void testParse() throws Exception {
         AprilTagJsonMessage parsedTag = mapper.readValue(EXAMPLE_TAG, AprilTagJsonMessage.class);
         assertEquals(expectedTag, parsedTag);
+    }
+
+    @Test
+    public void testConvertToWpiAprilTag() throws Exception {
+        AprilTagJsonMessage parsedTag = mapper.readValue(EXAMPLE_TAG, AprilTagJsonMessage.class);
+
+        AprilTag aprilTag = parsedTag.convertToWpiAprilTag();
+        assertNotNull(aprilTag);
+        assertEquals(2, aprilTag.ID);
+        assertEquals(expectedTag.getPose_t()[0][0], aprilTag.pose.getTranslation().getX());
+        assertEquals(expectedTag.getPose_t()[1][0], aprilTag.pose.getTranslation().getY());
+        assertEquals(expectedTag.getPose_t()[2][0], aprilTag.pose.getTranslation().getZ());
+        // TODO (riley) verify rotation :/
     }
 }
