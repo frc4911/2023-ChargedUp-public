@@ -6,8 +6,10 @@ import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import libraries.cheesylib.drivers.TalonFXFactory;
 
@@ -65,6 +67,7 @@ public final class ArmSubsystem implements Subsystem {
     public void configMotors() {
 
         //SHOULDER CONFIGURATION
+        //May need to use a wpilib pid controller instead if we are not going to use an encoder
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
         shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
         shoulderConfiguration.supplyCurrLimit.enable = true;
@@ -72,7 +75,9 @@ public final class ArmSubsystem implements Subsystem {
         shoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
         shoulderConfiguration.slot0.kI = 0.0;
         shoulderConfiguration.slot0.kD = 0.0;
+        shoulderConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
 
+        
         mShoulderMotor1.configAllSettings(shoulderConfiguration);
         mShoulderMotor2.configAllSettings(shoulderConfiguration);
         mShoulderMotor3.configAllSettings(shoulderConfiguration);
@@ -92,6 +97,8 @@ public final class ArmSubsystem implements Subsystem {
         wristConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
         wristConfiguration.slot0.kI = 0.0;
         wristConfiguration.slot0.kD = 0.0;
+        wristConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
+
 
         mWristMotor.configAllSettings(shoulderConfiguration);
 
@@ -130,11 +137,11 @@ public final class ArmSubsystem implements Subsystem {
     }
 
     public double convertDegreesToTicksShoulder(double degrees) {
-        return degrees; //Can do once we get gear ratios from DESIGN
+        return degrees * 2048 * 120 / 360; //2048 ticks per rotation, 120:1 gear down ratio, 360 degrees per rotation
     }
 
     public double convertDegreesToTicksWrist(double degrees) {
-        return degrees;//Can do calculations once we get gear ratios from DESIGN
+        return degrees * 2048 * 60 / 360; //2048 ticks per rotation, 60:1 gear down ratio, 360 degrees per rotation
     }
 
 }
