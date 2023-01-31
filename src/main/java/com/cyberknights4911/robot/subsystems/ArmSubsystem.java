@@ -10,13 +10,13 @@ import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import libraries.cheesylib.drivers.TalonFXFactory;
 
 /**
  * Subsystem for controlling the arm.
  */
-public final class ArmSubsystem implements Subsystem {
+public final class ArmSubsystem extends SubsystemBase {
 
     private TalonFX mShoulderMotor1;
     private TalonFX mShoulderMotor2;
@@ -30,28 +30,36 @@ public final class ArmSubsystem implements Subsystem {
     private double WRIST_ERROR = 100;
 
     public enum ArmPositions {
-        STOWED(0),
-        CONE_LEVEL_3(240), 
-        CUBE_LEVEL_3(240),
-        CONE_LEVEL_2(270),
-        CUBE_LEVEL_2(270),
-        HYBRID_CONE(300),
-        HYBRID_CUBE(300),
-        COLLECT_PORTAL(240),
-        COLLECT_GROUND(300);
+        //TODO: These values are untuned. Need Testing
+        STOWED(0, 0),
+        CONE_LEVEL_3(240, 100), 
+        CUBE_LEVEL_3(240, 100),
+        CONE_LEVEL_2(270, 100),
+        CUBE_LEVEL_2(270, 100),
+        HYBRID_CONE(300, 100),
+        HYBRID_CUBE(300, 100),
+        COLLECT_PORTAL(240, 100),
+        COLLECT_GROUND(300, 100);
 
-        double position;
+        double mShoulderPosition;
+        double mWristPosition;
 
-        private ArmPositions(double position) {
-            this.position = position;
+        private ArmPositions(double shoulderPosition, double wristPosition) {
+            mShoulderPosition = shoulderPosition;
+            mWristPosition = wristPosition;
+
         }
 
-        public double get() {
-            return position;
+        public double getShoulderPosition() {
+            return mShoulderPosition;
+        }
+
+        public double getWristPosition() {
+            return mWristPosition;
         }
     }
 
-    private ArmPositions desiredShoulderPosition = ArmPositions.STOWED;
+    private ArmPositions desiredArmPosition = ArmPositions.STOWED;
 
     public ArmSubsystem() {
 
@@ -106,11 +114,11 @@ public final class ArmSubsystem implements Subsystem {
     }
 
     public void setShoulderDesiredPosition(ArmPositions desiredPosition) {
-        desiredShoulderPosition = desiredPosition;
+        desiredArmPosition = desiredPosition;
     }
 
     public void moveShoulder() {
-        double falconTicks = convertDegreesToTicksShoulder(desiredShoulderPosition.get());
+        double falconTicks = convertDegreesToTicksShoulder(desiredArmPosition.getShoulderPosition());
         mShoulderMotor1.set(ControlMode.Position, falconTicks);
         mShoulderMotor2.set(ControlMode.Position, falconTicks);
         mShoulderMotor3.set(ControlMode.Position, falconTicks);
@@ -118,19 +126,24 @@ public final class ArmSubsystem implements Subsystem {
     }
 
     public void moveWrist() {
-        double falconTicks = desiredWristPosition();
+        double falconTicks = convertDegreesToTicksShoulder(desiredArmPosition.getWristPosition());
         mWristMotor.set(ControlMode.Position, falconTicks);
     }
 
-    public double desiredWristPosition() {
-        return convertDegreesToTicksWrist(desiredShoulderPosition.get()%180);
+
+    public boolean wristAtDesiredPosition() {
+        double wristPosition = mWristMotor.getSelectedSensorPosition();
+        double desiredWristPosition = desiredArmPosition.getWristPosition();
+        if (Math.abs(wristPosition - desiredWristPosition) < WRIST_ERROR) {
+            return true;
+        }
+        return false;
     }
 
-    public boolean atDesiredPosition() {
-        double wristPosition = mWristMotor.getSelectedSensorPosition();
-        double armPosition = mShoulderMotor1.getSelectedSensorPosition();
+    public boolean shoulderAtDesiredPosition() {
+        double shoulderPosition = mShoulderMotor1.getSelectedSensorPosition();
 
-        if ((Math.abs(armPosition - desiredShoulderPosition.get()) < ARM_ERROR) && (Math.abs(wristPosition - desiredWristPosition()) < WRIST_ERROR)) {
+        if (Math.abs(shoulderPosition - desiredArmPosition.getShoulderPosition()) < ARM_ERROR) {
             return true;
         }
         return false;
@@ -142,6 +155,19 @@ public final class ArmSubsystem implements Subsystem {
 
     public double convertDegreesToTicksWrist(double degrees) {
         return degrees * 2048 * 60 / 360; //2048 ticks per rotation, 60:1 gear down ratio, 360 degrees per rotation
+    }
+
+    @Override
+    public void periodic() {
+        
+        //TODO: This creates unneccessary CAN traffic. May or may not be a problem
+        if (!wristAtDesiredPosition()){
+            moveWrist();
+        }
+
+        if(!shoulderAtDesiredPosition()) {
+            moveShoulder();
+        }
     }
 
 }
