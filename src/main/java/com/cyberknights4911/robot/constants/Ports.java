@@ -38,7 +38,8 @@ public final class Ports {
     public static final int WRIST_MOTOR = 14;
 
     public static final int HOOD_MOTOR = 12;
-    
+    public static final int BOB_MOTOR = 12;
+
     // Climber Subsystem Motors
     public static final int CLIMB_SOLENOID_PORT = 1;
 
