@@ -97,14 +97,14 @@ public class RobotContainer {
     // Bind A to L2
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
-        armSubsystem.setShoulderDesiredPosition(ArmPositions.CUBE_LEVEL_2);
+        armSubsystem.setDesiredPosition(ArmPositions.CUBE_LEVEL_2);
         armSubsystem.moveShoulder();
       }, armSubsystem)
     );
     // Bind X to L3
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
-        armSubsystem.setShoulderDesiredPosition(ArmPositions.CUBE_LEVEL_3);
+        armSubsystem.setDesiredPosition(ArmPositions.CUBE_LEVEL_3);
         armSubsystem.moveShoulder();
       }, armSubsystem)
     );
@@ -158,12 +158,12 @@ public class RobotContainer {
     );
     // Bind right trigger to retract Bob
     operatorController.rightTrigger().onTrue(
-      Commands.runOnce(() -> bobSubsystem.setExtended(false), bobSubsystem)
+      Commands.runOnce(() -> bobSubsystem.toggleBob(false), bobSubsystem)
 
     );
      // Bind left trigger to extend Bob
      operatorController.leftTrigger().onTrue(
-      Commands.runOnce(() -> bobSubsystem.setExtended(true), bobSubsystem)
+      Commands.runOnce(() -> bobSubsystem.toggleBob(true), bobSubsystem)
       
     );
 

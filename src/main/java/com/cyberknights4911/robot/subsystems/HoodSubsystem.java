@@ -6,12 +6,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports;
 import libraries.cheesylib.drivers.TalonFXFactory;
 
-public class HoodSubsystem implements Subsystem{
+public class HoodSubsystem extends SubsystemBase{
     
     private TalonFX mHoodMotor;
 
@@ -63,5 +63,11 @@ public class HoodSubsystem implements Subsystem{
     public void moveHood() {
         mHoodMotor.set(ControlMode.Position, desiredHoodPosition.get());
     }
+
+    @Override
+    public void periodic() {
+        
+    }
+
 }
 

@@ -12,7 +12,7 @@ import libraries.cheesylib.vision.GoalTrackerConfig;
 public class Constants {
     /* All distance measurements are in inches, unless otherwise noted. */
 
-    public static final String ROBOT_NAME = "QuickSuck";
+    public static final String ROBOT_NAME = "QuickSlurpp";
 
     public static final String ROBOT_NAME_2022 = "Robot2022";
 
