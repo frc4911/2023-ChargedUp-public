@@ -96,14 +96,14 @@ public class RobotContainer {
     // Bind A to L2
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
-        armSubsystem.setShoulderDesiredPosition(ArmPositions.CUBE_LEVEL_2);
+        armSubsystem.setDesiredPosition(ArmPositions.CUBE_LEVEL_2);
         armSubsystem.moveShoulder();
       }, armSubsystem)
     );
     // Bind X to L3
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
-        armSubsystem.setShoulderDesiredPosition(ArmPositions.CUBE_LEVEL_3);
+        armSubsystem.setDesiredPosition(ArmPositions.CUBE_LEVEL_3);
         armSubsystem.moveShoulder();
       }, armSubsystem)
     );

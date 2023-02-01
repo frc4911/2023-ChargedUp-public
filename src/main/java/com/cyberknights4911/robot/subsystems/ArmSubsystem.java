@@ -31,6 +31,8 @@ public final class ArmSubsystem extends SubsystemBase {
 
     public enum ArmPositions {
         //TODO: These values are untuned. Need Testing
+        //Values are in degrees and later converted to ticks for ease of comprehension
+        //0 Degrees are at stowed for both SHOULDER and WRIST
         STOWED(0, 0),
         CONE_LEVEL_3(240, 100), 
         CUBE_LEVEL_3(240, 100),
@@ -94,7 +96,7 @@ public final class ArmSubsystem extends SubsystemBase {
         mShoulderMotor3.setInverted(true);
         mShoulderMotor4.setInverted(true);
 
-        //May want to use setStatusFramePeriod to be lower and make motors followers if having CAN utilization issues
+        //TODO: May want to use setStatusFramePeriod to be lower and make motors followers if having CAN utilization issues
         mShoulderMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
         //WRIST CONFIGURATION
@@ -113,8 +115,10 @@ public final class ArmSubsystem extends SubsystemBase {
 
     }
 
-    public void setShoulderDesiredPosition(ArmPositions desiredPosition) {
+    public void setDesiredPosition(ArmPositions desiredPosition) {
         desiredArmPosition = desiredPosition;
+        moveShoulder();
+        moveWrist();
     }
 
     public void moveShoulder() {
@@ -153,20 +157,32 @@ public final class ArmSubsystem extends SubsystemBase {
         return degrees * 2048 * 120 / 360; //2048 ticks per rotation, 120:1 gear down ratio, 360 degrees per rotation
     }
 
+    public double convertTicksToDegreesShoulder(double degrees) {
+        return degrees * 360 / 2048 / 120; //2048 ticks per rotation, 120:1 gear down ratio, 360 degrees per rotation
+    }
+
     public double convertDegreesToTicksWrist(double degrees) {
         return degrees * 2048 * 60 / 360; //2048 ticks per rotation, 60:1 gear down ratio, 360 degrees per rotation
     }
 
+    //Check if the robot will be too tall
+    //Avoid between 70-210 degrees
+    public boolean checkForHeightViolation() {
+        double shoulderPosition = convertTicksToDegreesShoulder(mShoulderMotor1.getSelectedSensorPosition());
+        if (shoulderPosition <= 210 && shoulderPosition >= 70 ) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void periodic() {
-        
-        //TODO: This creates unneccessary CAN traffic. May or may not be a problem
-        if (!wristAtDesiredPosition()){
-            moveWrist();
-        }
 
-        if(!shoulderAtDesiredPosition()) {
-            moveShoulder();
+        //Override wrist position to avoid being too tall
+        if (checkForHeightViolation()) {
+            mWristMotor.set(ControlMode.Position, 0);
+        } else {
+            moveWrist();
         }
     }
 
