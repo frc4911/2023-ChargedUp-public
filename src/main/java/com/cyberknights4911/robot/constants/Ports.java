@@ -29,6 +29,7 @@ public final class Ports {
     public static final int BACK_LEFT_CANCODER   = 2;
     public static final int BACK_RIGHT_CANCODER  = 3;
 
+    public static final int BOB_SOLENOID_PORT = 0;
     // Arm Subsystem Motors
     public static final int SHOULDER_MOTOR_1 = 10;
     public static final int SHOULDER_MOTOR_2 = 11;
@@ -37,7 +38,8 @@ public final class Ports {
     public static final int WRIST_MOTOR = 14;
 
     public static final int HOOD_MOTOR = 12;
-    
+    public static final int BOB_MOTOR = 12;
+
     // Climber Subsystem Motors
     public static final int CLIMB_SOLENOID_PORT = 1;
 

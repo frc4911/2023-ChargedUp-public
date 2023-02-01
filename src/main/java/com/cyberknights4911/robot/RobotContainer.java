@@ -7,13 +7,16 @@ package com.cyberknights4911.robot;
 import com.cyberknights4911.robot.commands.experimental.TeleopSwerveCommand;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem;
-import com.cyberknights4911.robot.subsystems.ClawSubsystem;
+import com.cyberknights4911.robot.subsystems.BobSubsystem;
+import com.cyberknights4911.robot.subsystems.SlurppSubsystem;
 import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.expermental.SwerveSubsystem;
+import com.cyberknights4911.robot.subsystems.ArmSubsystem.ArmPositions;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -33,10 +36,10 @@ public class RobotContainer {
       new CommandXboxController(Constants.OPERATOR_CONTROLLER_PORT);
   
   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-  private final ClawSubsystem clawSubsystem = new ClawSubsystem();
+  private final SlurppSubsystem slurppSubsystem = new SlurppSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
- 
+  private final BobSubsystem bobSubsystem = new BobSubsystem();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -65,24 +68,27 @@ public class RobotContainer {
     );
 
     // DRIVER
+    //Bind reset IMU to Y
+    driverController.y().onTrue(
+      Commands.runOnce(() -> swerveSubsystem.setRobotPosition(Constants.ROBOT_STARTING_POSE))
+      );
     // Bind open claw to right bumper
     driverController.rightBumper().onTrue(
-      Commands.runOnce(() -> clawSubsystem.openClaw())
-    );
-    
+      Commands.runOnce(() -> slurppSubsystem.slurpp()));
+
     // Bind Right Trigger to collect cube
     driverController.rightTrigger().onTrue(
       Commands.sequence(
-        Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
-        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        Commands.runOnce(() -> slurppSubsystem.slurpp(), slurppSubsystem),
+        Commands.runOnce(() -> slurppSubsystem.spit(), slurppSubsystem)
         
         )
     );
     // Bind Left Trigger to collect cone
     driverController.leftTrigger().onTrue(
       Commands.sequence(
-        Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
-        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        Commands.runOnce(() -> slurppSubsystem.slurpp(), slurppSubsystem),
+        Commands.runOnce(() -> slurppSubsystem.spit(), slurppSubsystem)
         
         )
     );
@@ -103,18 +109,22 @@ public class RobotContainer {
     // Bind A to L2
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
-        // TODO move to L2
+        armSubsystem.setDesiredPosition(ArmPositions.CUBE_LEVEL_2);
+        armSubsystem.moveShoulder();
       }, armSubsystem)
     );
     // Bind X to L3
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
-        // TODO move to L3
+        armSubsystem.setDesiredPosition(ArmPositions.CUBE_LEVEL_3);
+        armSubsystem.moveShoulder();
       }, armSubsystem)
     );
-    // Bind Y to Climb Deploy
-    operatorController.y().onTrue(
-      Commands.runOnce(() -> climberSubsystem.setExtended(true), climberSubsystem)
+    // Bind Y + Right Bumper to Climb Deploy
+    operatorController.rightBumper().and(
+      operatorController.y().onTrue(
+        Commands.runOnce(() -> climberSubsystem.setExtended(true), climberSubsystem)
+      )
     );
     // Bind D-pad up to stowed
     operatorController.povUp().onTrue(
@@ -126,38 +136,49 @@ public class RobotContainer {
     operatorController.povRight().onTrue(
       Commands.sequence(
         Commands.parallel(
-          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> slurppSubsystem.slurpp(), slurppSubsystem),
           Commands.runOnce(() -> {
             // TODO move to rear collect
           }, armSubsystem)
         ),
-        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        Commands.runOnce(() -> slurppSubsystem.spit(), slurppSubsystem)
       )
     );
     // Bind D-pad left to front collect
     operatorController.povLeft().onTrue(
       Commands.sequence(
         Commands.parallel(
-          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> slurppSubsystem.slurpp(), slurppSubsystem),
           Commands.runOnce(() -> {
             // TODO move to front collect
           }, armSubsystem)
         ),
-        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        Commands.runOnce(() -> slurppSubsystem.spit(), slurppSubsystem)
       )
     );
     // Bind D-pad down to floor collect
     operatorController.povDown().onTrue(
       Commands.sequence(
         Commands.parallel(
-          Commands.runOnce(() -> clawSubsystem.openClaw(), clawSubsystem),
+          Commands.runOnce(() -> slurppSubsystem.slurpp(), slurppSubsystem),
           Commands.runOnce(() -> {
             // TODO move to floor collect
           }, armSubsystem)
         ),
-        Commands.runOnce(() -> clawSubsystem.closeClaw(), clawSubsystem)
+        Commands.runOnce(() -> slurppSubsystem.spit(), slurppSubsystem)
       )
     );
+    // Bind right trigger to retract Bob
+    operatorController.rightTrigger().onTrue(
+      Commands.runOnce(() -> bobSubsystem.toggleBob(false), bobSubsystem)
+
+    );
+     // Bind left trigger to extend Bob
+     operatorController.leftTrigger().onTrue(
+      Commands.runOnce(() -> bobSubsystem.toggleBob(true), bobSubsystem)
+      
+    );
+
   }
 
   /**
