@@ -101,14 +101,18 @@ public class Constants {
     public static class Swerve {
         private Swerve() {}
 
+        public static final double STICK_DEADBAND = 0.1;
+
         //TODO: This must be tuned to specific robot
-        public static final double TRACK_WIDTH = Units.inchesToMeters(22);
-        public static final double WHEEL_BASE = Units.inchesToMeters(22);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(20.75);
+        public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
 
         public static final boolean INVERT_GYRO = false;
 
         /* Meters per Second */
         public static final double MAX_SPEED = 4.5; //TODO: This must be tuned to specific robot
+        /** Radians per Second */
+        public static final double MAX_ANGULAR_VELOCITY = 10.0; //TODO: This must be tuned to specific robot
             
         /* Swerve Current Limiting */
         public static final int ANGLE_CONTINUOUS_CURRENT_LIMIT = 25;

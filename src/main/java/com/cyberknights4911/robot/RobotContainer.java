@@ -4,12 +4,14 @@
 
 package com.cyberknights4911.robot;
 
+import com.cyberknights4911.robot.commands.experimental.TeleopSwerveCommand;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.ClawSubsystem;
 import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
-import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
+import com.cyberknights4911.robot.subsystems.expermental.SwerveSubsystem;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -29,10 +31,12 @@ public class RobotContainer {
       new CommandXboxController(Constants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController =
       new CommandXboxController(Constants.OPERATOR_CONTROLLER_PORT);
+  
   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   private final ClawSubsystem clawSubsystem = new ClawSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+ 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -49,6 +53,16 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    
+    swerveSubsystem.setDefaultCommand(
+        new TeleopSwerveCommand(
+            swerveSubsystem, 
+            () -> -driverController.getRawAxis(XboxController.Axis.kLeftY.value), 
+            () -> -driverController.getRawAxis(XboxController.Axis.kLeftX.value), 
+            () -> -driverController.getRawAxis(XboxController.Axis.kRightX.value), 
+            () -> driverController.rightBumper().getAsBoolean()
+        )
+    );
 
     // DRIVER
     // Bind open claw to right bumper
