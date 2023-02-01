@@ -7,11 +7,11 @@ package com.cyberknights4911.robot;
 import com.cyberknights4911.robot.commands.experimental.TeleopSwerveCommand;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem;
-import com.cyberknights4911.robot.subsystems.BobSubsystem;
-import com.cyberknights4911.robot.subsystems.SlurppSubsystem;
-import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
-import com.cyberknights4911.robot.subsystems.expermental.SwerveSubsystem;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem.ArmPositions;
+import com.cyberknights4911.robot.subsystems.BobSubsystem;
+import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
+import com.cyberknights4911.robot.subsystems.SlurppSubsystem;
+import com.cyberknights4911.robot.subsystems.expermental.SwerveSubsystem;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -69,9 +69,9 @@ public class RobotContainer {
 
     // DRIVER
     //Bind reset IMU to Y
-    driverController.y().onTrue(
-      Commands.runOnce(() -> swerveSubsystem.setRobotPosition(Constants.ROBOT_STARTING_POSE))
-      );
+    // driverController.y().onTrue(
+    //   Commands.runOnce(() -> swerveSubsystem.setRobotPosition(Constants.ROBOT_STARTING_POSE))
+    //   );
     // Bind open claw to right bumper
     driverController.rightBumper().onTrue(
       Commands.runOnce(() -> slurppSubsystem.slurpp()));
