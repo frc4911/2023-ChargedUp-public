@@ -1,6 +1,7 @@
 package libraries.cyberlib.kinematics;
 
 import libraries.cheesylib.geometry.Rotation2d;
+
 /**
  * Represents the speed of a robot chassis. Although this struct contains
  * similar members compared to a Twist2d, they do NOT represent the same thing.

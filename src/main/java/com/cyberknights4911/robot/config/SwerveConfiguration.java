@@ -3,7 +3,7 @@ package com.cyberknights4911.robot.config;
 import java.util.Arrays;
 import java.util.List;
 
-import libraries.cheesylib.geometry.Translation2d;;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class SwerveConfiguration {
     public final double wheelbaseLengthInMeters;

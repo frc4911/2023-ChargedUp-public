@@ -2,9 +2,9 @@ package libraries.cyberlib.control;
 
 import java.util.Optional;
 
-import libraries.cheesylib.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import libraries.cheesylib.geometry.Pose2dWithCurvature;
-import libraries.cheesylib.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import libraries.cheesylib.trajectory.TrajectoryIterator;
 import libraries.cheesylib.trajectory.timing.TimedState;
 

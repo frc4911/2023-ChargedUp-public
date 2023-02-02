@@ -3,36 +3,36 @@ package com.cyberknights4911.robot.subsystems;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cyberknights4911.robot.config.RobotConfiguration;
-import com.cyberknights4911.robot.config.SwerveConfiguration;
-import com.cyberknights4911.robot.constants.Constants;
-import com.cyberknights4911.robot.planners.DriveMotionPlanner;
-import com.cyberknights4911.robot.sensors.IMU;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import libraries.cheesylib.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import libraries.cheesylib.geometry.Pose2dWithCurvature;
-import libraries.cheesylib.geometry.Rotation2d;
-import libraries.cheesylib.geometry.Translation2d;
-import libraries.cheesylib.trajectory.TrajectoryIterator;
-import libraries.cheesylib.trajectory.timing.TimedState;
-import libraries.cyberlib.kinematics.ChassisSpeeds;
-import libraries.cyberlib.kinematics.SwerveDriveKinematics;
-import libraries.cyberlib.kinematics.SwerveDriveOdometry;
-import libraries.cyberlib.kinematics.SwerveModuleState;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import com.cyberknights4911.robot.config.RobotConfiguration;
+import com.cyberknights4911.robot.config.SwerveConfiguration;
+import com.cyberknights4911.robot.constants.Constants;
+//import com.cyberknights4911.robot.planners.DriveMotionPlanner;
+import com.cyberknights4911.robot.sensors.IMU;
+
+import libraries.cheesylib.trajectory.TrajectoryIterator;
+import libraries.cheesylib.trajectory.timing.TimedState;
 import libraries.cyberlib.utils.HolonomicDriveSignal;
 import libraries.cyberlib.utils.Util;
 
-/**
- * Subsystem for controlling Driving.
- */
-public final class SwerveSubsystem implements Subsystem {
+import edu.wpi.first.math.spline.PoseWithCurvature;
+
+public class SwerveSubsystem implements Subsystem {
 
     public enum ControlState {
         NEUTRAL, MANUAL, DISABLED, PATH_FOLLOWING, VISION_AIM
@@ -75,11 +75,10 @@ public final class SwerveSubsystem implements Subsystem {
 
 //    private static HeadingController mAimingHeaderController = null;
 
-   private double lastAimTimestamp = -1.0;
+    private double lastAimTimestamp = -1.0;
 
-   // Trajectory following
-    private static DriveMotionPlanner mMotionPlanner;
-   private boolean mOverrideTrajectory = false;
+    // Trajectory following
+    private boolean mOverrideTrajectory = false;
 
     private SlewRateLimiter forwardLimiter = new SlewRateLimiter(3.0, 0); // 1.5
     private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0, 0); // 1.5
@@ -107,10 +106,18 @@ public final class SwerveSubsystem implements Subsystem {
             mSwerveConfiguration.moduleLocations.get(1),
             mSwerveConfiguration.moduleLocations.get(2),
             mSwerveConfiguration.moduleLocations.get(3)); 
-        mOdometry = new SwerveDriveOdometry(mKinematics, mIMU.getYaw());
-        mPeriodicIO.robotPose = mOdometry.getPose();
 
-        // mMotionPlanner = new DriveMotionPlanner();
+
+            var frontRightPosition = mFrontRight.getPosition();
+            var frontLeftPosition = mFrontLeft.getPosition();
+            var backLeftPosition = mBackLeft.getPosition();
+            var backRightPosition = mBackRight.getPosition();
+
+
+
+            
+        mOdometry = new SwerveDriveOdometry(mKinematics, mIMU.getYaw(),new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition} , new Pose2d());
+        mPeriodicIO.robotPose = mOdometry.getPoseMeters();
 
         // rotationPow = SmartDashboard.getNumber("Rotation Power", -1);
         // if(rotationPow == -1) {
@@ -133,7 +140,6 @@ public final class SwerveSubsystem implements Subsystem {
                     handleManual();
                     break;
                 case PATH_FOLLOWING:
-                    updatePathFollower(lastUpdateTimestamp);
                     break;
                 case VISION_AIM:
                     handleAiming(lastUpdateTimestamp);
@@ -261,10 +267,10 @@ public final class SwerveSubsystem implements Subsystem {
 
             if (driveSignal.isFieldOriented()) {
                 // Adjust for robot heading to maintain field relative motion.
-                translationInput = translationInput.rotateBy(getPose().getRotation().inverse());
+                translationInput = translationInput.rotateBy(getPose().getRotation().unaryMinus());
             }
 
-            chassisSpeeds = new ChassisSpeeds(translationInput.x(), translationInput.y(), rotationInput);
+            chassisSpeeds = new ChassisSpeeds(translationInput.getX(), translationInput.getY(), rotationInput);
         }
 
         // Now calculate the new Swerve Module states using inverse kinematics.
@@ -276,6 +282,19 @@ public final class SwerveSubsystem implements Subsystem {
                 mPeriodicIO.swerveModuleStates, mSwerveConfiguration.maxSpeedInMetersPerSecond);
     }
 
+    // Method to update Swerve in autonomous
+    // Untested and mostly copy-pasted from updateModules()
+    // TODO: Look into the SwerveModuleState[] returned from the AutoBuilder and make sure nothing breaks. 
+    public synchronized void setSwerveModuleStates(SwerveModuleState[] moduleStates)
+    {
+        // Update the SwerveModuleStates
+        mPeriodicIO.swerveModuleStates = moduleStates;
+
+        // Normalize wheels speeds if any individual speed is above the specified
+        // maximum.
+        SwerveDriveKinematics.desaturateWheelSpeeds(
+                mPeriodicIO.swerveModuleStates, mSwerveConfiguration.maxSpeedInMetersPerSecond);
+    }
 
     public void setAimingTwistScaler(double scaler){
         // if (Double.isNaN(scaler)){
@@ -402,6 +421,13 @@ public final class SwerveSubsystem implements Subsystem {
     public ChassisSpeeds getChassisSpeeds() { 
         return mPeriodicIO.chassisSpeeds; 
     }
+    
+    /*
+     * Get the SwerveDriveKinematics from the SwerveSubsytem.
+     */
+    public SwerveDriveKinematics getmKinematics() {
+        return mKinematics;
+    }
 
     /**
      * Sets the current robot position on the field.
@@ -409,9 +435,18 @@ public final class SwerveSubsystem implements Subsystem {
      * @param pose The (x,y,theta) position.
      */
     public synchronized void setRobotPosition(Pose2d pose) {
-        mOdometry.resetPosition(pose, mIMU.getYaw());
-        mPeriodicIO.robotPose = mOdometry.getPose();
-        mGyroOffset = pose.getRotation().rotateBy(Rotation2d.fromDegrees(mIMU.getYaw().getDegrees()).inverse());
+
+
+        var frontRightPosition = mFrontRight.getPosition();
+        var frontLeftPosition = mFrontLeft.getPosition();
+        var backLeftPosition = mBackLeft.getPosition();
+        var backRightPosition = mBackRight.getPosition();
+
+
+
+        mOdometry.resetPosition(mIMU.getYaw(), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition}, pose);
+        mPeriodicIO.robotPose = mOdometry.getPoseMeters();
+        mGyroOffset = pose.getRotation().rotateBy(Rotation2d.fromDegrees(mIMU.getYaw().getDegrees()).unaryMinus());
     }
 
     /**
@@ -425,64 +460,23 @@ public final class SwerveSubsystem implements Subsystem {
         var backLeft = mBackLeft.getState();
         var backRight = mBackRight.getState();
 
+        var frontRightPosition = mFrontRight.getPosition();
+        var frontLeftPosition = mFrontLeft.getPosition();
+        var backLeftPosition = mBackLeft.getPosition();
+        var backRightPosition = mBackRight.getPosition();
+
         // Calculate a threshold for use in aiming
-        mPeriodicIO.averageWheelVelocity = (frontLeft.speedInMetersPerSecond + frontLeft.speedInMetersPerSecond +
-                backLeft.speedInMetersPerSecond + backRight.speedInMetersPerSecond) / 4;
+        mPeriodicIO.averageWheelVelocity = (frontLeft.speedMetersPerSecond + frontLeft.speedMetersPerSecond +
+                backLeft.speedMetersPerSecond + backRight.speedMetersPerSecond) / 4;
 
         // order is CCW starting with front right.
         mPeriodicIO.chassisSpeeds = mKinematics.toChassisSpeeds(frontRight, frontLeft, backLeft, backRight);
-        mPeriodicIO.robotPose = mOdometry.updateWithTime(
-                timestamp, mIMU.getYaw(), frontRight, frontLeft, backLeft, backRight);
+        mPeriodicIO.robotPose = mOdometry.update(
+                mIMU.getYaw(), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition});
     }
-
-    /**
-     * Gets whether path following is done or not. Typically, called in autonomous
-     * actions.
-     *
-     * @return true if done; otherwise false.
-     */
-    public boolean isDoneWithTrajectory() {
-        if (mMotionPlanner == null || mControlState != ControlState.PATH_FOLLOWING) {
-            return true;
-        }
-        return mMotionPlanner.isDone() || mOverrideTrajectory;
-    }
-
-    /**
-     * Sets a trajectory to follow.
-     *
-     * @param trajectory The trajectory to follow.
-     */
-    public synchronized void setTrajectory(TrajectoryIterator<TimedState<Pose2dWithCurvature>> trajectory) {
-         if (mMotionPlanner != null) {
-             mOverrideTrajectory = false;
-             mMotionPlanner.reset();
-             mMotionPlanner.setTrajectory(trajectory);
-             mControlState = ControlState.PATH_FOLLOWING;
-         }
-     }
 
     public void overrideTrajectory(boolean value) {
         mOverrideTrajectory = value;
-    }
-
-    private void updatePathFollower(double now) {
-        HolonomicDriveSignal driveSignal = null;
-        if (mControlState == ControlState.PATH_FOLLOWING) {
-            // Get updated drive signal
-            var trajectorySignal = mMotionPlanner.update(now, mPeriodicIO.robotPose, mPeriodicIO.chassisSpeeds);
-            mPeriodicIO.error = mMotionPlanner.error();
-            mPeriodicIO.path_setpoint = mMotionPlanner.setpoint();
-
-            if (!mOverrideTrajectory) {
-                if (trajectorySignal != null) {
-                    driveSignal = trajectorySignal;
-                }
-            }
-            setPathFollowingVelocity(driveSignal);
-        } else {
-            DriverStation.reportError("Swerve is not in path following state.", false);
-        }
     }
 
     /**
@@ -542,7 +536,8 @@ public final class SwerveSubsystem implements Subsystem {
     public synchronized void zeroSensors(Pose2d startingPose) {
         setRobotPosition(startingPose);
         mIMU.setAngle(startingPose.getRotation().getDegrees());
-        // mModules.forEach((m) -> m.zeroSensors(startingPose));
+        //TODO: Determine whether we need this for RobotContainer.getAutonomousCommand
+        //mModules.forEach((m) -> m.zeroSensors(startingPose));
     }
 
     /**

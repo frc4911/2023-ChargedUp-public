@@ -17,8 +17,8 @@ public class HoodSubsystem extends SubsystemBase{
 
     public enum HoodPositions {
         STOWED(0),
-        H1(1000),
-        H2(2000);
+        H1(10000),
+        H2(20000);
 
         double position;
 
@@ -44,7 +44,7 @@ public class HoodSubsystem extends SubsystemBase{
 
         //SHOULDER CONFIGURATION
         TalonFXConfiguration ShoulderConfiguration = new TalonFXConfiguration();
-        ShoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        ShoulderConfiguration.supplyCurrLimit.currentLimit = 10.0;
         ShoulderConfiguration.supplyCurrLimit.enable = true;
         ShoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
         ShoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
@@ -53,6 +53,7 @@ public class HoodSubsystem extends SubsystemBase{
 
         
         mHoodMotor.configAllSettings(ShoulderConfiguration);
+        mHoodMotor.setInverted(true);
     }
 
     public void setDesiredHoodPosition(HoodPositions desiredPosition) {

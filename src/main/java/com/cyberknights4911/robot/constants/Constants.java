@@ -1,7 +1,7 @@
 package com.cyberknights4911.robot.constants;
 
 import edu.wpi.first.math.util.Units;
-import libraries.cheesylib.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose2d;
 //import frc.robot.limelight.CameraResolution;
 //import frc.robot.limelight.PipelineConfiguration;
 //import libraries.cheesylib.geometry.Pose2d;
@@ -27,21 +27,27 @@ public class Constants {
 
     public static final boolean DEBUGGING_OUTPUT = true;
 
-    // Physical Robot Dimensions (including bumpers)
-    public static final double ROBOT_WIDTH = 28.0;
-    public static final double ROBOT_LENGTH = 28.0;
+    //2022 Physical Robot Dimensions (including bumpers)
+    public static final double ROBOT_WIDTH = 33;
+    public static final double ROBOT_LENGTH = 34.5;
+    public static final double ROBOT_WIDTH_METERS = 0.8382;
+    public static final double ROBOT_LENGTH_METERS = 0.8763;
     public static final double ROBOT_HALF_WIDTH = ROBOT_WIDTH / 2.0;
     public static final double ROBOT_HALF_LENGTH = ROBOT_LENGTH / 2.0;
     public static final double ROBOT_PROBE_EXTRUSION = 4.0;
 
     public static final double BALL_RADIUS = 6.5;
 
+    public static final double ROBOT_WIDTH_METERS_2023 = 0.8763;
+    public static final double ROBOT_LENGTH_METERS_2023 = 0.8763;
 
     // Path following constants
     public static final double PATH_LOOKAHEAD_TIME = 0.25; // seconds to look ahead along the path for steering 0.4
     public static final double PATH_MINI_LOOKAHEAD_DISTANCE = Units.inchesToMeters(6.0); // inches 24.0 (we've been
                                                                                       // using 3.0)
-    
+     // Swerve Heading Controller
+     public static final double SWERVE_HEADING_CONTROLLER_ERROR_TOLERANCE = 1.0; // degrees
+
 
     // These settings are for an inverted Mk4 L2. The steering reduction is
     // different:
@@ -51,6 +57,12 @@ public class Constants {
     public static final boolean MK4_L1_IDRIVE_INVERTED = true;
     public static final double MK4_L1_ISTEER_REDUCTION = (14.0 / 50.0) * (10.0 / 60.0);
     public static final boolean MK4_L1_ISTEER_INVERTED = true;
+
+    public static final double MK4_L2I_WHEEL_DIAMETER = 0.10033;
+    public static final double MK4_L2I_DRIVE_REDUCTION = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
+    public static final boolean MK4_L2I_DRIVE_INVERTED = true;
+    public static final double MK4_L2I_STEER_REDUCTION = (14.0 / 50.0) * (10.0 / 60.0);
+    public static final boolean MK4_L2_IS_STEER_INVERTED = true;
 
     public static final double DRIVE_DEADBAND = 0.05;
 
@@ -62,9 +74,6 @@ public class Constants {
 
     //Robot Starting Pose
     public static final Pose2d ROBOT_STARTING_POSE = new Pose2d();
-
-    // Swerve Heading Controller
-    public static final double SWERVE_HEADING_CONTROLLER_ERROR_TOLERANCE = 1.0; // degrees
 
     // END NEW SWERVE
 
@@ -95,4 +104,7 @@ public class Constants {
     // Controller port
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
+    // Claw Talon ID
+    public static final int CLAW_MOTOR_ID = 1;
+
 }
