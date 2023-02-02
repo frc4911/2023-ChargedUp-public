@@ -11,7 +11,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import libraries.cheesylib.drivers.TalonFXFactory;
+import libraries.cyberlib.drivers.TalonFXFactory;
 
 /**
  * Subsystem for controlling the arm.
@@ -66,11 +66,11 @@ public final class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
 
         //1 is closest to robot center and the numbering moves out clockwise
-        mShoulderMotor1 = TalonFXFactory.createDefaultTalon(Ports.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
-        mShoulderMotor2 = TalonFXFactory.createDefaultTalon(Ports.SHOULDER_MOTOR_2, Constants.CANIVORE_NAME);
-        mShoulderMotor3 = TalonFXFactory.createDefaultTalon(Ports.SHOULDER_MOTOR_3, Constants.CANIVORE_NAME);
-        mShoulderMotor4 = TalonFXFactory.createDefaultTalon(Ports.SHOULDER_MOTOR_4, Constants.CANIVORE_NAME);
-        mWristMotor = TalonFXFactory.createDefaultTalon(Ports.WRIST_MOTOR, Constants.CANIVORE_NAME);
+        mShoulderMotor1 = TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
+        mShoulderMotor2 = TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_2, Constants.CANIVORE_NAME);
+        mShoulderMotor3 = TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_3, Constants.CANIVORE_NAME);
+        mShoulderMotor4 = TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_4, Constants.CANIVORE_NAME);
+        mWristMotor = TalonFXFactory.createTalon(Ports.WRIST_MOTOR, Constants.CANIVORE_NAME);
         configMotors();
     }
 

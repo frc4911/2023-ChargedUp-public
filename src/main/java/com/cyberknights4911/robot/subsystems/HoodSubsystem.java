@@ -7,9 +7,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import libraries.cyberlib.drivers.TalonFXFactory;
+
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports;
-import libraries.cheesylib.drivers.TalonFXFactory;
 
 public class HoodSubsystem extends SubsystemBase{
     
@@ -36,7 +37,7 @@ public class HoodSubsystem extends SubsystemBase{
     public HoodSubsystem() {
 
         //1 is closest to robot center and the numbering moves out clockwise
-        mHoodMotor = TalonFXFactory.createDefaultTalon(Ports.ROBOT_2022_HOOD_MOTOR, Constants.CANIVORE_NAME);
+        mHoodMotor = TalonFXFactory.createTalon(Ports.ROBOT_2022_HOOD_MOTOR, Constants.CANIVORE_NAME);
         configMotors();
     }
 

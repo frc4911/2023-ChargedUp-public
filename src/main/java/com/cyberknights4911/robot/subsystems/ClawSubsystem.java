@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.cyberknights4911.robot.constants.Constants;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import libraries.cheesylib.drivers.TalonFXFactory;
+import libraries.cyberlib.drivers.TalonFXFactory;
 
 /**
  * Subsystem for controlling the Claw.
@@ -17,7 +17,7 @@ public final class ClawSubsystem implements Subsystem {
 
 
     public void Claw(){
-        mFXMotor = TalonFXFactory.createDefaultTalon(Constants.CLAW_MOTOR_ID, Constants.CANIVORE_NAME);
+        mFXMotor = TalonFXFactory.createTalon(Constants.CLAW_MOTOR_ID, Constants.CANIVORE_NAME);
 
         mFXMotor.setInverted(false);
 

@@ -8,6 +8,7 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
+import libraries.cyberlib.drivers.TalonFXFactory;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -17,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.config.SwerveModuleConfiguration;
 import libraries.cheesylib.control.FramePeriodSwitch;
-import libraries.cheesylib.drivers.TalonFXFactory;
 import libraries.cyberlib.utils.Angles;
 import libraries.cyberlib.utils.Util;
 
@@ -54,8 +54,8 @@ public class SwerveDriveModule {
 
         System.out.println("SwerveDriveModule " + mModuleName + "," + mConfig.kSteerMotorSlot0Kp);
 
-        mDriveMotor = TalonFXFactory.createDefaultTalon(mConfig.kDriveMotorTalonId, Constants.CANIVORE_NAME);
-        mSteerMotor = TalonFXFactory.createDefaultTalon(mConfig.kSteerMotorTalonId, Constants.CANIVORE_NAME);
+        mDriveMotor = TalonFXFactory.createTalon(mConfig.kDriveMotorTalonId, Constants.CANIVORE_NAME);
+        mSteerMotor = TalonFXFactory.createTalon(mConfig.kSteerMotorTalonId, Constants.CANIVORE_NAME);
         mCANCoder = new CANCoder(constants.kCANCoderId, Constants.CANIVORE_NAME);
         configCancoder();
         configureMotors();
