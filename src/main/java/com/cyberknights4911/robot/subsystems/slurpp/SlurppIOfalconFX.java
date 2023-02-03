@@ -26,6 +26,7 @@ public final class SlurppIOFalconFX implements SlurppIO {
             motor.getSelectedSensorVelocity() * 10 / TICKS_PER_REV / GEAR_RATIO);
         inputs.appliedVolts = motor.getMotorOutputVoltage();
         inputs.currentAmps = motor.getSupplyCurrent();
+        inputs.tempCelcius = motor.getTemperature();
     }
 
     @Override

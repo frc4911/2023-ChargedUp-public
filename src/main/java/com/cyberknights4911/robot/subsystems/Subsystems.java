@@ -1,6 +1,8 @@
 package com.cyberknights4911.robot.subsystems;
 
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
+import com.cyberknights4911.robot.subsystems.bob.BobIO;
+import com.cyberknights4911.robot.subsystems.bob.BobIOFalconFX;
 import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
 import com.cyberknights4911.robot.subsystems.climber.ClimberIO;
 import com.cyberknights4911.robot.subsystems.climber.ClimberIOSolenoid;
@@ -14,7 +16,8 @@ import com.cyberknights4911.robot.subsystems.slurpp.SlurppSubsystem;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
- * Subsystem instantiation manager. This ensures that the correct IO layer is passed to the constructor.
+ * Subsystem creation manager. This ensures that the correct IO layer is passed to the constructor
+ * according to the environment.
  */
 public final class Subsystems {
     private final ClimberSubsystem climberSubsystem;
@@ -30,14 +33,14 @@ public final class Subsystems {
             slurppSubsystem = new SlurppSubsystem(new SlurppIOFalconFX());
             armSubsystem = new ArmSubsystem();
             swerveSubsystem = new SwerveSubsystem();
-            bobSubsystem = new BobSubsystem();
+            bobSubsystem = new BobSubsystem(new BobIOFalconFX());
             hoodSubsystem = new HoodSubsystem();
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
             armSubsystem = new ArmSubsystem();
             swerveSubsystem = new SwerveSubsystem();
-            bobSubsystem = new BobSubsystem();
+            bobSubsystem = new BobSubsystem(new BobIO() {});
             hoodSubsystem = new HoodSubsystem();
         }
     }

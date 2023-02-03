@@ -13,8 +13,5 @@ public interface ClimberIO {
 
     /** Set solenoid state. */
     public default void setExtended(boolean extended) {}
-
-    /** Stop the motor. */
-    public default void stop() {}
     
 }
