@@ -7,13 +7,13 @@ import com.cyberknights4911.robot.constants.Constants;
 import edu.wpi.first.math.util.Units;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
-public final class SlurppIOfalconFX implements SplurppIO {
+public final class SlurppIOFalconFX implements SlurppIO {
     private static final double GEAR_RATIO = 1.5;
     private static final double TICKS_PER_REV = 2048;
     
     private final TalonFX motor;
 
-    public SlurppIOfalconFX() {
+    public SlurppIOFalconFX() {
         motor = TalonFXFactory.createTalon(Constants.CLAW_MOTOR_ID, Constants.CANIVORE_NAME);
         motor.setInverted(false);
     }

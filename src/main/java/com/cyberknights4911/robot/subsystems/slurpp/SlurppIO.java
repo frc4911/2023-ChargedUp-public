@@ -2,7 +2,7 @@ package com.cyberknights4911.robot.subsystems.slurpp;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface SplurppIO {
+public interface SlurppIO {
     @AutoLog
     public static class SplurppIOInputs {
       public double positionRad = 0.0;

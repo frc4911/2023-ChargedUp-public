@@ -17,18 +17,20 @@ public class ClimberSubsystemTest {
 
     private ClimberSubsystem climberSubsystem;
     private SolenoidSim solenoidSim;
+    private ClimberIOSolenoid climberIOSolenoid;
 
     @BeforeEach
     public void setup() {
         assert HAL.initialize(500, 0);
-        climberSubsystem = new ClimberSubsystem();
+        climberIOSolenoid = new ClimberIOSolenoid();
+        climberSubsystem = new ClimberSubsystem(climberIOSolenoid);
         // Keep args in sync with ClimberSubsystem.java
         solenoidSim = new SolenoidSim(PneumaticsModuleType.REVPH, Ports.CLIMB_SOLENOID_PORT);
     }
 
     @AfterEach
     public void tearDown() throws Exception {
-        climberSubsystem.close();
+        climberIOSolenoid.close();
     }
 
     @Test
