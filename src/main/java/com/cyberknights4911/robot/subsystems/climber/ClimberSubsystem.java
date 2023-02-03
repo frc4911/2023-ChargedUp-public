@@ -1,4 +1,4 @@
-package com.cyberknights4911.robot.subsystems;
+package com.cyberknights4911.robot.subsystems.climber;
 
 import com.cyberknights4911.robot.constants.Ports;
 

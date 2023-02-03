@@ -1,4 +1,5 @@
-package org.kingsschools.robot.subsystems;
+package com.cyberknights4911.robot.subsystems.climber;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.cyberknights4911.robot.constants.Ports;
-import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;

@@ -1,4 +1,4 @@
-package com.cyberknights4911.robot.subsystems;
+package com.cyberknights4911.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -6,10 +6,8 @@ import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
