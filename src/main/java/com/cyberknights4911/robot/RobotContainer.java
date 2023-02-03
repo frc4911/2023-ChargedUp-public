@@ -4,6 +4,7 @@
 
 package com.cyberknights4911.robot;
 
+import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.DefaultSwerveCommand;
 import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
 
@@ -91,7 +92,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     mSwerve.convertCancoderToFX();
-    xButton.onTrue(new MoveHoodCommand(mHood, HoodPositions.STOWED));
+    xButton.onTrue(new AutoBalanceCommand(swerveSubsystem));
     yButton.onTrue(new MoveHoodCommand(mHood, HoodPositions.H1));
     bButton.onTrue(new MoveHoodCommand(mHood, HoodPositions.H2));
 
@@ -128,6 +129,7 @@ public class RobotContainer {
     driverController.y().onTrue(
       Commands.runOnce(() -> swerveSubsystem.setRobotPosition(Constants.ROBOT_STARTING_POSE))
       );
+      
     // Bind open claw to right bumper
     driverController.rightBumper().onTrue(
       Commands.runOnce(() -> slurppSubsystem.slurpp()));
