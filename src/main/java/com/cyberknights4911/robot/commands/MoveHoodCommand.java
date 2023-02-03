@@ -7,16 +7,17 @@ import com.cyberknights4911.robot.subsystems.HoodSubsystem.HoodPositions;
 public class MoveHoodCommand extends CommandBase {
 
     private final HoodSubsystem mHoodSubsystem;
-
-    public MoveHoodCommand(HoodSubsystem hoodSubsystem) {
+    private final HoodPositions mDesiredHoodPosition;
+    public MoveHoodCommand(HoodSubsystem hoodSubsystem, HoodPositions desiredPosition) {
 
         mHoodSubsystem = hoodSubsystem;
+        mDesiredHoodPosition = desiredPosition;
         addRequirements(mHoodSubsystem);
     }
 
     @Override
     public void initialize() {
-        mHoodSubsystem.setDesiredHoodPosition(HoodPositions.H1);
+        mHoodSubsystem.setDesiredHoodPosition(mDesiredHoodPosition);
     }
 
     @Override
@@ -26,8 +27,6 @@ public class MoveHoodCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        mHoodSubsystem.setDesiredHoodPosition(HoodPositions.STOWED);
-
     }
     
 }

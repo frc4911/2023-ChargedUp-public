@@ -5,7 +5,7 @@ import com.cyberknights4911.robot.constants.Ports;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
-import libraries.cheesylib.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public class PigeonTwo implements IMU{
         private static PigeonTwo instance = null;

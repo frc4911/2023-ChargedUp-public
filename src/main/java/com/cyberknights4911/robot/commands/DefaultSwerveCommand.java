@@ -34,7 +34,7 @@ public class DefaultSwerveCommand extends CommandBase {
                 mRotationSupplier.getAsDouble(),
                 false,
                 true,
-                false);
+                true);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class DefaultSwerveCommand extends CommandBase {
                 0.0,
                 false,
                 true,
-                false);
+                true);
     }
 }

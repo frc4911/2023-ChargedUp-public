@@ -10,7 +10,7 @@ import com.cyberknights4911.robot.constants.Ports;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import libraries.cheesylib.drivers.TalonFXFactory;
+import libraries.cyberlib.drivers.TalonFXFactory;
 
 /**
  * Subsystem for controlling the balancer (Bob).
@@ -23,7 +23,7 @@ public final class BobSubsystem implements Subsystem {
 
     public BobSubsystem() {
         mBobSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.BOB_SOLENOID_PORT);
-        mBobMotor = TalonFXFactory.createDefaultTalon(Ports.BOB_MOTOR, Constants.CANIVORE_NAME);
+        mBobMotor = TalonFXFactory.createTalon(Ports.BOB_MOTOR, Constants.CANIVORE_NAME);
         configMotors();
     }
 

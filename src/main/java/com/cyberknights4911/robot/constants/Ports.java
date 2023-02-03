@@ -24,10 +24,10 @@ public final class Ports {
     public static final int ROBOT_2022_BACK_RIGHT_DRIVE  = 4; // PDP 14
     public static final int ROBOT_2022_BACK_RIGHT_STEER  = 8; // PDP 11
 
-    public static final int FRONT_RIGHT_CANCODER = 0;
-    public static final int FRONT_LEFT_CANCODER  = 1;
-    public static final int BACK_LEFT_CANCODER   = 2;
-    public static final int BACK_RIGHT_CANCODER  = 3;
+    public static final int ROBOT_2022_FRONT_RIGHT_CANCODER = 0;
+    public static final int ROBOT_2022_FRONT_LEFT_CANCODER  = 1;
+    public static final int ROBOT_2022_BACK_LEFT_CANCODER   = 2;
+    public static final int ROBOT_2022_BACK_RIGHT_CANCODER  = 3;
 
     public static final int BOB_SOLENOID_PORT = 0;
     // Arm Subsystem Motors
@@ -37,12 +37,11 @@ public final class Ports {
     public static final int SHOULDER_MOTOR_4 = 13;
     public static final int WRIST_MOTOR = 14;
 
-    public static final int HOOD_MOTOR = 12;
+    public static final int ROBOT_2022_HOOD_MOTOR = 12;
     public static final int BOB_MOTOR = 12;
 
     // Climber Subsystem Motors
     public static final int CLIMB_SOLENOID_PORT = 1;
 
     public static final int PIGEON = 0;
-    public static final int PRESSURE_SENSOR = 2; //Analog Input
 }

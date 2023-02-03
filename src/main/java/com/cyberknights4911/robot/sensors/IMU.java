@@ -1,6 +1,6 @@
 package com.cyberknights4911.robot.sensors;
 
-import libraries.cheesylib.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface IMU {
     public boolean isGood();

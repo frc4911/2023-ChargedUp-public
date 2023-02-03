@@ -1,8 +1,8 @@
 package com.cyberknights4911.robot.config;
 
-import static com.cyberknights4911.robot.constants.Constants.MK4_L1_IDRIVE_REDUCTION;
-import static com.cyberknights4911.robot.constants.Constants.MK4_L1_ISTEER_REDUCTION;
-import static com.cyberknights4911.robot.constants.Constants.MK4_L1_IWHEEL_DIAMETER;
+import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_DRIVE_REDUCTION;
+import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_STEER_REDUCTION;
+import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_WHEEL_DIAMETER;
 
 import com.cyberknights4911.robot.constants.Ports;
 import com.cyberknights4911.robot.sensors.IMU.ImuType;
@@ -45,11 +45,11 @@ public class Robot2022 implements RobotConfiguration {
         frontRightModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_FRONT_RIGHT_DRIVE;
         frontRightModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_FRONT_RIGHT_STEER;
         frontRightModuleConstants.kSteerMotorEncoderHomeOffset = FRONT_RIGHT_STEER_MOTOR_ENCODER_HOME_OFFSET;
-        frontRightModuleConstants.kCANCoderId = Ports.FRONT_RIGHT_CANCODER;
+        frontRightModuleConstants.kCANCoderId = Ports.ROBOT_2022_FRONT_RIGHT_CANCODER;
         frontRightModuleConstants.kCANCoderOffsetDegrees = FRONT_RIGHT_CANCODER_OFFSET_DEGREES;
-        frontRightModuleConstants.kWheelDiameter = MK4_L1_IWHEEL_DIAMETER;
-        frontRightModuleConstants.kDriveReduction = MK4_L1_IDRIVE_REDUCTION;
-        frontRightModuleConstants.kSteerReduction = MK4_L1_ISTEER_REDUCTION;
+        frontRightModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
+        frontRightModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
+        frontRightModuleConstants.kSteerReduction = MK4_L2I_STEER_REDUCTION;
         frontRightModuleConstants.kInvertDrive = true;
         frontRightModuleConstants.kInvertSteerMotor = true;
         frontRightModuleConstants.kSteerMotorSlot0Kp = STEER_MOTOR_KP;
@@ -68,11 +68,11 @@ public class Robot2022 implements RobotConfiguration {
         frontLeftModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_FRONT_LEFT_DRIVE;
         frontLeftModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_FRONT_LEFT_STEER;
         frontLeftModuleConstants.kSteerMotorEncoderHomeOffset = FRONT_LEFT_STEER_MOTOR_ENCODER_HOME_OFFSET;
-        frontLeftModuleConstants.kCANCoderId = Ports.FRONT_LEFT_CANCODER;
+        frontLeftModuleConstants.kCANCoderId = Ports.ROBOT_2022_FRONT_LEFT_CANCODER;
         frontLeftModuleConstants.kCANCoderOffsetDegrees = FRONT_LEFT_CANCODER_OFFSET_DEGREES;
-        frontLeftModuleConstants.kWheelDiameter = MK4_L1_IWHEEL_DIAMETER;
-        frontLeftModuleConstants.kDriveReduction = MK4_L1_IDRIVE_REDUCTION;
-        frontLeftModuleConstants.kSteerReduction = MK4_L1_ISTEER_REDUCTION;
+        frontLeftModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
+        frontLeftModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
+        frontLeftModuleConstants.kSteerReduction = MK4_L2I_STEER_REDUCTION;
         frontLeftModuleConstants.kInvertDrive = true;
         frontLeftModuleConstants.kInvertSteerMotor = true;
         frontLeftModuleConstants.kSteerMotorSlot0Kp = STEER_MOTOR_KP;
@@ -91,11 +91,11 @@ public class Robot2022 implements RobotConfiguration {
         backLeftModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_BACK_LEFT_DRIVE;
         backLeftModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_BACK_LEFT_STEER;
         backLeftModuleConstants.kSteerMotorEncoderHomeOffset = BACK_LEFT_STEER_MOTOR_ENCODER_HOME_OFFSET;
-        backLeftModuleConstants.kCANCoderId = Ports.BACK_LEFT_CANCODER;
+        backLeftModuleConstants.kCANCoderId = Ports.ROBOT_2022_BACK_LEFT_CANCODER;
         backLeftModuleConstants.kCANCoderOffsetDegrees = BACK_LEFT_CANCODER_OFFSET_DEGREES;
-        backLeftModuleConstants.kWheelDiameter = MK4_L1_IWHEEL_DIAMETER;
-        backLeftModuleConstants.kDriveReduction = MK4_L1_IDRIVE_REDUCTION;
-        backLeftModuleConstants.kSteerReduction = MK4_L1_ISTEER_REDUCTION;
+        backLeftModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
+        backLeftModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
+        backLeftModuleConstants.kSteerReduction = MK4_L2I_STEER_REDUCTION;
         backLeftModuleConstants.kInvertDrive = true;
         backLeftModuleConstants.kInvertSteerMotor = true;
         backLeftModuleConstants.kSteerMotorSlot0Kp = STEER_MOTOR_KP;
@@ -114,11 +114,11 @@ public class Robot2022 implements RobotConfiguration {
         backRightModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_BACK_RIGHT_DRIVE;
         backRightModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_BACK_RIGHT_STEER;
         backRightModuleConstants.kSteerMotorEncoderHomeOffset = BACK_RIGHT_STEER_MOTOR_ENCODER_HOME_OFFSET;
-        backRightModuleConstants.kCANCoderId = Ports.BACK_RIGHT_CANCODER;
+        backRightModuleConstants.kCANCoderId = Ports.ROBOT_2022_BACK_RIGHT_CANCODER;
         backRightModuleConstants.kCANCoderOffsetDegrees = BACK_RIGHT_CANCODER_OFFSET_DEGREES;
-        backRightModuleConstants.kWheelDiameter = MK4_L1_IWHEEL_DIAMETER;
-        backRightModuleConstants.kDriveReduction = MK4_L1_IDRIVE_REDUCTION;
-        backRightModuleConstants.kSteerReduction = MK4_L1_ISTEER_REDUCTION;
+        backRightModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
+        backRightModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
+        backRightModuleConstants.kSteerReduction = MK4_L2I_STEER_REDUCTION;
         backRightModuleConstants.kInvertDrive = true;
         backRightModuleConstants.kInvertSteerMotor = true;
         backRightModuleConstants.kSteerMotorSlot0Kp = STEER_MOTOR_KP;

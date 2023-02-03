@@ -1,6 +1,6 @@
 package libraries.cyberlib.utils;
 
-import libraries.cheesylib.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 /**
  * Represents a holonomic drive signal.
@@ -10,8 +10,8 @@ public class HolonomicDriveSignal {
     private final double rotation;
     private final boolean fieldOriented;
 
-    public HolonomicDriveSignal(Translation2d translation, double rotation, boolean fieldOriented) {
-        this.translation = translation;
+    public HolonomicDriveSignal(Translation2d translation2d, double rotation, boolean fieldOriented) {
+        this.translation = translation2d;
         this.rotation = rotation;
         this.fieldOriented = fieldOriented;
     }

@@ -1,8 +1,5 @@
 package com.cyberknights4911.robot.subsystems;
 
-import com.cyberknights4911.robot.config.SwerveModuleConfiguration;
-import com.cyberknights4911.robot.constants.Constants;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -11,11 +8,16 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
-import libraries.cheesylib.geometry.Rotation2d;
-import libraries.cyberlib.kinematics.SwerveModuleState;
+import libraries.cyberlib.drivers.TalonFXFactory;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.config.SwerveModuleConfiguration;
 import libraries.cheesylib.control.FramePeriodSwitch;
-import libraries.cheesylib.drivers.TalonFXFactory;
 import libraries.cyberlib.utils.Angles;
 import libraries.cyberlib.utils.Util;
 
@@ -52,8 +54,8 @@ public class SwerveDriveModule {
 
         System.out.println("SwerveDriveModule " + mModuleName + "," + mConfig.kSteerMotorSlot0Kp);
 
-        mDriveMotor = TalonFXFactory.createDefaultTalon(mConfig.kDriveMotorTalonId, Constants.CANIVORE_NAME);
-        mSteerMotor = TalonFXFactory.createDefaultTalon(mConfig.kSteerMotorTalonId, Constants.CANIVORE_NAME);
+        mDriveMotor = TalonFXFactory.createTalon(mConfig.kDriveMotorTalonId, Constants.CANIVORE_NAME);
+        mSteerMotor = TalonFXFactory.createTalon(mConfig.kSteerMotorTalonId, Constants.CANIVORE_NAME);
         mCANCoder = new CANCoder(constants.kCANCoderId, Constants.CANIVORE_NAME);
         configCancoder();
         configureMotors();
@@ -236,6 +238,12 @@ public class SwerveDriveModule {
         return new SwerveModuleState(encVelocityToMetersPerSecond(mPeriodicIO.driveVelocity), currentAngle);
     }
 
+    public synchronized SwerveModulePosition getPosition(){
+        Rotation2d currentAngle = Rotation2d.fromDegrees(Math.toDegrees(encoderUnitsToRadians(mPeriodicIO.steerPosition)));
+
+        return new SwerveModulePosition(encoderUnitsToDistance(mPeriodicIO.drivePosition), currentAngle);
+    }
+
     /**
      * Sets the state for the module.
      * <p>
@@ -258,7 +266,7 @@ public class SwerveDriveModule {
         // Converts the velocity in SI units (meters per second) to a voltage (as a
         // percentage)
         // for the motor controllers.
-        setDriveOpenLoop(state.speedInMetersPerSecond / mMaxSpeedInMetersPerSecond);
+        setDriveOpenLoop(state.speedMetersPerSecond / mMaxSpeedInMetersPerSecond);
 
         setReferenceAngle(state.angle.getRadians());
     }
@@ -410,6 +418,9 @@ public class SwerveDriveModule {
                 mDriveMotor.set(mPeriodicIO.driveControlMode, mPeriodicIO.driveDemand);
                 break;
         }
+        SmartDashboard.putNumber(mModuleName + " Steering", mPeriodicIO.steerDemand);
+        SmartDashboard.putNumber(mModuleName + " Drive", mPeriodicIO.driveDemand);
+
     }
 
     public static class PeriodicIO {
