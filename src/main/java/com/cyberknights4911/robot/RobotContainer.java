@@ -8,7 +8,7 @@ import com.cyberknights4911.robot.commands.DefaultSwerveCommand;
 import com.cyberknights4911.robot.commands.MoveHoodCommand;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.Subsystems;
-import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem.ArmPositions;
+import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem.HoodPositions;
 import com.pathplanner.lib.PathConstraints;
@@ -20,7 +20,6 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -150,14 +149,12 @@ public class RobotContainer {
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
         subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.CUBE_LEVEL_2);
-        subsystems.getArmSubsystem().moveShoulder();
       }, subsystems.getArmSubsystem())
     );
     // Bind X to L3
     operatorController.a().onTrue(
       Commands.runOnce(()-> {
         subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.CUBE_LEVEL_3);
-        subsystems.getArmSubsystem().moveShoulder();
       }, subsystems.getArmSubsystem())
     );
     // Bind Y + Right Bumper to Climb Deploy

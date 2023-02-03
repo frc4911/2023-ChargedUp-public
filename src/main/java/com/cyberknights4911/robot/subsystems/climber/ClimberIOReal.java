@@ -5,10 +5,10 @@ import com.cyberknights4911.robot.constants.Ports;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
-public final class ClimberIOSolenoid implements ClimberIO, AutoCloseable {
+public final class ClimberIOReal implements ClimberIO, AutoCloseable {
     private final Solenoid solenoid;
 
-    public ClimberIOSolenoid() {
+    public ClimberIOReal() {
         solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.CLIMB_SOLENOID_PORT);
         solenoid.set(false);
     }

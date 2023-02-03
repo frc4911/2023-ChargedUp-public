@@ -1,141 +1,52 @@
 package com.cyberknights4911.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.cyberknights4911.robot.constants.Constants;
-import com.cyberknights4911.robot.constants.Ports;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import libraries.cyberlib.drivers.TalonFXFactory;
 
 /**
  * Subsystem for controlling the arm.
  */
 public final class ArmSubsystem extends SubsystemBase {
-
-    private TalonFX mShoulderMotor1;
-    private TalonFX mShoulderMotor2;
-    private TalonFX mShoulderMotor3;
-    private TalonFX mShoulderMotor4;
-    private TalonFX mWristMotor;
-
+    public static final double SHOULDER_GEAR_RATIO = 120.0;
+    public static final double WRIST_GEAR_RATIO = 60.0;
+    public static final int TICKS_PER_REVOLUTION = 2048;
+    public static final int DEGREES_PER_REVOLUTION = 360;
     //In ticks can be changed to be in degrees
     //Makes it run much faster because it does not need to be precise
-    private double ARM_ERROR = 100;
-    private double WRIST_ERROR = 100;
+    private static final double ARM_ERROR = 100;
+    private static final double WRIST_ERROR = 100;
 
-    public enum ArmPositions {
-        //TODO: These values are untuned. Need Testing
-        //Values are in degrees and later converted to ticks for ease of comprehension
-        //0 Degrees are at stowed for both SHOULDER and WRIST
-        STOWED(0, 0),
-        CONE_LEVEL_3(240, 100), 
-        CUBE_LEVEL_3(240, 100),
-        CONE_LEVEL_2(270, 100),
-        CUBE_LEVEL_2(270, 100),
-        HYBRID_CONE(300, 100),
-        HYBRID_CUBE(300, 100),
-        COLLECT_PORTAL(240, 100),
-        COLLECT_GROUND(300, 100);
+    private final ArmIO armIO;
+    private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 
-        double mShoulderPosition;
-        double mWristPosition;
+    private ArmPositions desiredPosition = ArmPositions.STOWED;
 
-        private ArmPositions(double shoulderPosition, double wristPosition) {
-            mShoulderPosition = shoulderPosition;
-            mWristPosition = wristPosition;
-
-        }
-
-        public double getShoulderPosition() {
-            return mShoulderPosition;
-        }
-
-        public double getWristPosition() {
-            return mWristPosition;
-        }
-    }
-
-    private ArmPositions desiredArmPosition = ArmPositions.STOWED;
-
-    public ArmSubsystem() {
-
-        //1 is closest to robot center and the numbering moves out clockwise
-        mShoulderMotor1 = TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
-        mShoulderMotor2 = TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_2, Constants.CANIVORE_NAME);
-        mShoulderMotor3 = TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_3, Constants.CANIVORE_NAME);
-        mShoulderMotor4 = TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_4, Constants.CANIVORE_NAME);
-        mWristMotor = TalonFXFactory.createTalon(Ports.WRIST_MOTOR, Constants.CANIVORE_NAME);
-        configMotors();
-    }
-
-    public void configMotors() {
-
-        //SHOULDER CONFIGURATION
-        //May need to use a wpilib pid controller instead if we are not going to use an encoder
-        TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
-        shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        shoulderConfiguration.supplyCurrLimit.enable = true;
-        shoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        shoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
-        shoulderConfiguration.slot0.kI = 0.0;
-        shoulderConfiguration.slot0.kD = 0.0;
-        shoulderConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
-
-        
-        mShoulderMotor1.configAllSettings(shoulderConfiguration);
-        mShoulderMotor2.configAllSettings(shoulderConfiguration);
-        mShoulderMotor3.configAllSettings(shoulderConfiguration);
-        mShoulderMotor4.configAllSettings(shoulderConfiguration);
-
-        mShoulderMotor3.setInverted(true);
-        mShoulderMotor4.setInverted(true);
-
-        //TODO: May want to use setStatusFramePeriod to be lower and make motors followers if having CAN utilization issues
-        mShoulderMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
-        //WRIST CONFIGURATION
-        TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
-        wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        wristConfiguration.supplyCurrLimit.enable = true;
-        wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        wristConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
-        wristConfiguration.slot0.kI = 0.0;
-        wristConfiguration.slot0.kD = 0.0;
-        wristConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
-
-
-        mWristMotor.configAllSettings(shoulderConfiguration);
-
-
+    public ArmSubsystem(ArmIO armIO) {
+        super();
+        this.armIO = armIO;
     }
 
     public void setDesiredPosition(ArmPositions desiredPosition) {
-        desiredArmPosition = desiredPosition;
-        moveShoulder();
-        moveWrist();
+        this.desiredPosition = desiredPosition;
+        moveWrist(desiredPosition);
+        moveShoulder(desiredPosition);
     }
 
-    public void moveShoulder() {
+    private void moveShoulder(ArmPositions desiredArmPosition) {
         double falconTicks = convertDegreesToTicksShoulder(desiredArmPosition.getShoulderPosition());
-        mShoulderMotor1.set(ControlMode.Position, falconTicks);
-        mShoulderMotor2.set(ControlMode.Position, falconTicks);
-        mShoulderMotor3.set(ControlMode.Position, falconTicks);
-        mShoulderMotor4.set(ControlMode.Position, falconTicks);
+
+        armIO.setShoulderPosition(falconTicks);
     }
 
-    public void moveWrist() {
-        double falconTicks = convertDegreesToTicksShoulder(desiredArmPosition.getWristPosition());
-        mWristMotor.set(ControlMode.Position, falconTicks);
+    private void moveWrist(ArmPositions desiredArmPosition) {
+        double falconTicks = convertDegreesToTicksWrist(desiredArmPosition.getWristPosition());
+        armIO.setWristPosition(falconTicks);
     }
-
 
     public boolean wristAtDesiredPosition() {
-        double wristPosition = mWristMotor.getSelectedSensorPosition();
-        double desiredWristPosition = desiredArmPosition.getWristPosition();
+        double wristPosition = armIO.getWristPosition();
+        double desiredWristPosition = desiredPosition.getWristPosition();
         if (Math.abs(wristPosition - desiredWristPosition) < WRIST_ERROR) {
             return true;
         }
@@ -143,30 +54,18 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public boolean shoulderAtDesiredPosition() {
-        double shoulderPosition = mShoulderMotor1.getSelectedSensorPosition();
+        double shoulderPosition = armIO.getShoulderPosition();
 
-        if (Math.abs(shoulderPosition - desiredArmPosition.getShoulderPosition()) < ARM_ERROR) {
+        if (Math.abs(shoulderPosition - desiredPosition.getShoulderPosition()) < ARM_ERROR) {
             return true;
         }
         return false;
     }
 
-    public double convertDegreesToTicksShoulder(double degrees) {
-        return degrees * 2048 * 120 / 360; //2048 ticks per rotation, 120:1 gear down ratio, 360 degrees per rotation
-    }
-
-    public double convertTicksToDegreesShoulder(double degrees) {
-        return degrees * 360 / 2048 / 120; //2048 ticks per rotation, 120:1 gear down ratio, 360 degrees per rotation
-    }
-
-    public double convertDegreesToTicksWrist(double degrees) {
-        return degrees * 2048 * 60 / 360; //2048 ticks per rotation, 60:1 gear down ratio, 360 degrees per rotation
-    }
-
     //Check if the robot will be too tall
     //Avoid between 70-210 degrees
     public boolean checkForHeightViolation() {
-        double shoulderPosition = convertTicksToDegreesShoulder(mShoulderMotor1.getSelectedSensorPosition());
+        double shoulderPosition = convertTicksToDegreesShoulder(armIO.getShoulderPosition());
         if (shoulderPosition <= 210 && shoulderPosition >= 70 ) {
             return true;
         }
@@ -175,13 +74,27 @@ public final class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        armIO.updateInputs(inputs);
+        Logger.getInstance().processInputs("Arm", inputs);
 
         //Override wrist position to avoid being too tall
         if (checkForHeightViolation()) {
-            mWristMotor.set(ControlMode.Position, 0);
+            armIO.setWristPosition(0);
         } else {
-            moveWrist();
+            moveWrist(desiredPosition);
         }
+    }
+
+    private double convertDegreesToTicksShoulder(double degrees) {
+        return degrees * TICKS_PER_REVOLUTION * SHOULDER_GEAR_RATIO / DEGREES_PER_REVOLUTION;
+    }
+
+    private double convertTicksToDegreesShoulder(double degrees) {
+        return degrees * DEGREES_PER_REVOLUTION / TICKS_PER_REVOLUTION / SHOULDER_GEAR_RATIO;
+    }
+
+    private double convertDegreesToTicksWrist(double degrees) {
+        return degrees * TICKS_PER_REVOLUTION * WRIST_GEAR_RATIO / DEGREES_PER_REVOLUTION;
     }
 
 }

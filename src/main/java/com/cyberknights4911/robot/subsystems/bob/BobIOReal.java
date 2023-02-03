@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
-public final class BobIOFalconFX implements BobIO {
+public final class BobIOReal implements BobIO {
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 2048;
 
     private final Solenoid solenoid;
     private final TalonFX motor;
     
-    public BobIOFalconFX() {
+    public BobIOReal() {
         solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.BOB_SOLENOID_PORT);
         motor = TalonFXFactory.createTalon(Ports.BOB_MOTOR, Constants.CANIVORE_NAME);
 

@@ -17,7 +17,7 @@ public final class SlurppSubsystem extends SubsystemBase {
         super();
         this.splurppIO = splurppIO;
     }
-        
+
     @Override
     public void periodic() {
         splurppIO.updateInputs(inputs);
