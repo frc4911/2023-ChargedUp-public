@@ -4,31 +4,35 @@
 
 package com.cyberknights4911.robot;
 
+import java.util.HashMap;
+import java.util.List;
+
+import com.cyberknights4911.robot.commands.DefaultSwerveCommand;
+import com.cyberknights4911.robot.commands.MoveHoodCommand;
 import com.cyberknights4911.robot.commands.experimental.TeleopSwerveCommand;
 import com.cyberknights4911.robot.constants.Constants;
-import com.cyberknights4911.robot.subsystems.HoodSubsystem;
-import com.cyberknights4911.robot.subsystems.HoodSubsystem.HoodPositions;
-
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem;
-import com.cyberknights4911.robot.subsystems.ArmSubsystem.ArmPositions;
 import com.cyberknights4911.robot.subsystems.ArmSubsystem.ArmPositions;
 import com.cyberknights4911.robot.subsystems.BobSubsystem;
 import com.cyberknights4911.robot.subsystems.ClimberSubsystem;
+import com.cyberknights4911.robot.subsystems.HoodSubsystem;
+import com.cyberknights4911.robot.subsystems.HoodSubsystem.HoodPositions;
 import com.cyberknights4911.robot.subsystems.SlurppSubsystem;
-import com.cyberknights4911.robot.subsystems.expermental.SwerveSubsystem;
+import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -59,7 +63,8 @@ public class RobotContainer {
   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   private final SlurppSubsystem slurppSubsystem = new SlurppSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
-  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final com.cyberknights4911.robot.subsystems.expermental.SwerveSubsystem swerveSubsystem =
+    new com.cyberknights4911.robot.subsystems.expermental.SwerveSubsystem();
   private final BobSubsystem bobSubsystem = new BobSubsystem();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

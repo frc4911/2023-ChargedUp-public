@@ -50,7 +50,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 0,
                 Ports.ROBOT_2022_FRONT_LEFT_DRIVE,
                 Ports.ROBOT_2022_FRONT_LEFT_STEER,
-                Ports.FRONT_LEFT_CANCODER,
+                Ports.ROBOT_2022_FRONT_LEFT_CANCODER,
                 Rotation2d.fromDegrees(-31.0),
                 physicalSwerveModule,
                 ctreConfigs
@@ -59,7 +59,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 1,
                 Ports.ROBOT_2022_FRONT_RIGHT_DRIVE,
                 Ports.ROBOT_2022_FRONT_RIGHT_STEER,
-                Ports.FRONT_RIGHT_CANCODER,
+                Ports.ROBOT_2022_FRONT_RIGHT_CANCODER,
                 Rotation2d.fromDegrees(180.0),
                 physicalSwerveModule,
                 ctreConfigs
@@ -68,7 +68,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 2,
                 Ports.ROBOT_2022_BACK_LEFT_DRIVE,
                 Ports.ROBOT_2022_BACK_LEFT_STEER,
-                Ports.BACK_LEFT_CANCODER,
+                Ports.ROBOT_2022_BACK_LEFT_CANCODER,
                 Rotation2d.fromDegrees(-97.0),
                 physicalSwerveModule,
                 ctreConfigs
@@ -77,7 +77,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 3,
                 Ports.ROBOT_2022_BACK_RIGHT_DRIVE,
                 Ports.ROBOT_2022_BACK_RIGHT_STEER,
-                Ports.BACK_RIGHT_CANCODER,
+                Ports.ROBOT_2022_BACK_RIGHT_CANCODER,
                 Rotation2d.fromDegrees(63.0),
                 physicalSwerveModule,
                 ctreConfigs

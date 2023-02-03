@@ -68,6 +68,9 @@ public class Constants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
 
+    // Claw Talon ID
+    public static final int CLAW_MOTOR_ID = 1;
+
     public static class Swerve {
         private Swerve() {}
 
@@ -78,8 +81,6 @@ public class Constants {
         public static final double WHEEL_BASE = Units.inchesToMeters(23.75);
 
         public static final boolean INVERT_GYRO = false;
-        // Claw Talon ID
-        public static final int CLAW_MOTOR_ID = 1;
 
         /* Meters per Second */
         public static final double MAX_SPEED = 4.5; //TODO: This must be tuned to specific robot
