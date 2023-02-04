@@ -1,8 +1,8 @@
 package com.cyberknights4911.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import com.cyberknights4911.robot.subsystems.HoodSubsystem;
-import com.cyberknights4911.robot.subsystems.HoodSubsystem.HoodPositions;
+import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem;
+import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem.HoodPositions;
 
 public class MoveHoodCommand extends CommandBase {
 

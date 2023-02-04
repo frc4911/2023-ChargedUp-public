@@ -1,4 +1,4 @@
-package com.cyberknights4911.robot.subsystems;
+package com.cyberknights4911.robot.subsystems.drive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,22 +15,18 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import com.cyberknights4911.robot.config.RobotConfiguration;
 import com.cyberknights4911.robot.config.SwerveConfiguration;
 import com.cyberknights4911.robot.constants.Constants;
-//import com.cyberknights4911.robot.planners.DriveMotionPlanner;
 import com.cyberknights4911.robot.sensors.IMU;
 
-import libraries.cheesylib.trajectory.TrajectoryIterator;
 import libraries.cheesylib.trajectory.timing.TimedState;
 import libraries.cyberlib.utils.HolonomicDriveSignal;
 import libraries.cyberlib.utils.Util;
-
-import edu.wpi.first.math.spline.PoseWithCurvature;
 
 public class SwerveSubsystem implements Subsystem {
 
@@ -123,6 +119,7 @@ public class SwerveSubsystem implements Subsystem {
         // if(rotationPow == -1) {
         //     SmartDashboard.putNumber("Rotation Power", 0);
         // }
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     @Override
