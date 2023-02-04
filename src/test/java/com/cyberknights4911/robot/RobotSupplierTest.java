@@ -1,13 +1,10 @@
-package org.kingsschools.robot;
+package com.cyberknights4911.robot;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import com.cyberknights4911.robot.Robot;
-import com.cyberknights4911.robot.RobotSupplier;
 
 public class RobotSupplierTest {
 
