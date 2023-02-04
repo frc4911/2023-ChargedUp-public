@@ -48,7 +48,7 @@ public class Constants {
     public static final double MK4_L2I_STEER_REDUCTION = (14.0 / 50.0) * (10.0 / 60.0);
     public static final boolean MK4_L2_IS_STEER_INVERTED = true;
 
-    public static final double DRIVE_DEADBAND = 0.05;
+    public static final double DRIVE_DEADBAND = 0.1;
 
     // New Swerve requires SI units
     // NOTE: All Robot specific configuration for Junior, DeadEye, and Robot2022 can
