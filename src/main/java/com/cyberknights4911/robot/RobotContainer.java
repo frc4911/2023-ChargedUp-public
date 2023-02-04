@@ -6,6 +6,7 @@ package com.cyberknights4911.robot;
 
 import com.cyberknights4911.robot.commands.DefaultSwerveCommand;
 import com.cyberknights4911.robot.commands.MoveHoodCommand;
+import com.cyberknights4911.robot.commands.experimental.TeleopSwerveCommand;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.control.ButtonAction;
 import com.cyberknights4911.robot.control.ControllerBinding;
@@ -48,22 +49,32 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    subsystems.getSwerveSubsystem().convertCancoderToFX();
-
     subsystems.getSwerveSubsystem().setDefaultCommand(
-      new DefaultSwerveCommand(
+      new TeleopSwerveCommand(
         subsystems.getSwerveSubsystem(),
         controllerBinding.supplierFor(StickAction.FORWARD),
         controllerBinding.supplierFor(StickAction.STRAFE),
-        controllerBinding.supplierFor(StickAction.ROTATE)
+        controllerBinding.supplierFor(StickAction.ROTATE),
+        () -> false
       )
     );
 
-    controllerBinding.triggerFor(ButtonAction.RESET_IMU).onTrue(
-      Commands.runOnce(
-        () -> subsystems.getSwerveSubsystem().setRobotPosition(Constants.ROBOT_STARTING_POSE)
-      )
-    );
+    // subsystems.getSwerveSubsystem().convertCancoderToFX();
+
+    // subsystems.getSwerveSubsystem().setDefaultCommand(
+    //   new DefaultSwerveCommand(
+    //     subsystems.getSwerveSubsystem(),
+    //     controllerBinding.supplierFor(StickAction.FORWARD),
+    //     controllerBinding.supplierFor(StickAction.STRAFE),
+    //     controllerBinding.supplierFor(StickAction.ROTATE)
+    //   )
+    // );
+
+    // controllerBinding.triggerFor(ButtonAction.RESET_IMU).onTrue(
+    //   Commands.runOnce(
+    //     () -> subsystems.getSwerveSubsystem().setRobotPosition(Constants.ROBOT_STARTING_POSE)
+    //   )
+    // );
 
     controllerBinding.triggerFor(ButtonAction.RELEASE_PIECE).onTrue(
       Commands.runOnce(() -> subsystems.getSlurppSubsystem().spit())
@@ -197,8 +208,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    // This will load the file "Test.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-    // for every path in the group
+    // // This will load the file "Test.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
+    // // for every path in the group
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Test", new PathConstraints(4, 3));
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("hood", new MoveHoodCommand(subsystems.getHoodSubsystem(), HoodPositions.H2));
@@ -207,17 +218,18 @@ public class RobotContainer {
     // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
         subsystems.getSwerveSubsystem()::getPose, // Pose2d supplier
-        subsystems.getSwerveSubsystem()::setRobotPosition, // Pose2d consumer, used to reset odometry at the beginning of auto
-        subsystems.getSwerveSubsystem().getmKinematics(), // SwerveDriveKinematics
+        subsystems.getSwerveSubsystem()::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+        subsystems.getSwerveSubsystem().getKinematics(), // SwerveDriveKinematics
         new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
         new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-        subsystems.getSwerveSubsystem()::setSwerveModuleStates, // Module states consumer used to output to the drive subsystem
+        subsystems.getSwerveSubsystem()::setModuleStates, // Module states consumer used to output to the drive subsystem
         eventMap,
         subsystems.getSwerveSubsystem() // The drive subsystem. Used to properly set the requirements of path following commands
     );
 
-    Command fullAuto = new InstantCommand(() -> subsystems.getSwerveSubsystem().setState(SwerveSubsystem.ControlState.PATH_FOLLOWING))
-        .andThen(autoBuilder.fullAuto(pathGroup));
+    // Command fullAuto = new InstantCommand(() -> subsystems.getSwerveSubsystem().setState(SwerveSubsystem.ControlState.PATH_FOLLOWING))
+    //     .andThen(autoBuilder.fullAuto(pathGroup));
+    Command fullAuto = autoBuilder.fullAuto(pathGroup);
 
     //TODO: We might need to call a stop on this or set something to stop the robot after it runs.
     return fullAuto;
