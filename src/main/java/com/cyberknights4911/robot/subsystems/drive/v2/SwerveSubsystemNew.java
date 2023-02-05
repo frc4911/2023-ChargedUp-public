@@ -1,4 +1,4 @@
-package com.cyberknights4911.robot.subsystems.expermental;
+package com.cyberknights4911.robot.subsystems.drive.v2;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -6,10 +6,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.cyberknights4911.robot.commands.TeleopSwerveCommand;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.constants.Ports;
+import com.cyberknights4911.robot.control.ControllerBinding;
+import com.cyberknights4911.robot.control.StickAction;
+import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,9 +21,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class SwerveSubsystem extends SubsystemBase {
+public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] swerveModules;
     private final Pigeon2 gyro;
@@ -27,7 +32,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private final CotsFalconSwerveConstants physicalSwerveModule;
     private final CtreConfigs ctreConfigs;
 
-    public SwerveSubsystem() {
+    public SwerveSubsystemNew() {
         gyro = new Pigeon2(Ports.PIGEON, Constants.CANIVORE_NAME);
         gyro.configFactoryDefault();
         zeroGyro();
@@ -114,48 +119,48 @@ public class SwerveSubsystem extends SubsystemBase {
                                 );
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Swerve.MAX_SPEED);
 
-        for (int i = 0; i < swerveModules.length; i++) {
-            SwerveModule swerveModule = swerveModules[i];
-            swerveModule.setDesiredState(swerveModuleStates[swerveModule.moduleNumber], isOpenLoop);
+        for (SwerveModule mod : swerveModules) {
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
     }    
 
+    @Override
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
     }
 
-    /* Used by SwerveControllerCommand in Auto */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
+    /** Used by SwerveControllerCommand in Auto */
+    @Override
+    public void setSwerveModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Swerve.MAX_SPEED);
         
-        for (int i = 0; i < swerveModules.length; i++) {
-            SwerveModule swerveModule = swerveModules[i];
-            swerveModule.setDesiredState(desiredStates[swerveModule.moduleNumber], false);
+        for (SwerveModule mod : swerveModules) {
+            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
     }    
 
+    @Override
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
     }
 
-    public void resetOdometry(Pose2d pose) {
+    @Override
+    public void setPose(Pose2d pose) {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        for (int i = 0; i < states.length; i++) {
-            SwerveModule swerveModule = swerveModules[i];
-            states[swerveModule.moduleNumber] = swerveModule.getState();
+        for (SwerveModule mod : swerveModules) {
+            states[mod.moduleNumber] = mod.getState();
         }
         return states;
     }
 
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
-        for (int i = 0; i < positions.length; i++) {
-            SwerveModule swerveModule = swerveModules[i];
-            positions[swerveModule.moduleNumber] = swerveModule.getPosition();
+        for (SwerveModule mod : swerveModules) {
+            positions[mod.moduleNumber] = mod.getPosition();
         }
         return positions;
     }
@@ -169,9 +174,9 @@ public class SwerveSubsystem extends SubsystemBase {
             Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
     }
 
-    public void resetModulesToAbsolute(){
-        for (int i = 0; i < swerveModules.length; i++) {
-            swerveModules[i].resetToAbsolute();
+    public void resetModulesToAbsolute() {
+        for (SwerveModule mod : swerveModules) {
+            mod.resetToAbsolute();
         }
     }
 
@@ -208,4 +213,18 @@ public class SwerveSubsystem extends SubsystemBase {
             );
         }
     }
+
+    @Override
+    public Command createDefaultCommand(ControllerBinding controllerBinding) {
+        return new TeleopSwerveCommand(
+            this,
+            controllerBinding.supplierFor(StickAction.FORWARD),
+            controllerBinding.supplierFor(StickAction.STRAFE),
+            controllerBinding.supplierFor(StickAction.ROTATE),
+            () -> false
+        );
+    }
+
+    @Override
+    public void initForPathFollowing() {}
 }
