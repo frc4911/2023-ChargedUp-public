@@ -6,17 +6,14 @@ package com.cyberknights4911.robot;
 
 import java.util.HashMap;
 
-import com.cyberknights4911.robot.commands.DefaultSwerveCommand;
 import com.cyberknights4911.robot.commands.MoveHoodCommand;
 import com.cyberknights4911.robot.commands.auto.PathPlannerCommandFactory;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.control.ButtonAction;
 import com.cyberknights4911.robot.control.ControllerBinding;
-import com.cyberknights4911.robot.control.StickAction;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
-import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem.HoodPositions;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -45,7 +42,7 @@ public class RobotContainer {
 
     factory = new PathPlannerCommandFactory(
       subsystems.getSwerveSubsystem()::getPose,
-      subsystems.getSwerveSubsystem()::setRobotPosition,
+      subsystems.getSwerveSubsystem()::setPose,
       subsystems.getSwerveSubsystem().getKinematics(),
       subsystems.getSwerveSubsystem()::setSwerveModuleStates,
       subsystems.getSwerveSubsystem()
@@ -54,27 +51,12 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     subsystems.getSwerveSubsystem().setDefaultCommand(
-      new TeleopSwerveCommand(
-        subsystems.getSwerveSubsystem(),
-        controllerBinding.supplierFor(StickAction.FORWARD),
-        controllerBinding.supplierFor(StickAction.STRAFE),
-        controllerBinding.supplierFor(StickAction.ROTATE),
-        () -> false
-      )
-    );
-
-    subsystems.getSwerveSubsystem().setDefaultCommand(
-      new DefaultSwerveCommand(
-        subsystems.getSwerveSubsystem(),
-        controllerBinding.supplierFor(StickAction.FORWARD),
-        controllerBinding.supplierFor(StickAction.STRAFE),
-        controllerBinding.supplierFor(StickAction.ROTATE)
-      )
+      subsystems.getSwerveSubsystem().createDefaultCommand(controllerBinding)
     );
 
     controllerBinding.triggerFor(ButtonAction.RESET_IMU).onTrue(
       Commands.runOnce(
-        () -> subsystems.getSwerveSubsystem().setRobotPosition(Constants.ROBOT_STARTING_POSE)
+        () -> subsystems.getSwerveSubsystem().setPose(Constants.ROBOT_STARTING_POSE)
       )
     );
 
@@ -219,7 +201,7 @@ public class RobotContainer {
 
       //TODO: We might need to call a stop on this or set something to stop the robot after it runs.
       return new InstantCommand(
-        () -> subsystems.getSwerveSubsystem().setState(SwerveSubsystem.ControlState.PATH_FOLLOWING)
+        () -> subsystems.getSwerveSubsystem().initForPathFollowing()
       ).andThen(autoCommand);
   }
 }
