@@ -51,7 +51,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 Ports.ROBOT_2022_FRONT_LEFT_DRIVE,
                 Ports.ROBOT_2022_FRONT_LEFT_STEER,
                 Ports.ROBOT_2022_FRONT_LEFT_CANCODER,
-                Rotation2d.fromDegrees(-31.0),
+                Rotation2d.fromDegrees(150.38),
                 physicalSwerveModule,
                 ctreConfigs
             ),
@@ -60,7 +60,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 Ports.ROBOT_2022_FRONT_RIGHT_DRIVE,
                 Ports.ROBOT_2022_FRONT_RIGHT_STEER,
                 Ports.ROBOT_2022_FRONT_RIGHT_CANCODER,
-                Rotation2d.fromDegrees(180.0),
+                Rotation2d.fromDegrees(2.29),
                 physicalSwerveModule,
                 ctreConfigs
             ),
@@ -69,7 +69,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 Ports.ROBOT_2022_BACK_LEFT_DRIVE,
                 Ports.ROBOT_2022_BACK_LEFT_STEER,
                 Ports.ROBOT_2022_BACK_LEFT_CANCODER,
-                Rotation2d.fromDegrees(-97.0),
+                Rotation2d.fromDegrees(83.23),
                 physicalSwerveModule,
                 ctreConfigs
             ),
@@ -78,7 +78,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 Ports.ROBOT_2022_BACK_RIGHT_DRIVE,
                 Ports.ROBOT_2022_BACK_RIGHT_STEER,
                 Ports.ROBOT_2022_BACK_RIGHT_CANCODER,
-                Rotation2d.fromDegrees(63.0),
+                Rotation2d.fromDegrees(244.07),
                 physicalSwerveModule,
                 ctreConfigs
             )
@@ -119,6 +119,10 @@ public class SwerveSubsystem extends SubsystemBase {
             swerveModule.setDesiredState(swerveModuleStates[swerveModule.moduleNumber], isOpenLoop);
         }
     }    
+
+    public SwerveDriveKinematics getKinematics() {
+        return kinematics;
+    }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {

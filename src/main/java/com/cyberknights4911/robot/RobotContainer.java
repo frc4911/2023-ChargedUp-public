@@ -38,8 +38,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     subsystems = new Subsystems();
-    
-    subsystems.getSwerveSubsystem().convertCancoderToFX();
 
     controllerBinding = new XboxControllerBinding();
 
@@ -48,13 +46,23 @@ public class RobotContainer {
     factory = new PathPlannerCommandFactory(
       subsystems.getSwerveSubsystem()::getPose,
       subsystems.getSwerveSubsystem()::setRobotPosition,
-      subsystems.getSwerveSubsystem().getmKinematics(),
+      subsystems.getSwerveSubsystem().getKinematics(),
       subsystems.getSwerveSubsystem()::setSwerveModuleStates,
       subsystems.getSwerveSubsystem()
     );
   }
 
   private void configureButtonBindings() {
+    subsystems.getSwerveSubsystem().setDefaultCommand(
+      new TeleopSwerveCommand(
+        subsystems.getSwerveSubsystem(),
+        controllerBinding.supplierFor(StickAction.FORWARD),
+        controllerBinding.supplierFor(StickAction.STRAFE),
+        controllerBinding.supplierFor(StickAction.ROTATE),
+        () -> false
+      )
+    );
+
     subsystems.getSwerveSubsystem().setDefaultCommand(
       new DefaultSwerveCommand(
         subsystems.getSwerveSubsystem(),
