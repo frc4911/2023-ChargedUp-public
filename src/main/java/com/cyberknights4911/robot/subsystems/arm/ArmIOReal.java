@@ -117,7 +117,7 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public double getShoulderPosition() {
-        return encoder.getPositionOffset();
+        return encoder.get();
     }
 
     @Override
