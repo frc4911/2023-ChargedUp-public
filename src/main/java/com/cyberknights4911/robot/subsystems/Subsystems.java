@@ -7,6 +7,8 @@ import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
 import com.cyberknights4911.robot.subsystems.climber.ClimberIO;
 import com.cyberknights4911.robot.subsystems.climber.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
+import com.cyberknights4911.robot.subsystems.hood.HoodIO;
+import com.cyberknights4911.robot.subsystems.hood.HoodIOReal;
 import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIO;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppSubsystem;
@@ -33,14 +35,14 @@ public final class Subsystems {
             armSubsystem = new ArmSubsystem(new ArmIO() {});
             swerveSubsystem = new SwerveSubsystem();
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem();
+            hoodSubsystem = new HoodSubsystem(new HoodIOReal());
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
             armSubsystem = new ArmSubsystem(new ArmIO() {});
             swerveSubsystem = new SwerveSubsystem();
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem();
+            hoodSubsystem = new HoodSubsystem(new HoodIO() {});
         }
     }
 
