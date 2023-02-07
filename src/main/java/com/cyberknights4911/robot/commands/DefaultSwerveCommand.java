@@ -2,19 +2,19 @@ package com.cyberknights4911.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
-import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
+import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DefaultSwerveCommand extends CommandBase {
  
-    private final SwerveSubsystem mSwerve;
+    private final SwerveSubsystemCurrent mSwerve;
 
     private final DoubleSupplier mTranslationXSupplier;
     private final DoubleSupplier mTranslationYSupplier;
     private final DoubleSupplier mRotationSupplier;
 
-    public DefaultSwerveCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier translationXSupplier,
+    public DefaultSwerveCommand(SwerveSubsystemCurrent swerveSubsystem, DoubleSupplier translationXSupplier,
             DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
         this.mSwerve = swerveSubsystem;
         this.mTranslationXSupplier = translationXSupplier;
