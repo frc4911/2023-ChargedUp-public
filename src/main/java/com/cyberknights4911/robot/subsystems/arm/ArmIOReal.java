@@ -20,7 +20,8 @@ public final class ArmIOReal implements ArmIO {
     private final TalonFX shoulderMotor4;
     private final TalonFX wristMotor;
 
-    private final DutyCycleEncoder encoder;
+    private final DutyCycleEncoder shoulderEncoder;
+    private final DutyCycleEncoder wristEncoder;
 
     public ArmIOReal() {
         // 1 is closest to robot center and the numbering moves out clockwise
@@ -36,8 +37,11 @@ public final class ArmIOReal implements ArmIO {
 
         configMotors();
 
-        encoder = new DutyCycleEncoder(Ports.ARM_AXEL_ENCODER);
-        encoder.reset();
+        shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
+        shoulderEncoder.reset();
+
+        wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
+        wristEncoder.reset();
     }
     
     private void configMotors() {
@@ -117,7 +121,7 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public double getShoulderPosition() {
-        return encoder.get();
+        return shoulderEncoder.get();
     }
 
     @Override

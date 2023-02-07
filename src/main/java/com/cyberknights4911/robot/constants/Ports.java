@@ -37,6 +37,8 @@ public final class Ports {
     public static final int SHOULDER_MOTOR_4 = 13;
     public static final int WRIST_MOTOR = 14;
     public static final int ARM_AXEL_ENCODER = 1;
+    public static final int ARM_SHOULDER_ENCODER = 2;
+    public static final int ARM_WRIST_ENCODER = 3;
 
     public static final int ROBOT_2022_HOOD_MOTOR = 12;
     public static final int BOB_MOTOR = 12;
