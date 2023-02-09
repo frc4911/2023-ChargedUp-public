@@ -39,9 +39,11 @@ public final class AutoCommandChooser {
         loggedDashboardChooser = new LoggedDashboardChooser<Command>("Auto Routine");
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        translationConstants = new PIDConstants(5.0, 0.0, 0.0);
+
+        translationConstants = new PIDConstants(2.0, 1.0, 0.0);
         // PID constants to correct for rotation error (used to create the rotation controller)
-        rotationConstants = new PIDConstants(5.0, 0.0, 0.0);
+        rotationConstants = new PIDConstants(7.0, 0.0, 0.0);
+
 
         poseSupplier = subsystems.getSwerveSubsystem()::getPose;
         resetPose = subsystems.getSwerveSubsystem()::setPose;
@@ -83,7 +85,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Test", new PathConstraints(4, 3))
+            PathPlanner.loadPathGroup("Test", new PathConstraints(1, 3))
         );
 
         //TODO: We might need to call a stop on this or set something to stop the robot after it runs.
