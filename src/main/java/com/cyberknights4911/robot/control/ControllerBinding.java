@@ -1,5 +1,6 @@
 package com.cyberknights4911.robot.control;
 
+import java.util.List;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -10,12 +11,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public interface ControllerBinding {
 
     /**
-     * Given a desired button action, return the actual button trigger.
+     * Given a desired button action, return the actual button triggers.
      * 
      * @param action the button action that is being bound.
-     * @return the input trigger that maps to the given action.
+     * @return the input triggers that maps to the given action.
      */
-    public Trigger triggerFor(ButtonAction action);
+    public List<Trigger> triggerFor(ButtonAction action);
 
     /**
      * Given a desired stick action, return the actual stick input supplier.

@@ -1,5 +1,7 @@
 package com.cyberknights4911.robot.control;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -40,30 +42,31 @@ public final class XboxControllerBinding implements ControllerBinding {
     }
 
     @Override
-    public Trigger triggerFor(ButtonAction action) {
+    public List<Trigger> triggerFor(ButtonAction action) {
         switch(action) {
-            case ALIGN_COLLECT: return driverController.a();
-            case RESET_IMU: return driverController.y();
-            case RELEASE_PIECE: return driverController.rightBumper();
-            case COLLECT_CUBE: return driverController.rightTrigger();
-            case COLLECT_CONE: return driverController.leftTrigger();
-            case CLIMB_WHEEL_LOCK: return driverController.povDown();
-            case RESET_WHEELS: return driverController.start();
-            case ARM_L2: return operatorController.a();
-            case ARM_L3: return operatorController.x();
-            case CLIMB_DEPLOY: return operatorController.y();
-            case CLIMB_LOCKOUT: return operatorController.rightBumper();
-            case BOB_STOW: return operatorController.rightTrigger();
-            case BOB_DEPLOY: return operatorController.leftTrigger();
-            case STOW: return operatorController.povUp();
-            case REAR_COLLECT: return operatorController.povRight();
-            case FRONT_COLLECT: return operatorController.povLeft();
-            case FLOOR_COLLECT: return operatorController.povDown();
-            case HOME: return ALWAYS_FALSE; // TODO: figure out how to bind to home button
-            case HOME_CLAW: return ALWAYS_FALSE; // TODO: figure out how to bind to share button
-            default: return ALWAYS_FALSE;
+            case ALIGN_COLLECT: return Arrays.asList(driverController.a());
+            case RESET_IMU: return Arrays.asList(driverController.y());
+            case COLLECTOR_BACKWARD: return Arrays.asList(driverController.rightBumper(), driverController.leftBumper());
+            case COLLECTOR_FORWARD: return Arrays.asList(driverController.rightTrigger(), driverController.leftTrigger());
+            case CLIMB_WHEEL_LOCK: return Arrays.asList(driverController.povDown());
+            case RESET_WHEELS: return Arrays.asList(driverController.start());
+            case STOW: return Arrays.asList(operatorController.a());
+            case ARM_L3: return Arrays.asList(operatorController.b());
+            case ARM_L2: return Arrays.asList(operatorController.x());
+            case CLIMB_DEPLOY: return Arrays.asList(operatorController.y());
+            case CLIMB_LOCKOUT: return Arrays.asList(operatorController.rightBumper());
+            case BOB_STOW: return Arrays.asList(operatorController.rightTrigger());
+            case BOB_DEPLOY: return Arrays.asList(operatorController.leftTrigger());
+            case REAR_COLLECT: return Arrays.asList(operatorController.povUp());
+            case FRONT_COLLECT_CUBE: return Arrays.asList(operatorController.povRight());
+            case FRONT_COLLECT_CONE: return Arrays.asList(operatorController.povLeft());
+            case FLOOR_COLLECT: return Arrays.asList(operatorController.povDown());
+            case HOME: return Arrays.asList(ALWAYS_FALSE); // TODO: figure out how to bind to home button
+            case HOME_CLAW: return Arrays.asList(ALWAYS_FALSE); // TODO: figure out how to bind to share button
+            default: return Arrays.asList(ALWAYS_FALSE);
         }
     }
+
 
     @Override
     public DoubleSupplier supplierFor(StickAction action) {
