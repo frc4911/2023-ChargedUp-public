@@ -67,6 +67,7 @@ public final class XboxControllerBinding implements ControllerBinding {
         }
     }
 
+
     @Override
     public DoubleSupplier supplierFor(StickAction action) {
         switch (action) {
