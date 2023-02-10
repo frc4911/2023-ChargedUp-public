@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import com.cyberknights4911.robot.config.RobotConfiguration;
 import com.cyberknights4911.robot.config.SwerveConfiguration;
 import com.cyberknights4911.robot.constants.Constants;
@@ -32,7 +34,7 @@ import libraries.cyberlib.utils.Util;
 
 import edu.wpi.first.math.spline.PoseWithCurvature;
 
-public class SwerveSubsystem implements Subsystem {
+public class SwerveSubsystem extends SubsystemBase {
 
     public enum ControlState {
         NEUTRAL, MANUAL, DISABLED, PATH_FOLLOWING, VISION_AIM

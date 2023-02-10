@@ -93,8 +93,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     mSwerve.convertCancoderToFX();
     xButton.onTrue(new AutoBalanceCommand(swerveSubsystem));
-    yButton.onTrue(new MoveHoodCommand(mHood, HoodPositions.H1));
-    bButton.onTrue(new MoveHoodCommand(mHood, HoodPositions.H2));
+    // yButton.onTrue(new MoveHoodCommand(mHood, HoodPositions.H1));
+    // bButton.onTrue(new MoveHoodCommand(mHood, HoodPositions.H2));
 
   }
 
@@ -159,7 +159,7 @@ public class RobotContainer {
     // Bind Start to reset wheels
     driverController.povDown().onTrue(
       Commands.runOnce(() -> {
-        // TODO: reset wheels
+        mSwerve.convertCancoderToFX();
       })
     );
 
