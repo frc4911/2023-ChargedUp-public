@@ -17,9 +17,8 @@ public class AutoBalanceCommand extends CommandBase {
     
     public AutoBalanceCommand (SwerveSubsystem swerveSubsystem){
 
-       mSwerveSubsystem = SwerveSubsystem.getInstance();
-        mSwerveSubsystem = swerveSubsystem;
-        addRequirements(mSwerveSubsystem);
+      mSwerveSubsystem = swerveSubsystem;
+      addRequirements(mSwerveSubsystem);
 
       
     }
@@ -55,6 +54,7 @@ public class AutoBalanceCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
+    System.out.println(tilt.getNorm());
     return (tilt.getNorm()<2); //TODO: make constants
   }
     

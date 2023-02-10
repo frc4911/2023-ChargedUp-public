@@ -77,12 +77,15 @@ public class SwerveSubsystem implements Subsystem {
 
     private double lastAimTimestamp = -1.0;
 
+    private static SwerveSubsystem instance;
+
     // Trajectory following
     private boolean mOverrideTrajectory = false;
 
     private SlewRateLimiter forwardLimiter = new SlewRateLimiter(3.0, 0); // 1.5
     private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0, 0); // 1.5
     private SlewRateLimiter rotationLimiter = new SlewRateLimiter(2, 0);
+
 
     public SwerveSubsystem() {
         mRobotConfiguration = RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2022);
@@ -647,4 +650,28 @@ public class SwerveSubsystem implements Subsystem {
                 new SwerveModuleState(0, new Rotation2d())
         };
     } 
+
+    public Rotation2d getRoll() {
+        double roll = mIMU.getRoll();
+
+        return Constants.PITCH_INVERSION 
+            ? Rotation2d.fromDegrees(360 - roll)
+            : Rotation2d.fromDegrees(roll);
+    }
+
+    public Rotation2d getPitch() {
+        double pitch = mIMU.getPitch();
+
+        return Constants.PITCH_INVERSION 
+            ? Rotation2d.fromDegrees(360 - pitch)
+            : Rotation2d.fromDegrees(pitch);
+    }
+    
+
+    public static SwerveSubsystem getInstance() {
+        if (instance == null) {
+            instance = new SwerveSubsystem();
+        }
+        return instance;
+    }
 }
