@@ -116,7 +116,7 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public double getWristPosition() {
-        return wristMotor.getSelectedSensorPosition();
+        return wristEncoder.get();
     }
 
     @Override
