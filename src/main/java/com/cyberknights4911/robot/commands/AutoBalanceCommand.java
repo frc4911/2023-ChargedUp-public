@@ -5,17 +5,17 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import com.cyberknights4911.robot.constants.Constants;
-import com.cyberknights4911.robot.subsystems.SwerveSubsystem;
+import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
 
 public class AutoBalanceCommand extends CommandBase {
     
     
-    private SwerveSubsystem mSwerveSubsystem;
+    private final SwerveSubsystemCurrent mSwerveSubsystem;
     Translation2d tilt;
 
 
     
-    public AutoBalanceCommand (SwerveSubsystem swerveSubsystem){
+    public AutoBalanceCommand (SwerveSubsystemCurrent swerveSubsystem){
 
       mSwerveSubsystem = swerveSubsystem;
       addRequirements(mSwerveSubsystem);
