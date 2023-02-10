@@ -57,6 +57,8 @@ public final class AutoCommandChooser {
         loggedDashboardChooser.addOption("PadRight", getPadRightCommand());
         loggedDashboardChooser.addOption("ScoreLeft", getScoreLeftCommand());
         loggedDashboardChooser.addOption("ScoreRight", getScoreRightCommand());
+        loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
+        loggedDashboardChooser.addOption("Translation", getTranslationTestCommand());
     }
 
     private SwerveAutoBuilder createSwerveAutoBuilder(
@@ -194,6 +196,35 @@ public final class AutoCommandChooser {
         ).andThen(autoCommand);
     }
 
+    private Command getRotationTestCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("RotationTest", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getTranslationTestCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("TranslationTest", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
 
     private Command getTestCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
