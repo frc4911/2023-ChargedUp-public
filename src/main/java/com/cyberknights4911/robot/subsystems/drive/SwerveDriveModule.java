@@ -1,30 +1,21 @@
 package com.cyberknights4911.robot.subsystems.drive;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
-import libraries.cyberlib.drivers.TalonFXFactory;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.config.SwerveModuleConfiguration;
-import libraries.cheesylib.control.FramePeriodSwitch;
 import libraries.cyberlib.utils.Angles;
 import libraries.cyberlib.utils.Util;
 
 public class SwerveDriveModule {
-
-    TalonFX mSteerMotor, mDriveMotor;
-    CANCoder mCANCoder;
 
     public enum ControlState {
         /**
@@ -40,91 +31,25 @@ public class SwerveDriveModule {
 
     String mModuleName;
 
+    private final SwerveIO swerveIO;
+    private final SwerveIOInputsAutoLogged inputs = new SwerveIOInputsAutoLogged();
+
     private final PeriodicIO mPeriodicIO = new PeriodicIO();
     private ControlState mControlState = ControlState.NEUTRAL;
     public final SwerveModuleConfiguration mConfig;
 
     private double mMaxSpeedInMetersPerSecond = 1.0;
 
-    public SwerveDriveModule(SwerveModuleConfiguration constants, double maxSpeedInMetersPerSecond) {
+    public SwerveDriveModule(
+        SwerveIO swerveIO, SwerveModuleConfiguration constants, double maxSpeedInMetersPerSecond
+    ) {
+        this.swerveIO = swerveIO;
         this.mConfig = constants;
         mMaxSpeedInMetersPerSecond = maxSpeedInMetersPerSecond;
         mModuleName = String.format("%s %d", mConfig.kName, mConfig.kModuleId);
         mPeriodicIO.moduleID = mConfig.kModuleId;
 
         System.out.println("SwerveDriveModule " + mModuleName + "," + mConfig.kSteerMotorSlot0Kp);
-
-        mDriveMotor = TalonFXFactory.createTalon(mConfig.kDriveMotorTalonId, Constants.CANIVORE_NAME);
-        mSteerMotor = TalonFXFactory.createTalon(mConfig.kSteerMotorTalonId, Constants.CANIVORE_NAME);
-        mCANCoder = new CANCoder(constants.kCANCoderId, Constants.CANIVORE_NAME);
-        configCancoder();
-        configureMotors();
-
-        // System.out.println("Be sure to reset convertCancoderToFX2() call before DCMP's");
-        convertCancoderToFX2(false); // ready for event
-    }
-
-    private void configCancoder(){
-        CANCoderConfiguration config = new CANCoderConfiguration();
-        config.initializationStrategy = mConfig.kCANCoderSensorInitializationStrategy;
-        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        config.magnetOffsetDegrees = mConfig.kCANCoderOffsetDegrees;
-        config.sensorDirection = false; // TODO - Make cancoder direction configurable through robot config files
-
-        mCANCoder.configAllSettings(config, Constants.LONG_CAN_TIMEOUTS_MS);
-
-        // mCANCoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults,
-        //         mConfig.kCANCoderStatusFramePeriodVbatAndFaults);
-        // mCANCoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, mConfig.kCANCoderStatusFramePeriodSensorData);
-    }
-    /**
-     * Configure motors based on current SwerveModuleConstants.
-     */
-    private void configureMotors() {
-
-        mCANCoder.configMagnetOffset(mConfig.kCANCoderOffsetDegrees, 200);
-
-        commonMotorConfig(mDriveMotor, "Drive");
-        commonMotorConfig(mSteerMotor, "Steer");
-
-        mSteerMotor.setInverted(mConfig.kInvertSteerMotor);
-        mSteerMotor.configMotionAcceleration(0.9 * mConfig.kSteerTicksPerUnitVelocity * 0.25, Constants.LONG_CAN_TIMEOUTS_MS);
-        mSteerMotor.configMotionCruiseVelocity(0.9 * mConfig.kSteerTicksPerUnitVelocity,Constants.LONG_CAN_TIMEOUTS_MS);
-        mSteerMotor.configVelocityMeasurementPeriod(mConfig.kSteerMotorVelocityMeasurementPeriod, Constants.LONG_CAN_TIMEOUTS_MS);
-        mSteerMotor.configVelocityMeasurementWindow(mConfig.kSteerMotorVelocityMeasurementWindow, Constants.LONG_CAN_TIMEOUTS_MS);
-        mSteerMotor.selectProfileSlot(0, 0);
-
-        // Slot 0 is for normal use (tuned for fx integrated encoder)
-        mSteerMotor.config_kP(0, mConfig.kSteerMotorSlot0Kp, Constants.LONG_CAN_TIMEOUTS_MS);
-        mSteerMotor.config_kI(0, mConfig.kSteerMotorSlot0Ki, Constants.LONG_CAN_TIMEOUTS_MS);
-        mSteerMotor.config_kD(0, mConfig.kSteerMotorSlot0Kd, Constants.LONG_CAN_TIMEOUTS_MS);
-        mSteerMotor.config_kF(0, mConfig.kSteerMotorSlot0Kf, Constants.LONG_CAN_TIMEOUTS_MS);
-        mSteerMotor.config_IntegralZone(0, mConfig.kSteerMotorSlot0IZone, Constants.LONG_CAN_TIMEOUTS_MS);
-
-        mDriveMotor.setInverted(mConfig.kInvertDrive);
-        mDriveMotor.configOpenloopRamp(0.3, Constants.LONG_CAN_TIMEOUTS_MS); // Increase if swerve acceleration is too fast
-
-        FramePeriodSwitch.configStatorCurrentLimitPermanent(mDriveMotor, new StatorCurrentLimitConfiguration(true, 90, 90, 0));
-    }
-
-    private void commonMotorConfig(TalonFX motor, String motorName){
-        System.out.println("configuring "+motorName+" motor");
-
-        // The following commands are stored in nonVolatile ram in the motor
-        // They are repeated on boot incase a motor needs to replaced quickly
-        FramePeriodSwitch.configFactoryDefaultPermanent(motor);
-
-        // the following commands are stored in nonVolatile ram but they are
-        // no longer deemed necessary. Keeping around for a while in case they
-        // need to be brought back
-        // motor.configNeutralDeadband(.04, 100);
-        // motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled, 100);
-        // motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled, 100);
-
-        // the following are volatile settings and must be run every power cycle
-        FramePeriodSwitch.setFramePeriodsVolatile(motor); // set frame periods
-
-        FramePeriodSwitch.setNeutralModeVolatile(motor, NeutralMode.Brake);
     }
 
     protected void convertCancoderToFX2(){
@@ -144,9 +69,9 @@ public class SwerveDriveModule {
 
         if (useCancoders){
             do{
-                frameTimestamp = mCANCoder.getLastTimestamp();
+                frameTimestamp = swerveIO.getLastTimeStamp();
                 if (frameTimestamp != lastFrameTimestamp){
-                    position = mCANCoder.getAbsolutePosition();
+                    position = swerveIO.getAbsolutePosition();
                     cancoderPositions[(++index)%cancoderPositions.length]=position;
                     allDone = true;
                     for (int kk=0; kk<cancoderPositions.length;kk++){
@@ -170,16 +95,16 @@ public class SwerveDriveModule {
             System.out.println(mModuleName+" assuming wheels aligned to 0 degrees, not using CANCoders");
             cancoderDegrees = 0;
         }
-        double fxTicksBefore = mSteerMotor.getSelectedSensorPosition();
+        double fxTicksBefore = swerveIO.getTurnSensorPosition();
         double fxTicksTarget = degreesToEncUnits(cancoderDegrees);
         double fxTicksNow = fxTicksBefore;
         int loops = 0;
         final double acceptableTickErr = 10;
 
         while ((Math.abs(fxTicksNow - fxTicksTarget) > acceptableTickErr) && (loops < 5)) {
-            mSteerMotor.setSelectedSensorPosition(fxTicksTarget, 0, 0);
+            swerveIO.setTurnSensorPosition(fxTicksTarget);
             Timer.delay(.1);
-            fxTicksNow = mSteerMotor.getSelectedSensorPosition();
+            fxTicksNow = swerveIO.getTurnPosition();
             loops++;
         }
 
@@ -377,7 +302,17 @@ public class SwerveDriveModule {
      *                    Controller output throttle is neutral (ie brake/coast)
      **/
     public synchronized void setNeutralMode(NeutralMode neutralMode) {
-        mDriveMotor.setNeutralMode(neutralMode);
+        switch (neutralMode) {
+            case Brake: {
+                swerveIO.setDriveBrakeMode(true);
+                return;
+            }
+            case Coast:
+            default:{
+                swerveIO.setDriveBrakeMode(false);
+                return;
+            }
+        }
     }
 
     public synchronized void stop() {
@@ -385,8 +320,8 @@ public class SwerveDriveModule {
             mControlState = ControlState.NEUTRAL;
         }
 
-        mDriveMotor.set(ControlMode.PercentOutput, 0.0);
-        mSteerMotor.set(ControlMode.PercentOutput, 0.0);
+        swerveIO.setDrive(ControlMode.PercentOutput, 0.0);
+        swerveIO.setTurn(ControlMode.PercentOutput, 0.0);
         mPeriodicIO.driveDemand = 0;
         mPeriodicIO.steerDemand = 0;
         mPeriodicIO.driveControlMode = ControlMode.PercentOutput;
@@ -394,11 +329,14 @@ public class SwerveDriveModule {
     }
 
     public synchronized void readPeriodicInputs() {
-        mPeriodicIO.steerPosition = (int) mSteerMotor.getSelectedSensorPosition();
-        mPeriodicIO.drivePosition = (int) mDriveMotor.getSelectedSensorPosition();
-        mPeriodicIO.driveVelocity = mDriveMotor.getSelectedSensorVelocity();
-        mPeriodicIO.steerVelocity = mSteerMotor.getSelectedSensorVelocity();
+        mPeriodicIO.steerPosition = (int) swerveIO.getTurnPosition();
+        mPeriodicIO.drivePosition = (int) swerveIO.getDrivePosition();
+        mPeriodicIO.driveVelocity = swerveIO.getDriveVelocity();
+        mPeriodicIO.steerVelocity = swerveIO.getTurnVelocity();
         // mPeriodicIO.steerError = mSteerMotor.getClosedLoopError(0);
+
+        swerveIO.updateInputs(inputs);
+        Logger.getInstance().processInputs(mModuleName, inputs);
     }
 
     public synchronized void writePeriodicOutputs() {
@@ -408,14 +346,14 @@ public class SwerveDriveModule {
                 if (Util.epsilonEquals(mPeriodicIO.driveDemand, 0.0, mConfig.kDriveDeadband)) {
                     stop();
                 } else {
-                    mSteerMotor.set(mPeriodicIO.steerControlMode, mPeriodicIO.steerDemand);
-                    mDriveMotor.set(mPeriodicIO.driveControlMode, mPeriodicIO.driveDemand);
+                    swerveIO.setDrive(mPeriodicIO.driveControlMode, mPeriodicIO.driveDemand);
+                    swerveIO.setTurn(mPeriodicIO.steerControlMode, mPeriodicIO.steerDemand);
                 }
                 break;
             case NEUTRAL:
             default:
-                mSteerMotor.set(mPeriodicIO.steerControlMode, mPeriodicIO.steerDemand);
-                mDriveMotor.set(mPeriodicIO.driveControlMode, mPeriodicIO.driveDemand);
+                swerveIO.setDrive(mPeriodicIO.driveControlMode, mPeriodicIO.driveDemand);
+                swerveIO.setTurn(mPeriodicIO.steerControlMode, mPeriodicIO.steerDemand);
                 break;
         }
         SmartDashboard.putNumber(mModuleName + " Steering", mPeriodicIO.steerDemand);
