@@ -51,7 +51,16 @@ public final class AutoCommandChooser {
         outputModuleStates = subsystems.getSwerveSubsystem()::setSwerveModuleStates;
 
         loggedDashboardChooser.addDefaultOption("Test", getTestCommand());
-        // TODO(https://github.com/frc4911/2023-ChargedUp/issues/84) Add all other paths here
+        loggedDashboardChooser.addOption("Angery", getAngeryCommand());
+        loggedDashboardChooser.addOption("Left", getLeftCommand());
+        loggedDashboardChooser.addOption("Right", getRightCommand());
+        loggedDashboardChooser.addOption("PadCenter", getPadCenterCommand());
+        loggedDashboardChooser.addOption("PadLeft", getPadLeftCommand());
+        loggedDashboardChooser.addOption("PadRight", getPadRightCommand());
+        loggedDashboardChooser.addOption("ScoreLeft", getScoreLeftCommand());
+        loggedDashboardChooser.addOption("ScoreRight", getScoreRightCommand());
+        loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
+        loggedDashboardChooser.addOption("Translation", getTranslationTestCommand());
     }
 
     private SwerveAutoBuilder createSwerveAutoBuilder(
@@ -68,6 +77,155 @@ public final class AutoCommandChooser {
             eventMap,
             driveRequirements
         );
+    }
+    private Command getAngeryCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("Angery", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getLeftCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("Left", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getRightCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("Right", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getPadCenterCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("PadCenter", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getPadLeftCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("PadLeft", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getPadRightCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("PadRight", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getScoreLeftCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("ScoreLeft", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getScoreRightCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("ScoreRight", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getRotationTestCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("RotationTest", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
+    }
+
+    private Command getTranslationTestCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("TranslationTest", new PathConstraints(1, 3))
+        );
+
+        return new InstantCommand(
+            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+        ).andThen(autoCommand);
     }
 
     private Command getTestCommand() {
