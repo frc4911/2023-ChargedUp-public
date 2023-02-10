@@ -49,13 +49,13 @@ public class RobotContainer {
       );
     }
 
-    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.RELEASE)) {
+    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_BACKWARD)) {
       trigger.onTrue(
         Commands.runOnce(() -> subsystems.getSlurppSubsystem().spit())
       );
     }
 
-    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECT)) {
+    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_FORWARD)) {
       trigger.onTrue(
         Commands.sequence(
           Commands.runOnce(
@@ -68,7 +68,7 @@ public class RobotContainer {
       );
     }
 
-    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECT)) {
+    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_FORWARD)) {
       trigger.onTrue(
         Commands.sequence(
           Commands.runOnce(

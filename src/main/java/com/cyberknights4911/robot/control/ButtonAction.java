@@ -6,8 +6,8 @@ package com.cyberknights4911.robot.control;
 public enum ButtonAction {
     ALIGN_COLLECT,
     RESET_IMU,
-    RELEASE,
-    COLLECT,
+    COLLECTOR_BACKWARD,
+    COLLECTOR_FORWARD,
     CLIMB_WHEEL_LOCK,
     RESET_WHEELS,
     ARM_L2,

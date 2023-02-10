@@ -46,9 +46,8 @@ public final class XboxControllerBinding implements ControllerBinding {
         switch(action) {
             case ALIGN_COLLECT: return Arrays.asList(driverController.a());
             case RESET_IMU: return Arrays.asList(driverController.y());
-            case RELEASE: return Arrays.asList(driverController.rightBumper(), driverController.leftBumper());
-            case COLLECT: return Arrays.asList(driverController.rightTrigger());
-            //case COLLECT: return driverController.leftTrigger();
+            case COLLECTOR_BACKWARD: return Arrays.asList(driverController.rightBumper(), driverController.leftBumper());
+            case COLLECTOR_FORWARD: return Arrays.asList(driverController.rightTrigger(), driverController.leftTrigger());
             case CLIMB_WHEEL_LOCK: return Arrays.asList(driverController.povDown());
             case RESET_WHEELS: return Arrays.asList(driverController.start());
             case STOW: return Arrays.asList(operatorController.a());
