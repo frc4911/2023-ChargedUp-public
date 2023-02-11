@@ -6,64 +6,50 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
-import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.util.Conversions;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-
 public final class SwerveIOReal implements SwerveIO {
-    private final Rotation2d angleOffset;
-
     private final TalonFX angleMotor;
     private final TalonFX driveMotor;
     private final CANCoder angleEncoder;
-    
-    private final CotsFalconSwerveConstants physicalSwerveModule;
-    private final CtreConfigs ctreConfigs;
+
+    private final SwerveModuleConstants swerveModuleConstants;
 
     public SwerveIOReal(
-        int moduleNumber,
-        int driveMotorId,
-        int angleMotorId,
-        int canCoderId,
-        Rotation2d angleOffset,
-        CotsFalconSwerveConstants physicalSwerveModule,
-        CtreConfigs ctreConfigs
+        SwerveModuleConstants swerveModuleConstants
     ) {
-        this.angleOffset = angleOffset;
-        this.physicalSwerveModule = physicalSwerveModule;
-        this.ctreConfigs = ctreConfigs;
+        this.swerveModuleConstants = swerveModuleConstants;
         
         /* Angle Encoder Config */
-        angleEncoder = new CANCoder(canCoderId, Constants.CANIVORE_NAME);
+        angleEncoder = new CANCoder(swerveModuleConstants.getCanCoderId(), Constants.CANIVORE_NAME);
         configAngleEncoder();
 
         /* Angle Motor Config */
-        angleMotor = new TalonFX(angleMotorId, Constants.CANIVORE_NAME);
+        angleMotor = new TalonFX(swerveModuleConstants.getAngleMotorId(), Constants.CANIVORE_NAME);
         configAngleMotor();
 
         /* Drive Motor Config */
-        driveMotor = new TalonFX(driveMotorId, Constants.CANIVORE_NAME);
+        driveMotor = new TalonFX(swerveModuleConstants.getDriveMotorId(), Constants.CANIVORE_NAME);
         configDriveMotor();
     }
 
     private void configAngleEncoder() {        
         angleEncoder.configFactoryDefault();
-        angleEncoder.configAllSettings(ctreConfigs.swerveCanCoderConfig);
+        angleEncoder.configAllSettings(swerveModuleConstants.getCtreConfigs().swerveCanCoderConfig);
     }
 
     private void configAngleMotor() {
         angleMotor.configFactoryDefault();
-        angleMotor.configAllSettings(ctreConfigs.swerveAngleFXConfig);
-        angleMotor.setInverted(physicalSwerveModule.angleMotorInvert);
+        angleMotor.configAllSettings(swerveModuleConstants.getCtreConfigs().swerveAngleFXConfig);
+        angleMotor.setInverted(swerveModuleConstants.getPhysicalSwerveModule().angleMotorInvert);
         angleMotor.setNeutralMode(Swerve.ANGLE_NEUTRAL_MODE);
         resetToAbsolute();
     }
 
     private void configDriveMotor() {        
         driveMotor.configFactoryDefault();
-        driveMotor.configAllSettings(ctreConfigs.swerveDriveFXConfig);
-        driveMotor.setInverted(physicalSwerveModule.driveMotorInvert);
+        driveMotor.configAllSettings(swerveModuleConstants.getCtreConfigs().swerveDriveFXConfig);
+        driveMotor.setInverted(swerveModuleConstants.getPhysicalSwerveModule().driveMotorInvert);
         driveMotor.setNeutralMode(Swerve.DRIVE_NEUTRAL_MODE);
         driveMotor.setSelectedSensorPosition(0);
     }
@@ -76,8 +62,8 @@ public final class SwerveIOReal implements SwerveIO {
     @Override
     public void resetToAbsolute() {
         double absolutePosition = Conversions.degreesToFalcon(
-            getAngleEncoderDegrees() - angleOffset.getDegrees(),
-            physicalSwerveModule.angleGearRatio
+            getAngleEncoderDegrees() - swerveModuleConstants.getAngleOffset().getDegrees(),
+            swerveModuleConstants.getPhysicalSwerveModule().angleGearRatio
         );
         angleMotor.setSelectedSensorPosition(absolutePosition);
     }
