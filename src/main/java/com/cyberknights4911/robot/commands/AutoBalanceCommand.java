@@ -12,12 +12,14 @@ public class AutoBalanceCommand extends CommandBase {
     
     private final SwerveSubsystemCurrent mSwerveSubsystem;
     Translation2d tilt;
+    private int counter;
 
 
     
     public AutoBalanceCommand (SwerveSubsystemCurrent swerveSubsystem){
 
       mSwerveSubsystem = swerveSubsystem;
+      counter = 0;
       addRequirements(mSwerveSubsystem);
 
       
@@ -54,8 +56,12 @@ public class AutoBalanceCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    System.out.println(tilt.getNorm());
-    return (tilt.getNorm()<2); //TODO: make constants
+    if (tilt.getNorm()<2){
+      counter += 1;
+    } else {
+      counter = 0;
+    }
+    return counter >= 10; //TODO: make constants
   }
     
 
