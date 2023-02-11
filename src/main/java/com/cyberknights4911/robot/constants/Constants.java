@@ -68,4 +68,10 @@ public class Constants {
     // Claw Talon ID
     public static final int CLAW_MOTOR_ID = 1;
 
+    //auto balance
+    public static final boolean PITCH_INVERSION = false;
+    public static final boolean ROLL_INVERSION = false;
+
+    public static final double MAX_SPEED = 1;
+
 }

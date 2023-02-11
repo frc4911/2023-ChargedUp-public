@@ -701,4 +701,21 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
                 new SwerveModuleState(0, new Rotation2d())
         };
     }
+
+    public Rotation2d getRoll() {
+        double roll = gyroIO.getRoll();
+
+        return Constants.PITCH_INVERSION 
+            ? Rotation2d.fromDegrees(360 - roll)
+            : Rotation2d.fromDegrees(roll);
+    }
+
+    public Rotation2d getPitch() {
+        double pitch = gyroIO.getPitch();
+
+        return Constants.PITCH_INVERSION 
+            ? Rotation2d.fromDegrees(360 - pitch)
+            : Rotation2d.fromDegrees(pitch);
+    }
+
 }

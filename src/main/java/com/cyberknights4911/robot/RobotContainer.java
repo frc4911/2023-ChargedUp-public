@@ -2,6 +2,7 @@
 
 package com.cyberknights4911.robot;
 
+import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.auto.AutoCommandChooser;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.control.ButtonAction;
