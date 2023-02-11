@@ -5,7 +5,6 @@ import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_STEER_REDUC
 import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_WHEEL_DIAMETER;
 
 import com.cyberknights4911.robot.constants.Ports;
-import com.cyberknights4911.robot.sensors.IMU.ImuType;
 
 import edu.wpi.first.math.util.Units;
 
@@ -128,26 +127,4 @@ public class Robot2022 implements RobotConfiguration {
 
         return backRightModuleConstants;
     }
-
-    @Override
-    public ImuType getImuType() {
-        return ImuType.PIGEON2;
-    }
-
-    // @Override
-    // public LimelightConfiguration getLimelightConfiguration()
-    // {
-    //     return new LimelightConfiguration(
-    //             1, // label id
-    //             LimelightConfiguration.Type.Shooter,
-    //             "Shooter Limelight #1", // name
-    //             "limelight-shoot", // table name
-    //             Units.inchesToMeters(40), // height
-    //             // Distance between center of shooter and limelight's camera lens
-    //             new Pose2d(0.0, Units.inchesToMeters(-7.0), Rotation2d.identity()), // shooter to lens
-    //             Rotation2d.fromDegrees(50.00), // horizontalPlaneToLens,
-    //             65.0, //64.03840065743408,
-    //             50.0 //50.34836606499798
-    //     );
-    // }
 }

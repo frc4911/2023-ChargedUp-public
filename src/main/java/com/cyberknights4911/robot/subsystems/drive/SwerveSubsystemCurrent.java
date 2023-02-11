@@ -3,8 +3,13 @@ package com.cyberknights4911.robot.subsystems.drive;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import libraries.cheesylib.geometry.Pose2dWithCurvature;
@@ -12,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
@@ -26,7 +30,6 @@ import com.cyberknights4911.robot.config.SwerveConfiguration;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.StickAction;
-import com.cyberknights4911.robot.sensors.IMU;
 
 import libraries.cheesylib.trajectory.timing.TimedState;
 import libraries.cyberlib.utils.HolonomicDriveSignal;
@@ -59,14 +62,17 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
    private double mAimingScaler = kDefaultScaler;
 
    // Swerve kinematics & odometry
-   private final IMU mIMU;
    private boolean mIsBrakeMode;
+
+   private final GyroIO gyroIO;
+   private final GyroIOInputsAutoLogged inputs = new GyroIOInputsAutoLogged();
 
    // TODO - do we still need this a odometry tracks this already?
    private Rotation2d mGyroOffset = new Rotation2d();
 
-   private final SwerveDriveOdometry mOdometry;
+   
    private final SwerveDriveKinematics mKinematics;
+   private final SwerveDrivePoseEstimator mEstimator;
 
    // Aiming Controller to turn in place when using vision system to aim
 //    private SynchronousPIDF mAimingController = new SynchronousPIDF(
@@ -84,23 +90,42 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
     private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0, 0); // 1.5
     private SlewRateLimiter rotationLimiter = new SlewRateLimiter(2, 0);
 
-    public SwerveSubsystemCurrent() {
-        mRobotConfiguration = RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2022);
+    public SwerveSubsystemCurrent(
+        RobotConfiguration robotConfiguration,
+        GyroIO gyroIO,
+        SwerveIO frontLeftSwerveIO,
+        SwerveIO frontRightSwerveIO,
+        SwerveIO backLeftSwerveIO,
+        SwerveIO backRightSwerveIO
+    ) {
+        this.gyroIO = gyroIO;
+        mRobotConfiguration = robotConfiguration;
 
         mSwerveConfiguration = mRobotConfiguration.getSwerveConfiguration();
-        mModules.add(mFrontRight = new SwerveDriveModule(mRobotConfiguration.getFrontRightModuleConstants(),
-                mSwerveConfiguration.maxSpeedInMetersPerSecond));
-        mModules.add(mFrontLeft = new SwerveDriveModule(mRobotConfiguration.getFrontLeftModuleConstants(),
-                mSwerveConfiguration.maxSpeedInMetersPerSecond));
-        mModules.add(mBackLeft = new SwerveDriveModule(mRobotConfiguration.getBackLeftModuleConstants(),
-                mSwerveConfiguration.maxSpeedInMetersPerSecond));
-        mModules.add(mBackRight = new SwerveDriveModule(mRobotConfiguration.getBackRightModuleConstants(),
-                mSwerveConfiguration.maxSpeedInMetersPerSecond));
+        mModules.add(mFrontRight = new SwerveDriveModule(
+            frontRightSwerveIO,
+            mRobotConfiguration.getFrontRightModuleConstants(),
+            mSwerveConfiguration.maxSpeedInMetersPerSecond
+        ));
+        mModules.add(mFrontLeft = new SwerveDriveModule(
+            frontLeftSwerveIO,
+            mRobotConfiguration.getFrontLeftModuleConstants(),
+            mSwerveConfiguration.maxSpeedInMetersPerSecond
+        ));
+        mModules.add(mBackLeft = new SwerveDriveModule(
+            backLeftSwerveIO,
+            mRobotConfiguration.getBackLeftModuleConstants(),
+            mSwerveConfiguration.maxSpeedInMetersPerSecond
+        ));
+        mModules.add(mBackRight = new SwerveDriveModule(
+            backRightSwerveIO,
+            mRobotConfiguration.getBackRightModuleConstants(),
+            mSwerveConfiguration.maxSpeedInMetersPerSecond
+        ));
 
         // precaution to ensure misconfiguration modules don't run.
         stopSwerveDriveModules();
 
-        mIMU = IMU.createImu(mRobotConfiguration.getImuType());
         mKinematics = new SwerveDriveKinematics(
             mSwerveConfiguration.moduleLocations.get(0),
             mSwerveConfiguration.moduleLocations.get(1),
@@ -115,9 +140,12 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
 
 
 
-            
-        mOdometry = new SwerveDriveOdometry(mKinematics, mIMU.getYaw(),new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition} , new Pose2d());
-        mPeriodicIO.robotPose = mOdometry.getPoseMeters();
+            mEstimator = new SwerveDrivePoseEstimator(mKinematics, gyroIO.getYaw(), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition}, new Pose2d(),
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // State measurement standard deviations. X, Y, theta.
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01)); // Global measurement standard deviations. X, Y, and theta.
+    
+        //mEstimator = new SwerveDrivePoseEstimator(mKinematics, mIMU.getYaw(),new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition} , new Pose2d());
+        mPeriodicIO.robotPose = mEstimator.getEstimatedPosition();
 
         // rotationPow = SmartDashboard.getNumber("Rotation Power", -1);
         // if(rotationPow == -1) {
@@ -153,6 +181,9 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
             }
 
             writePeriodicOutputs();
+
+            gyroIO.updateInputs(inputs);
+            Logger.getInstance().processInputs("Gyro", inputs);
         }
     }
 
@@ -458,9 +489,9 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
 
 
 
-        mOdometry.resetPosition(mIMU.getYaw(), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition}, pose);
-        mPeriodicIO.robotPose = mOdometry.getPoseMeters();
-        mGyroOffset = pose.getRotation().rotateBy(Rotation2d.fromDegrees(mIMU.getYaw().getDegrees()).unaryMinus());
+        mEstimator.resetPosition(gyroIO.getYaw(), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition}, pose);
+        mPeriodicIO.robotPose = mEstimator.getEstimatedPosition();
+        mGyroOffset = pose.getRotation().rotateBy(Rotation2d.fromDegrees(gyroIO.getYaw().getDegrees()).unaryMinus());
     }
 
     @Override
@@ -490,8 +521,8 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
 
         // order is CCW starting with front right.
         mPeriodicIO.chassisSpeeds = mKinematics.toChassisSpeeds(frontRight, frontLeft, backLeft, backRight);
-        mPeriodicIO.robotPose = mOdometry.update(
-                mIMU.getYaw(), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition});
+        mPeriodicIO.robotPose = mEstimator.update(
+                gyroIO.getYaw(), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition});
     }
 
     public void overrideTrajectory(boolean value) {
@@ -554,7 +585,7 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
      */
     public synchronized void zeroSensors(Pose2d startingPose) {
         setPose(startingPose);
-        mIMU.setAngle(startingPose.getRotation().getDegrees());
+        gyroIO.setAngle(startingPose.getRotation().getDegrees());
         //TODO: Determine whether we need this for RobotContainer.getAutonomousCommand
         //mModules.forEach((m) -> m.zeroSensors(startingPose));
     }
@@ -609,7 +640,7 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
         double now = lastUpdateTimestamp;
         mPeriodicIO.schedDeltaActual = now - mPeriodicIO.lastSchedStart;
         mPeriodicIO.lastSchedStart = now;
-        mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(mIMU.getYaw().getDegrees()).rotateBy(mGyroOffset);
+        mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(gyroIO.getYaw().getDegrees()).rotateBy(mGyroOffset);
         // mPeriodicIO.gyroYaw = mIMU.getYaw();
 
         // read modules

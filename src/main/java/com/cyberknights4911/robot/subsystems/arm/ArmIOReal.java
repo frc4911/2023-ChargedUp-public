@@ -9,6 +9,7 @@ import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
 public final class ArmIOReal implements ArmIO {
@@ -18,6 +19,9 @@ public final class ArmIOReal implements ArmIO {
     private final TalonFX shoulderMotor3;
     private final TalonFX shoulderMotor4;
     private final TalonFX wristMotor;
+
+    private final DutyCycleEncoder shoulderEncoder;
+    private final DutyCycleEncoder wristEncoder;
 
     public ArmIOReal() {
         // 1 is closest to robot center and the numbering moves out clockwise
@@ -32,6 +36,12 @@ public final class ArmIOReal implements ArmIO {
         wristMotor = TalonFXFactory.createTalon(Ports.WRIST_MOTOR, Constants.CANIVORE_NAME);
 
         configMotors();
+
+        shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
+        shoulderEncoder.reset();
+
+        wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
+        wristEncoder.reset();
     }
     
     private void configMotors() {
@@ -106,12 +116,12 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public double getWristPosition() {
-        return wristMotor.getSelectedSensorPosition();
+        return wristEncoder.get();
     }
 
     @Override
     public double getShoulderPosition() {
-        return shoulderMotor1.getSelectedSensorPosition();
+        return shoulderEncoder.get();
     }
 
     @Override
