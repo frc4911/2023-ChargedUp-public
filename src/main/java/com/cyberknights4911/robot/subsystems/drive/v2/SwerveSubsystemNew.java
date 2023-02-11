@@ -5,14 +5,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import org.littletonrobotics.junction.Logger;
+
 import com.cyberknights4911.robot.commands.TeleopSwerveCommand;
-import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.constants.Ports;
 import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.StickAction;
+import com.cyberknights4911.robot.subsystems.drive.GyroIO;
+import com.cyberknights4911.robot.subsystems.drive.GyroIOInputsAutoLogged;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,14 +29,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem {
     private final SwerveDriveOdometry swerveOdometry;
     private final SwerveModule[] swerveModules;
-    private final Pigeon2 gyro;
+    private final GyroIO gyro;
     private final SwerveDriveKinematics kinematics;
     private final CotsFalconSwerveConstants physicalSwerveModule;
     private final CtreConfigs ctreConfigs;
+    
+    private final GyroIOInputsAutoLogged inputs = new GyroIOInputsAutoLogged();
 
-    public SwerveSubsystemNew() {
-        gyro = new Pigeon2(Ports.PIGEON, Constants.CANIVORE_NAME);
-        gyro.configFactoryDefault();
+    public SwerveSubsystemNew(
+        GyroIO gyro,
+        SwerveIO frontLeftSwerveIO,
+        SwerveIO frontRightSwerveIO,
+        SwerveIO backLeftSwerveIO,
+        SwerveIO backRightSwerveIO
+    ) {
+        this.gyro = gyro;
         zeroGyro();
         
         kinematics = new SwerveDriveKinematics(
@@ -53,39 +62,43 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
         swerveModules = new SwerveModule[] {
             new SwerveModule(
                 0,
-                Ports.ROBOT_2022_FRONT_LEFT_DRIVE,
-                Ports.ROBOT_2022_FRONT_LEFT_STEER,
-                Ports.ROBOT_2022_FRONT_LEFT_CANCODER,
-                Rotation2d.fromDegrees(150.38),
-                physicalSwerveModule,
-                ctreConfigs
+                frontLeftSwerveIO,
+                // Ports.ROBOT_2022_FRONT_LEFT_DRIVE,
+                // Ports.ROBOT_2022_FRONT_LEFT_STEER,
+                // Ports.ROBOT_2022_FRONT_LEFT_CANCODER,
+                // Rotation2d.fromDegrees(150.38),
+                physicalSwerveModule
+                // ctreConfigs
             ),
             new SwerveModule(
                 1,
-                Ports.ROBOT_2022_FRONT_RIGHT_DRIVE,
-                Ports.ROBOT_2022_FRONT_RIGHT_STEER,
-                Ports.ROBOT_2022_FRONT_RIGHT_CANCODER,
-                Rotation2d.fromDegrees(2.29),
-                physicalSwerveModule,
-                ctreConfigs
+                frontRightSwerveIO,
+                // Ports.ROBOT_2022_FRONT_RIGHT_DRIVE,
+                // Ports.ROBOT_2022_FRONT_RIGHT_STEER,
+                // Ports.ROBOT_2022_FRONT_RIGHT_CANCODER,
+                // Rotation2d.fromDegrees(2.29),
+                physicalSwerveModule
+                // ctreConfigs
             ),
             new SwerveModule(
                 2,
-                Ports.ROBOT_2022_BACK_LEFT_DRIVE,
-                Ports.ROBOT_2022_BACK_LEFT_STEER,
-                Ports.ROBOT_2022_BACK_LEFT_CANCODER,
-                Rotation2d.fromDegrees(83.23),
-                physicalSwerveModule,
-                ctreConfigs
+                backLeftSwerveIO,
+                // Ports.ROBOT_2022_BACK_LEFT_DRIVE,
+                // Ports.ROBOT_2022_BACK_LEFT_STEER,
+                // Ports.ROBOT_2022_BACK_LEFT_CANCODER,
+                // Rotation2d.fromDegrees(83.23),
+                physicalSwerveModule
+                // ctreConfigs
             ),
             new SwerveModule(
                 3,
-                Ports.ROBOT_2022_BACK_RIGHT_DRIVE,
-                Ports.ROBOT_2022_BACK_RIGHT_STEER,
-                Ports.ROBOT_2022_BACK_RIGHT_CANCODER,
-                Rotation2d.fromDegrees(244.07),
-                physicalSwerveModule,
-                ctreConfigs
+                backRightSwerveIO,
+                // Ports.ROBOT_2022_BACK_RIGHT_DRIVE,
+                // Ports.ROBOT_2022_BACK_RIGHT_STEER,
+                // Ports.ROBOT_2022_BACK_RIGHT_CANCODER,
+                // Rotation2d.fromDegrees(244.07),
+                physicalSwerveModule
+                // ctreConfigs
             )
         };
 
@@ -120,7 +133,7 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Swerve.MAX_SPEED);
 
         for (SwerveModule mod : swerveModules) {
-            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+            mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
         }
     }    
 
@@ -135,7 +148,7 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Swerve.MAX_SPEED);
         
         for (SwerveModule mod : swerveModules) {
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
+            mod.setDesiredState(desiredStates[mod.getModuleNumber()], false);
         }
     }    
 
@@ -152,7 +165,7 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : swerveModules) {
-            states[mod.moduleNumber] = mod.getState();
+            states[mod.getModuleNumber()] = mod.getState();
         }
         return states;
     }
@@ -160,7 +173,7 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : swerveModules) {
-            positions[mod.moduleNumber] = mod.getPosition();
+            positions[mod.getModuleNumber()] = mod.getPosition();
         }
         return positions;
     }
@@ -184,34 +197,41 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
 
-        for (int i = 0; i < swerveModules.length; i++) {
-            SwerveModule swerveModule = swerveModules[i];
+        gyro.updateInputs(inputs);
+        Logger.getInstance().processInputs("Gyro", inputs);
 
-            SmartDashboard.putNumber(
-                new StringBuilder()
-                    .append("Mod ")
-                    .append(swerveModule.moduleNumber)
-                    .append( " Cancoder")
-                    .toString(),
-                swerveModule.getCanCoder().getDegrees()
-            );
-            SmartDashboard.putNumber(
-                new StringBuilder()
-                    .append("Mod ")
-                    .append(swerveModule.moduleNumber)
-                    .append( " Integrated")
-                    .toString(),
-                swerveModule.getPosition().angle.getDegrees()
-            );
-            SmartDashboard.putNumber(
-                new StringBuilder()
-                    .append("Mod ")
-                    .append(swerveModule.moduleNumber)
-                    .append( " Velocity")
-                    .toString(),
-                swerveModule.getState().speedMetersPerSecond
-            );
-        }
+        for (SwerveModule mod : swerveModules) {
+            mod.handlePeriodic();
+        } 
+        // for (int i = 0; i < swerveModules.length; i++) {
+        //     SwerveModule swerveModule = swerveModules[i];
+
+        //     SmartDashboard.putNumber(
+        //         new StringBuilder()
+        //             .append("Mod ")
+        //             .append(swerveModule.moduleNumber)
+        //             .append( " Cancoder")
+        //             .toString(),
+                
+        //         swerveModule.getAngleEncoderDegrees()
+        //     );
+        //     SmartDashboard.putNumber(
+        //         new StringBuilder()
+        //             .append("Mod ")
+        //             .append(swerveModule.moduleNumber)
+        //             .append( " Integrated")
+        //             .toString(),
+        //         swerveModule.getPosition().angle.getDegrees()
+        //     );
+        //     SmartDashboard.putNumber(
+        //         new StringBuilder()
+        //             .append("Mod ")
+        //             .append(swerveModule.moduleNumber)
+        //             .append( " Velocity")
+        //             .toString(),
+        //         swerveModule.getState().speedMetersPerSecond
+        //     );
+        // }
     }
 
     @Override

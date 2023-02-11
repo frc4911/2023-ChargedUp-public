@@ -14,6 +14,7 @@ public final class GyroIOReal implements GyroIO {
 
     public GyroIOReal() {
         pigeon = new Pigeon2(Ports.PIGEON, Constants.CANIVORE_NAME);
+        pigeon.configFactoryDefault();
     }
   
     @Override
