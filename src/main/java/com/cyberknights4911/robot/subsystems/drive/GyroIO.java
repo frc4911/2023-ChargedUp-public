@@ -15,20 +15,20 @@ public interface GyroIO {
     public default void updateInputs(GyroIOInputs inputs) {}
 
     /** Get the turn rotation */
-    public default Rotation2d getYaw() {
-        return new Rotation2d();
+    public default double getYaw() {
+        return 0.0;
     }
 
     /** Get the pitch rotation */
-    public default Rotation2d getPitch() {
-        return new Rotation2d();
+    public default double getPitch() {
+        return 0.0;
     }
 
     /** Get the roll rotation */
-    public default Rotation2d getRoll() {
-        return new Rotation2d();
+    public default double getRoll() {
+        return 0.0;
     }
 
-    /** Reset the sensor angle. */
-    public default void setAngle(double angleInDegrees) {}
+    /** Reset the sensor yaw rotation */
+    public default void setYaw(double angleInDegrees) {}
 }
