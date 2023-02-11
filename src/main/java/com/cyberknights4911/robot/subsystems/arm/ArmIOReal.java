@@ -2,6 +2,7 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -17,7 +18,6 @@ public final class ArmIOReal implements ArmIO {
     private final TalonFX shoulderMotor1;
     private final TalonFX shoulderMotor2;
     private final TalonFX shoulderMotor3;
-    private final TalonFX shoulderMotor4;
     private final TalonFX wristMotor;
 
     private final DutyCycleEncoder shoulderEncoder;
@@ -31,8 +31,6 @@ public final class ArmIOReal implements ArmIO {
             TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_2, Constants.CANIVORE_NAME);
         shoulderMotor3 =
             TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_3, Constants.CANIVORE_NAME);
-        shoulderMotor4 =
-            TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_4, Constants.CANIVORE_NAME);
         wristMotor = TalonFXFactory.createTalon(Ports.WRIST_MOTOR, Constants.CANIVORE_NAME);
 
         configMotors();
@@ -57,12 +55,10 @@ public final class ArmIOReal implements ArmIO {
         shoulderConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
         
         shoulderMotor1.configAllSettings(shoulderConfiguration);
-        shoulderMotor2.configAllSettings(shoulderConfiguration);
-        shoulderMotor3.configAllSettings(shoulderConfiguration);
-        shoulderMotor4.configAllSettings(shoulderConfiguration);
-
-        shoulderMotor3.setInverted(true);
-        shoulderMotor4.setInverted(true);
+        shoulderMotor2.follow(shoulderMotor1);
+        shoulderMotor3.follow(shoulderMotor1);
+        shoulderMotor2.setInverted(InvertType.FollowMaster);
+        shoulderMotor3.setInverted(InvertType.FollowMaster);
 
         //TODO: May want to use setStatusFramePeriod to be lower and make motors followers if having CAN utilization issues
         shoulderMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -77,7 +73,7 @@ public final class ArmIOReal implements ArmIO {
         wristConfiguration.slot0.kD = 0.0;
         wristConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
 
-        wristMotor.configAllSettings(shoulderConfiguration);
+        wristMotor.configAllSettings(wristConfiguration);
     }
     
     @Override
@@ -89,20 +85,17 @@ public final class ArmIOReal implements ArmIO {
         inputs.shoulderAppliedVolts = new double[] {
             shoulderMotor1.getMotorOutputVoltage(),
             shoulderMotor2.getMotorOutputVoltage(),
-            shoulderMotor3.getMotorOutputVoltage(),
-            shoulderMotor4.getMotorOutputVoltage()
+            shoulderMotor3.getMotorOutputVoltage()
         };
         inputs.shoulderCurrentAmps = new double[] {
             shoulderMotor1.getSupplyCurrent(),
             shoulderMotor2.getSupplyCurrent(),
-            shoulderMotor3.getSupplyCurrent(),
-            shoulderMotor4.getSupplyCurrent()
+            shoulderMotor3.getSupplyCurrent()
         };
         inputs.shoulderTempCelcius = new double[] {
             shoulderMotor1.getTemperature(),
             shoulderMotor2.getTemperature(),
-            shoulderMotor3.getTemperature(),
-            shoulderMotor4.getTemperature()
+            shoulderMotor3.getTemperature()
         };
 
         inputs.wristAppliedVolts = Units.rotationsToRadians(
@@ -127,9 +120,6 @@ public final class ArmIOReal implements ArmIO {
     @Override
     public void setShoulderPosition(double position) {
         shoulderMotor1.set(ControlMode.Position, position);
-        shoulderMotor2.set(ControlMode.Position, position);
-        shoulderMotor3.set(ControlMode.Position, position);
-        shoulderMotor4.set(ControlMode.Position, position);
     }
 
     @Override
