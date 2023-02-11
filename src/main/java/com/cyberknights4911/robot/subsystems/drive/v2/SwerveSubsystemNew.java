@@ -8,9 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import org.littletonrobotics.junction.Logger;
 
 import com.cyberknights4911.robot.commands.TeleopSwerveCommand;
-import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
-import com.cyberknights4911.robot.constants.Ports;
 import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.StickAction;
 import com.cyberknights4911.robot.subsystems.drive.GyroIO;
@@ -22,7 +20,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -31,8 +28,6 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
     private final SwerveModule[] swerveModules;
     private final GyroIO gyro;
     private final SwerveDriveKinematics kinematics;
-    private final CotsFalconSwerveConstants physicalSwerveModule;
-    private final CtreConfigs ctreConfigs;
     
     private final GyroIOInputsAutoLogged inputs = new GyroIOInputsAutoLogged();
 
@@ -53,52 +48,22 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
             new Translation2d(-Swerve.WHEEL_BASE / 2.0, -Swerve.TRACK_WIDTH / 2.0)
         );
 
-        physicalSwerveModule = CotsFalconSwerveConstants.SDSMK4i(
-            CotsFalconSwerveConstants.DriveGearRatios.SDSMK4i_L2
-        );
-
-        ctreConfigs = new CtreConfigs(physicalSwerveModule);
-
         swerveModules = new SwerveModule[] {
             new SwerveModule(
-                0,
                 frontLeftSwerveIO,
-                // Ports.ROBOT_2022_FRONT_LEFT_DRIVE,
-                // Ports.ROBOT_2022_FRONT_LEFT_STEER,
-                // Ports.ROBOT_2022_FRONT_LEFT_CANCODER,
-                // Rotation2d.fromDegrees(150.38),
-                physicalSwerveModule
-                // ctreConfigs
+                SwerveModuleConstants.FRONT_LEFT
             ),
             new SwerveModule(
-                1,
                 frontRightSwerveIO,
-                // Ports.ROBOT_2022_FRONT_RIGHT_DRIVE,
-                // Ports.ROBOT_2022_FRONT_RIGHT_STEER,
-                // Ports.ROBOT_2022_FRONT_RIGHT_CANCODER,
-                // Rotation2d.fromDegrees(2.29),
-                physicalSwerveModule
-                // ctreConfigs
+                SwerveModuleConstants.FRONT_RIGHT
             ),
             new SwerveModule(
-                2,
                 backLeftSwerveIO,
-                // Ports.ROBOT_2022_BACK_LEFT_DRIVE,
-                // Ports.ROBOT_2022_BACK_LEFT_STEER,
-                // Ports.ROBOT_2022_BACK_LEFT_CANCODER,
-                // Rotation2d.fromDegrees(83.23),
-                physicalSwerveModule
-                // ctreConfigs
+                SwerveModuleConstants.BACK_LEFT
             ),
             new SwerveModule(
-                3,
                 backRightSwerveIO,
-                // Ports.ROBOT_2022_BACK_RIGHT_DRIVE,
-                // Ports.ROBOT_2022_BACK_RIGHT_STEER,
-                // Ports.ROBOT_2022_BACK_RIGHT_CANCODER,
-                // Rotation2d.fromDegrees(244.07),
-                physicalSwerveModule
-                // ctreConfigs
+                SwerveModuleConstants.BACK_RIGHT
             )
         };
 
