@@ -19,6 +19,16 @@ public interface GyroIO {
         return new Rotation2d();
     }
 
+    /** Get the pitch rotation */
+    public default Rotation2d getPitch() {
+        return new Rotation2d();
+    }
+
+    /** Get the roll rotation */
+    public default Rotation2d getRoll() {
+        return new Rotation2d();
+    }
+
     /** Reset the sensor angle. */
     public default void setAngle(double angleInDegrees) {}
 }

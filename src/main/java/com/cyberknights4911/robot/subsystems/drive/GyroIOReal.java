@@ -31,6 +31,16 @@ public final class GyroIOReal implements GyroIO {
     }
 
     @Override
+    public Rotation2d getPitch() {
+        return Rotation2d.fromDegrees(pigeon.getPitch());
+    }
+
+    @Override
+    public Rotation2d getRoll() {
+        return Rotation2d.fromDegrees(pigeon.getRoll());
+    }
+
+    @Override
     public void setAngle(double angleInDegrees) {
         pigeon.setYaw(-angleInDegrees, Constants.LONG_CAN_TIMEOUTS_MS);
         System.out.println("Pigeon angle set to: " + angleInDegrees);
