@@ -5,7 +5,6 @@ import com.ctre.phoenix.sensors.Pigeon2;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 public final class GyroIOReal implements GyroIO {
@@ -26,23 +25,23 @@ public final class GyroIOReal implements GyroIO {
     }
 
     @Override
-    public Rotation2d getYaw() {
-        return Rotation2d.fromDegrees(pigeon.getYaw());
+    public double getYaw() {
+        return pigeon.getYaw();
     }
 
     @Override
-    public Rotation2d getPitch() {
-        return Rotation2d.fromDegrees(pigeon.getPitch());
+    public double getPitch() {
+        return pigeon.getPitch();
     }
 
     @Override
-    public Rotation2d getRoll() {
-        return Rotation2d.fromDegrees(pigeon.getRoll());
+    public double getRoll() {
+        return pigeon.getRoll();
     }
 
     @Override
-    public void setAngle(double angleInDegrees) {
+    public void setYaw(double angleInDegrees) {
         pigeon.setYaw(-angleInDegrees, Constants.LONG_CAN_TIMEOUTS_MS);
-        System.out.println("Pigeon angle set to: " + angleInDegrees);
+        System.out.println("Pigeon yaw set to: " + angleInDegrees);
     }
 }
