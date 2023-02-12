@@ -36,4 +36,6 @@ public interface ArmIO {
     
     /** Set wrist motor position. */
     public default void setWristPosition(double position) {}
+
+    public default void adjustError(){}
 }

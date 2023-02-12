@@ -85,6 +85,8 @@ public final class ArmSubsystem extends SubsystemBase {
         } else {
             moveWrist(desiredPosition);
         }
+
+        armIO.adjustError();
     }
 
     private double convertDegreesToTicksShoulder(double degrees) {

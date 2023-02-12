@@ -130,6 +130,14 @@ public final class ArmIOReal implements ArmIO {
         wristMotor.set(ControlMode.Position, position);
     }
 
+    //This will set the integrated sensors to be accurate with where the arm actually is
+    //Remove error introduced by chain
+    @Override
+    public void adjustError() {
+        wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
+        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
+    }
+
     //The following are all for the Absolute Encoder not the Integrated Falcon Sensor
     //TODO:Use these values to setSelectedSensorPosition() of leader falcon when it gets inaccurate
     public double getShoulderDegrees() {
