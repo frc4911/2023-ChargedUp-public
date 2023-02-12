@@ -44,6 +44,7 @@ public final class ArmSubsystem extends SubsystemBase {
         armIO.setWristPosition(falconTicks);
     }
 
+    //Calculated in degrees at the moment
     public boolean wristAtDesiredPosition() {
         double wristPosition = armIO.getWristPosition();
         double desiredWristPosition = desiredPosition.getWristPosition();
@@ -53,6 +54,7 @@ public final class ArmSubsystem extends SubsystemBase {
         return false;
     }
 
+    //Calculated in degrees at the moment
     public boolean shoulderAtDesiredPosition() {
         double shoulderPosition = armIO.getShoulderPosition();
 

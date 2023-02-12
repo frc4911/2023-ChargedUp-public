@@ -126,5 +126,19 @@ public final class ArmIOReal implements ArmIO {
     public void setWristPosition(double position) {
         wristMotor.set(ControlMode.Position, position);
     }
+
+    //The following are all for the Absolute Encoder not the Integrated Falcon Sensor
+    //TODO:Use these values to setSelectedSensorPosition() of leader falcon when it gets inaccurate
+    public double getShoulderDegrees() {
+        return dutyCycleToDegrees(getShoulderPosition());
+      }
+
+      public double getWristDegrees() {
+        return dutyCycleToDegrees(getWristPosition());
+      }
+
+      public double dutyCycleToDegrees(double dutyCyclePos) {
+        return dutyCyclePos * 360;
+      }
     
 }
