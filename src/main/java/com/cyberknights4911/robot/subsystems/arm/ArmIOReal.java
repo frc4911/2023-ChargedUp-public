@@ -57,11 +57,12 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor1.configAllSettings(shoulderConfiguration);
         shoulderMotor2.follow(shoulderMotor1);
         shoulderMotor3.follow(shoulderMotor1);
-        shoulderMotor2.setInverted(InvertType.FollowMaster);
+        shoulderMotor2.setInverted(InvertType.FollowMaster); //We probably do not want to do this because most likely one will be different from the others
         shoulderMotor3.setInverted(InvertType.FollowMaster);
 
         //TODO: May want to use setStatusFramePeriod to be lower and make motors followers if having CAN utilization issues
         shoulderMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
 
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
@@ -74,6 +75,8 @@ public final class ArmIOReal implements ArmIO {
         wristConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
 
         wristMotor.configAllSettings(wristConfiguration);
+        wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
+
     }
     
     @Override
@@ -140,5 +143,14 @@ public final class ArmIOReal implements ArmIO {
       public double dutyCycleToDegrees(double dutyCyclePos) {
         return dutyCyclePos * 360;
       }
+
+      //Start of Falcon Sensor Methods
+    private double convertDegreesToTicksShoulder(double degrees) {
+        return degrees * ArmSubsystem.TICKS_PER_REVOLUTION * ArmSubsystem.SHOULDER_GEAR_RATIO / ArmSubsystem.DEGREES_PER_REVOLUTION;
+    }
+
+    private double convertDegreesToTicksWrist(double degrees) {
+        return degrees * ArmSubsystem.TICKS_PER_REVOLUTION * ArmSubsystem.WRIST_GEAR_RATIO / ArmSubsystem.DEGREES_PER_REVOLUTION;
+    }
     
 }
