@@ -3,7 +3,6 @@ from dt_apriltags import Detector
 from networktables import NetworkTables
 
 import cv2
-import json
 import logging
 import numpy
 import os
@@ -58,9 +57,24 @@ sink = CameraServer.getVideo()
 # Allocating new images is very expensive, always try to preallocate
 input_img = numpy.zeros(shape=(480, 640, 3), dtype=numpy.uint8)
 
+# [367.91895687 156.03958565]
+
+# [[322.9781189  211.85998535]
+#  [420.58554077 210.97744751]
+#  [417.59829712  94.33355713]
+#  [318.15740967 104.13204193]]
+
+# [[ 0.86346625  0.03805549  0.502969  ]
+#  [-0.00455012  0.99769697 -0.06767608]
+#  [-0.50438609  0.05614744  0.86165082]]
+
+# [[ 0.0444061 ]
+#  [-0.10594213]
+#  [ 1.27216578]]
 # Scan loop
 while True:
-    time.sleep(0.020)
+    # Adjust this to process faster/slower
+    time.sleep(3)
     print("Getting a new image")
 
     # Read a new image
@@ -79,7 +93,7 @@ while True:
                               camera_params=c270_camera_params,
                               tag_size=frc_tag_size_meters)
 
-    detectedTags = []
+    detected_tags = []
 
     rejectedTagCount = 0
     
@@ -109,20 +123,27 @@ while True:
         sub_table = tag_table.getSubTable(f'tag_{tag.tag_id}')
 
         sub_table.putBoolean('detected', True)
-        print(tag.center)
-        print(tag.corners)
-        print(tag.pose_R)
-        print(tag.pose_t)
-        sub_table.putNumberArray('center', [])
-        sub_table.putNumberArray('corners', [])
-        sub_table.putNumberArray('pose_R', [])
-        sub_table.putNumberArray('pose_t', [])
+        # print(tag.center)
+        # print(tag.corners.flatten())
+        # print(tag.pose_R.flatten())
+        # print(tag.pose_t.flatten())
+        sub_table.putNumber('hamming', tag.hamming)
+        sub_table.putNumber('decision_margin', tag.decision_margin)
+        sub_table.putNumberArray('center', tag.center)
+        sub_table.putNumberArray('corners', tag.corners.flatten())
+        sub_table.putNumberArray('pose_R', tag.pose_R.flatten())
+        sub_table.putNumberArray('pose_t', tag.pose_t.flatten())
 
         # print(f'adding tag {tag.tag_id} to detected list')
-        # detectedTags.append(data)
+        detected_tags.append(tag.tag_id)
 
     print(f'rejected {rejectedTagCount} tags with low decision margin')
 
-    # jsonMessage = json.dumps(detectedTags)
-    # print(f'sending tag collection to robot: {jsonMessage}')
-    # table.putString(entry_name, jsonMessage)
+    # Mark all the undetected tags as such
+    for tag_id in range(8):
+        if tag_id not in detected_tags:
+            tag_table.getSubTable(f'tag_{tag_id}').putBoolean('detected', False)
+
+    # Pushes all pending changes immediately
+    NetworkTables.flush()
+    print(f'sending {len(detected_tags)} detected tags to robot')
