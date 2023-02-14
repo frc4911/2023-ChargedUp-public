@@ -1,7 +1,6 @@
 package com.cyberknights4911.robot.subsystems.arm;
 
 public enum ArmPositions {
-    //TODO: These values are untuned. Need Testing
     //Values are in degrees and later converted to ticks for ease of comprehension
     //0 Degrees are at stowed for both SHOULDER and WRIST
     STOWED(42, 42),
