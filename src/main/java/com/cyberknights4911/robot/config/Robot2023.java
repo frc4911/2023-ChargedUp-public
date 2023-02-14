@@ -4,11 +4,12 @@ import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_DRIVE_REDUC
 import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_STEER_REDUCTION;
 import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_WHEEL_DIAMETER;
 
+import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports;
 
 import edu.wpi.first.math.util.Units;
 
-public class Robot2022 implements RobotConfiguration {
+public class Robot2023 implements RobotConfiguration {
     
     private static final double FRONT_RIGHT_STEER_MOTOR_ENCODER_HOME_OFFSET = 883.0;
     private static final double FRONT_LEFT_STEER_MOTOR_ENCODER_HOME_OFFSET = 1683.0;
@@ -28,8 +29,8 @@ public class Robot2022 implements RobotConfiguration {
     @Override
     public SwerveConfiguration getSwerveConfiguration() {
         return new SwerveConfiguration(
-                Units.inchesToMeters(23.75),
-                Units.inchesToMeters(20.75),
+                Constants.ROBOT_LENGTH_METERS,
+                Constants.ROBOT_WIDTH_METERS,
                 Units.feetToMeters(7.5), //7.5 Max speed in feet per second in auto: Theoretical max is 17.065 ft per second
                 Math.toRadians(100), // 150 Max change in degrees per second
                 0.01, 0, 0, 0 // kSwerveHeadingKp,kSwerveHeadingKi,kSwerveHeadingKp,kSwerveHeadingKf
