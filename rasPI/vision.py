@@ -10,7 +10,7 @@ import os
 import time
 
 # Taken from https://calibdb.net/
-c270_camera_params = [1419.6926739461624, 1419.204023362152, 624.4230937815905, 317.19888645121466]
+c270_camera_params = [931.4759229459526, 934.3344071111114, 335.83219605049294, 233.4049079752566]
 
 # FRC 2023 manual states 6-inch tags, which is this many meters:
 frc_tag_size_meters = 0.1524
@@ -23,9 +23,9 @@ at_detector = Detector(families='tag16h5',
                        decode_sharpening=.25,
                        debug=0)
 
+# Default IP for RoboRIO
 server_ip = '10.49.11.2'
 table_name = 'APRIL_TAGS'
-entry_name = 'DETECTED_TAGS'
 
 NetworkTables.initialize(server_ip)
 
@@ -47,20 +47,20 @@ while True:
         continue
     break
 
-table = NetworkTables.getTable(table_name)
+tag_table = NetworkTables.getTable(table_name)
 
 # Configure video capture
 CameraServer.enableLogging()
 camera = CameraServer.startAutomaticCapture()
-camera.setResolution(1280, 720)
+camera.setResolution(640, 480)
 sink = CameraServer.getVideo()
 
 # Allocating new images is very expensive, always try to preallocate
-input_img = numpy.zeros(shape=(720, 1280, 3), dtype=numpy.uint8)
+input_img = numpy.zeros(shape=(480, 640, 3), dtype=numpy.uint8)
 
 # Scan loop
 while True:
-    time.sleep(1)
+    time.sleep(0.020)
     print("Getting a new image")
 
     # Read a new image
@@ -81,32 +81,48 @@ while True:
 
     detectedTags = []
 
+    rejectedTagCount = 0
+    
     # iterate through detected tags
     for tag in tags:
         # Filter out likely false positives
         if (tag.decision_margin < 10):
-            print(f'rejecting tag {tag.tag_id} with low decision margin of: {tag.decision_margin}')
+            rejectedTagCount += 1
             continue
         # Only tags 0-7 are used in the game
         if (tag.tag_id >= 7):
-            print(f'ignoring tag {tag.tag_id} with invalid id')
+            rejectedTagCount += 1
             continue
 
         # Build JSON message
-        data = {}
-        data['id'] = tag.tag_id
-        data['hamming'] = tag.hamming
-        data['decision_margin'] = tag.decision_margin
-        data['center'] = tag.center.tolist()
-        data['corners'] = tag.corners.tolist()
-        data['pose_R'] = tag.pose_R.tolist()
-        data['pose_t'] = tag.pose_t.tolist()
+        # data = {}
+        # data['id'] = tag.tag_id
+        # data['hamming'] = tag.hamming
+        # data['decision_margin'] = tag.decision_margin
+        # data['center'] = tag.center.tolist()
+        # data['corners'] = tag.corners.tolist()
+        # data['pose_R'] = tag.pose_R.tolist()
+        # data['pose_t'] = tag.pose_t.tolist()
         # is this useful?
         # data['pose_err'] = tag.pose_err.tolist()
 
-        print(f'adding tag {tag.tag_id} to detected list')
-        detectedTags.append(data)
+        sub_table = tag_table.getSubTable(f'tag_{tag.tag_id}')
 
-    jsonMessage = json.dumps(detectedTags)
-    print(f'sending tag collection to robot: {jsonMessage}')
-    table.putString(entry_name, jsonMessage)
+        sub_table.putBoolean('detected', True)
+        print(tag.center)
+        print(tag.corners)
+        print(tag.pose_R)
+        print(tag.pose_t)
+        sub_table.putNumberArray('center', [])
+        sub_table.putNumberArray('corners', [])
+        sub_table.putNumberArray('pose_R', [])
+        sub_table.putNumberArray('pose_t', [])
+
+        # print(f'adding tag {tag.tag_id} to detected list')
+        # detectedTags.append(data)
+
+    print(f'rejected {rejectedTagCount} tags with low decision margin')
+
+    # jsonMessage = json.dumps(detectedTags)
+    # print(f'sending tag collection to robot: {jsonMessage}')
+    # table.putString(entry_name, jsonMessage)

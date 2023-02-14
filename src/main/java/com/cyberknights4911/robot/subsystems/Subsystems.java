@@ -19,6 +19,7 @@ import com.cyberknights4911.robot.subsystems.hood.HoodIOReal;
 import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIO;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppSubsystem;
+import com.cyberknights4911.robot.subsystems.vision.VisionSubsystem;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -33,6 +34,7 @@ public final class Subsystems {
     private final SwerveSubsystem swerveSubsystem;
     private final BobSubsystem bobSubsystem;
     private final HoodSubsystem hoodSubsystem;
+    private final VisionSubsystem visionSubsystem;
 
     public Subsystems() {
         RobotConfiguration configuration =  RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2022);
@@ -51,6 +53,7 @@ public final class Subsystems {
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
             hoodSubsystem = new HoodSubsystem(new HoodIOReal());
+            visionSubsystem = new VisionSubsystem();
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
@@ -65,6 +68,7 @@ public final class Subsystems {
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
             hoodSubsystem = new HoodSubsystem(new HoodIO() {});
+            visionSubsystem = new VisionSubsystem();
         }
     }
 
