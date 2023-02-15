@@ -65,7 +65,7 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
    private boolean mIsBrakeMode;
 
    private final GyroIO gyroIO;
-   private final GyroIOInputsAutoLogged inputs = new GyroIOInputsAutoLogged();
+   //private final GyroIOInputsAutoLogged inputs = new GyroIOInputsAutoLogged();
 
    // TODO - do we still need this a odometry tracks this already?
    private Rotation2d mGyroOffset = new Rotation2d();
@@ -138,13 +138,11 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
             var backLeftPosition = mBackLeft.getPosition();
             var backRightPosition = mBackRight.getPosition();
 
-            mEstimator = new SwerveDrivePoseEstimator(
-                mKinematics,
-                Rotation2d.fromDegrees(gyroIO.getYaw()),
-                new SwerveModulePosition [] { frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition},
-                new Pose2d(),
-                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // State measurement standard deviations. X, Y, theta.
-                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01)); // Global measurement standard deviations. X, Y, and theta.
+
+
+            mEstimator = new SwerveDrivePoseEstimator(mKinematics, Rotation2d.fromDegrees(gyroIO.getYaw()), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition}, new Pose2d(),
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // State measurement standard deviations. X, Y, theta.
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01)); // Global measurement standard deviations. X, Y, and theta.
     
         //mEstimator = new SwerveDrivePoseEstimator(mKinematics, mIMU.getYaw(),new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition} , new Pose2d());
         mPeriodicIO.robotPose = mEstimator.getEstimatedPosition();
@@ -184,8 +182,8 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
 
             writePeriodicOutputs();
 
-            gyroIO.updateInputs(inputs);
-            Logger.getInstance().processInputs("Gyro", inputs);
+            //gyroIO.updateInputs(inputs);
+            //Logger.getInstance().processInputs("Gyro", inputs);
         }
     }
 
@@ -490,11 +488,10 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
         var backRightPosition = mBackRight.getPosition();
 
 
-        var yaw = Rotation2d.fromDegrees(gyroIO.getYaw());
 
-        mEstimator.resetPosition(yaw, new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition}, pose);
+        mEstimator.resetPosition(Rotation2d.fromDegrees(gyroIO.getYaw()), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition}, pose);
         mPeriodicIO.robotPose = mEstimator.getEstimatedPosition();
-        mGyroOffset = pose.getRotation().rotateBy(yaw.unaryMinus());
+        mGyroOffset = pose.getRotation().rotateBy(Rotation2d.fromDegrees(Rotation2d.fromDegrees(gyroIO.getYaw()).getDegrees()).unaryMinus());
     }
 
     @Override
@@ -525,8 +522,7 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
         // order is CCW starting with front right.
         mPeriodicIO.chassisSpeeds = mKinematics.toChassisSpeeds(frontRight, frontLeft, backLeft, backRight);
         mPeriodicIO.robotPose = mEstimator.update(
-            Rotation2d.fromDegrees(gyroIO.getYaw()),
-            new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition});
+            Rotation2d.fromDegrees(gyroIO.getYaw()), new SwerveModulePosition []{ frontRightPosition, frontLeftPosition, backLeftPosition, backRightPosition});
     }
 
     public void overrideTrajectory(boolean value) {
@@ -644,7 +640,7 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
         double now = lastUpdateTimestamp;
         mPeriodicIO.schedDeltaActual = now - mPeriodicIO.lastSchedStart;
         mPeriodicIO.lastSchedStart = now;
-        mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(gyroIO.getYaw()).rotateBy(mGyroOffset);
+        mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(Rotation2d.fromDegrees(gyroIO.getYaw()).getDegrees()).rotateBy(mGyroOffset);
         // mPeriodicIO.gyroYaw = mIMU.getYaw();
 
         // read modules

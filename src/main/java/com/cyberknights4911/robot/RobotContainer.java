@@ -10,6 +10,7 @@ import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
+import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,11 +44,13 @@ public class RobotContainer {
     );
 
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.RESET_IMU)) {
-      trigger.onTrue(
-        Commands.runOnce(
-          () -> subsystems.getSwerveSubsystem().setPose(Constants.ROBOT_STARTING_POSE)
-        )
-      );
+      //Change for real robot. Just for testing
+      trigger.onTrue(new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
+
+        //Commands.runOnce(
+          //() -> subsystems.getSwerveSubsystem().setPose(Constants.ROBOT_STARTING_POSE)
+        //)
+      //);
     }
 
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_BACKWARD)) {
