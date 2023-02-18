@@ -1,5 +1,6 @@
 package com.cyberknights4911.robot.subsystems.vision;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTag;
@@ -9,9 +10,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -21,74 +20,74 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public final class AprilTagTable {
     private static final String APRILTAG_TABLE_NAME = "APRIL_TAGS";
     private static final String SUB_TABLE_NAME_PREFIX = "tag_%d";
-    private static final String DETECTED_TOPIC_NAME = "detected";
-    private static final String HAMMING_TOPIC_NAME = "hamming";
-    private static final String DECISION_MARGIN_TOPIC_NAME = "decision_margin";
-    private static final String CENTER_TOPIC_NAME = "center";
-    private static final String CORNERS_TOPIC_NAME = "corners";
-    private static final String POSE_R_TOPIC_NAME = "pose_R";
-    private static final String POSE_T_TOPIC_NAME = "pose_t";
+    private static final String VALUES_TOPIC_NAME = "values";
     
+    // All the tag info is packed into one double array
+    private static final int START_INDEX_DETECTED = 0; // length of 1
+    private static final int START_INDEX_HAMMING = 1; // length of 1
+    private static final int START_INDEX_DECISION_MARGIN = 2; // length of 1
+    private static final int START_INDEX_CENTER = 3; // length of 2
+    private static final int START_INDEX_CORNERS = 5; // length of 8
+    private static final int START_INDEX_POSE_R = 13; // length of 9
+    private static final int START_INDEX_POSE_T = 22; // length of 3
+
+    private static final int ARRAY_LENGTH_CENTER = 2;
+    private static final int ARRAY_LENGTH_CORNERS = 8;
+    private static final int ARRAY_LENGTH_POSE_R = 9;    
+    private static final int ARRAY_LENGTH_POSE_T = 3;
+
     private final int tagId;
     private final NetworkTable tagSubtable;
-    private final BooleanSubscriber detected;
-    private final DoubleSubscriber hamming;
-    private final DoubleSubscriber decisionMargin;
-    private final DoubleArraySubscriber center;
-    private final DoubleArraySubscriber corners;
-    private final DoubleArraySubscriber pose_R;
-    private final DoubleArraySubscriber pose_t;
+    private final DoubleArraySubscriber values;
 
     public AprilTagTable(int tagId, NetworkTableInstance networkTables) {
         this.tagId = tagId;
         tagSubtable = networkTables.getTable(APRILTAG_TABLE_NAME)
             .getSubTable(String.format(SUB_TABLE_NAME_PREFIX, tagId));
-        detected = tagSubtable.getBooleanTopic(DETECTED_TOPIC_NAME).subscribe(false);
-        hamming = tagSubtable.getDoubleTopic(HAMMING_TOPIC_NAME).subscribe(0.0);
-        decisionMargin = tagSubtable.getDoubleTopic(DECISION_MARGIN_TOPIC_NAME).subscribe(0.0);
-        center = tagSubtable.getDoubleArrayTopic(CENTER_TOPIC_NAME).subscribe(new double[0]);
-        corners = tagSubtable.getDoubleArrayTopic(CORNERS_TOPIC_NAME).subscribe(new double[0]);
-        pose_R = tagSubtable.getDoubleArrayTopic(POSE_R_TOPIC_NAME).subscribe(new double[0]);
-        pose_t = tagSubtable.getDoubleArrayTopic(POSE_T_TOPIC_NAME).subscribe(new double[0]);
+        values = tagSubtable.getDoubleArrayTopic(VALUES_TOPIC_NAME).subscribe(new double[0]);
     }
 
     public Optional<AprilTagDetectionInfo> getLatestAprilTag() {
-        if (!detected.get()) {
+        double[] valuesArray = values.get();
+        if (valuesArray[START_INDEX_DETECTED] == 0.0) {
             // Any other fields are from a previous detection. Ignore it.
             return Optional.empty();
         }
 
-        double hammingValue = hamming.get();
-        double decisionMarginValue = decisionMargin.get();
-        double[] rotationPoseMatrix = pose_R.get();
-        double[] translationMatrix = pose_t.get();
-        double[] centerArray = center.get();
-        double[] cornerArray = corners.get();
+        // TODO(rbrewer) verify array length
 
-        if (rotationPoseMatrix.length < 9) {
-            return Optional.empty();
-        } else if (translationMatrix.length < 3) {
-            return Optional.empty();
-        }
+        double hammingValue = valuesArray[START_INDEX_HAMMING];
+        double decisionMarginValue = valuesArray[START_INDEX_DECISION_MARGIN];
+        double[] centerArray = Arrays.copyOfRange(
+            valuesArray,
+            START_INDEX_CENTER,
+            ARRAY_LENGTH_CENTER);
+        double[] cornersArray = Arrays.copyOfRange(
+            valuesArray,
+            START_INDEX_CORNERS,
+            ARRAY_LENGTH_CORNERS);
 
         Matrix<N3, N3> camMatrix = new Matrix<N3, N3>(Nat.N3(), Nat.N3());
         // pose_R is a flattened 3x3 "camera matrix"
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                camMatrix.set(i, j, rotationPoseMatrix[i+j+i*i]);
+                camMatrix.set(i, j, valuesArray[START_INDEX_POSE_R + i + j + 2 * i]);
             }
         }
-
         return Optional.of(
             new AprilTagDetectionInfo(
                 hammingValue,
                 decisionMarginValue,
                 centerArray,
-                cornerArray,
+                cornersArray,
                 new AprilTag(
                     tagId,
                     new Pose3d(
-                        new Translation3d(translationMatrix[0], translationMatrix[1], translationMatrix[2]),
+                        new Translation3d(
+                            valuesArray[START_INDEX_POSE_T],
+                            valuesArray[START_INDEX_POSE_T + 1],
+                            valuesArray[START_INDEX_POSE_T + 2]
+                        ),
                         new Rotation3d(camMatrix)
                     )
                 )

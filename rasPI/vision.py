@@ -108,33 +108,16 @@ while True:
             rejectedTagCount += 1
             continue
 
-        # Build JSON message
-        # data = {}
-        # data['id'] = tag.tag_id
-        # data['hamming'] = tag.hamming
-        # data['decision_margin'] = tag.decision_margin
-        # data['center'] = tag.center.tolist()
-        # data['corners'] = tag.corners.tolist()
-        # data['pose_R'] = tag.pose_R.tolist()
-        # data['pose_t'] = tag.pose_t.tolist()
-        # is this useful?
-        # data['pose_err'] = tag.pose_err.tolist()
-
         sub_table = tag_table.getSubTable(f'tag_{tag.tag_id}')
 
-        sub_table.putBoolean('detected', True)
-        # print(tag.center)
-        # print(tag.corners.flatten())
-        # print(tag.pose_R.flatten())
-        # print(tag.pose_t.flatten())
-        sub_table.putNumber('hamming', tag.hamming)
-        sub_table.putNumber('decision_margin', tag.decision_margin)
-        sub_table.putNumberArray('center', tag.center)
-        sub_table.putNumberArray('corners', tag.corners.flatten())
-        sub_table.putNumberArray('pose_R', tag.pose_R.flatten())
-        sub_table.putNumberArray('pose_t', tag.pose_t.flatten())
+        result = [1.0, tag.hamming, tag.decision_margin]
+        results.append(tag.center)
+        results.append(tag.corners.flatten())
+        results.append(tag.pose_R.flatten())
+        results.append(tag.pose_t.flatten())
 
-        # print(f'adding tag {tag.tag_id} to detected list')
+        sub_table.putNumberArray('values', result)
+
         detected_tags.append(tag.tag_id)
 
     print(f'rejected {rejectedTagCount} tags with low decision margin')
@@ -142,7 +125,7 @@ while True:
     # Mark all the undetected tags as such
     for tag_id in range(8):
         if tag_id not in detected_tags:
-            tag_table.getSubTable(f'tag_{tag_id}').putBoolean('detected', False)
+            tag_table.getSubTable(f'tag_{tag_id}').putNumberArray('values', [0.0])
 
     # Pushes all pending changes immediately
     NetworkTables.flush()
