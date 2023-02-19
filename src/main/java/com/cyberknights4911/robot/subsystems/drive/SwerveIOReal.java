@@ -25,9 +25,9 @@ public final class SwerveIOReal implements SwerveIO {
 
     public SwerveIOReal(SwerveModuleConfiguration swerveConfig) {
         this.swerveConfig = swerveConfig;
-        turnMotor = TalonFXFactory.createTalon(swerveConfig.kSteerMotorTalonId, Constants.CANIVORE_NAME);
-        driveMotor = TalonFXFactory.createTalon(swerveConfig.kDriveMotorTalonId, Constants.CANIVORE_NAME);
-        encoder = new CANCoder(swerveConfig.kCANCoderId, Constants.CANIVORE_NAME);
+        turnMotor = TalonFXFactory.createTalon(swerveConfig.kSteerMotorTalonId);
+        driveMotor = TalonFXFactory.createTalon(swerveConfig.kDriveMotorTalonId);
+        encoder = new CANCoder(swerveConfig.kCANCoderId);
         
         configCancoder();
         configureMotors();
