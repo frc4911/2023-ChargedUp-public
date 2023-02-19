@@ -35,26 +35,28 @@ public final class AprilTagTable {
     private static final int ARRAY_LENGTH_CORNERS = 8;
     private static final int ARRAY_LENGTH_POSE_R = 9;    
     private static final int ARRAY_LENGTH_POSE_T = 3;
-
+    
     private final int tagId;
     private final NetworkTable tagSubtable;
-    private final DoubleArraySubscriber values;
+    private final DoubleArraySubscriber tagValuesSubscriber;
 
     public AprilTagTable(int tagId, NetworkTableInstance networkTables) {
         this.tagId = tagId;
         tagSubtable = networkTables.getTable(APRILTAG_TABLE_NAME)
             .getSubTable(String.format(SUB_TABLE_NAME_PREFIX, tagId));
-        values = tagSubtable.getDoubleArrayTopic(VALUES_TOPIC_NAME).subscribe(new double[0]);
+        tagValuesSubscriber = tagSubtable.getDoubleArrayTopic(VALUES_TOPIC_NAME).subscribe(new double[0]);
     }
 
     public Optional<AprilTagDetectionInfo> getLatestAprilTag() {
-        double[] valuesArray = values.get();
+        double[] valuesArray = tagValuesSubscriber.get();
+        if (valuesArray.length == 0) {
+            // Nothing is there
+            return Optional.empty();
+        }
         if (valuesArray[START_INDEX_DETECTED] == 0.0) {
             // Any other fields are from a previous detection. Ignore it.
             return Optional.empty();
         }
-
-        // TODO(rbrewer) verify array length
 
         double hammingValue = valuesArray[START_INDEX_HAMMING];
         double decisionMarginValue = valuesArray[START_INDEX_DECISION_MARGIN];

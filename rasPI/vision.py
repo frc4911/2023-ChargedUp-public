@@ -108,15 +108,13 @@ while True:
             rejectedTagCount += 1
             continue
 
-        sub_table = tag_table.getSubTable(f'tag_{tag.tag_id}')
-
-        result = [1.0, tag.hamming, tag.decision_margin]
-        results.append(tag.center)
-        results.append(tag.corners.flatten())
-        results.append(tag.pose_R.flatten())
-        results.append(tag.pose_t.flatten())
-
-        sub_table.putNumberArray('values', result)
+        # Put everything in one array since NetworkTables doesn't really do transactions
+        tag_values_list = [1.0, tag.hamming, tag.decision_margin]
+        tag_values_list.extend(tag.center)
+        tag_values_list.extend(tag.corners.flatten())
+        tag_values_list.extend(tag.pose_R.flatten())
+        tag_values_list.extend(tag.pose_t.flatten())
+        tag_table.getSubTable(f'tag_{tag.tag_id}').putNumberArray('values', tag_values_list)
 
         detected_tags.append(tag.tag_id)
 
