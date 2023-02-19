@@ -30,7 +30,7 @@ public final class Subsystems {
     private final ClimberSubsystem climberSubsystem;
     private final SlurppSubsystem slurppSubsystem;
     private final ArmSubsystem armSubsystem ;
-    private final SwerveSubsystem swerveSubsystem;
+    //private final SwerveSubsystem swerveSubsystem;
     private final BobSubsystem bobSubsystem;
     private final HoodSubsystem hoodSubsystem;
 
@@ -41,28 +41,28 @@ public final class Subsystems {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
             armSubsystem = new ArmSubsystem(new ArmIO() {});
-            swerveSubsystem = new SwerveSubsystemCurrent(
-                configuration,
-                new GyroIOReal(),
-                new SwerveIOReal(configuration.getFrontLeftModuleConstants()),
-                new SwerveIOReal(configuration.getFrontRightModuleConstants()),
-                new SwerveIOReal(configuration.getBackLeftModuleConstants()),
-                new SwerveIOReal(configuration.getBackRightModuleConstants())
-            );
+            // swerveSubsystem = new SwerveSubsystemCurrent(
+            //     configuration,
+            //     new GyroIOReal(),
+            //     new SwerveIOReal(configuration.getFrontLeftModuleConstants()),
+            //     new SwerveIOReal(configuration.getFrontRightModuleConstants()),
+            //     new SwerveIOReal(configuration.getBackLeftModuleConstants()),
+            //     new SwerveIOReal(configuration.getBackRightModuleConstants())
+            // );
             bobSubsystem = new BobSubsystem(new BobIO() {});
             hoodSubsystem = new HoodSubsystem(new HoodIOReal());
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
             armSubsystem = new ArmSubsystem(new ArmIO() {});
-            swerveSubsystem = new SwerveSubsystemCurrent(
-                configuration,
-                new GyroIO() {},
-                new SwerveIO() {},
-                new SwerveIO() {},
-                new SwerveIO() {},
-                new SwerveIO() {}
-            );
+            // swerveSubsystem = new SwerveSubsystemCurrent(
+            //     configuration,
+            //     new GyroIO() {},
+            //     new SwerveIO() {},
+            //     new SwerveIO() {},
+            //     new SwerveIO() {},
+            //     new SwerveIO() {}
+            // );
             bobSubsystem = new BobSubsystem(new BobIO() {});
             hoodSubsystem = new HoodSubsystem(new HoodIO() {});
         }
@@ -81,7 +81,8 @@ public final class Subsystems {
     }
 
     public SwerveSubsystem getSwerveSubsystem() {
-        return swerveSubsystem;
+        //return swerveSubsystem;
+        return null;
     }
 
     public BobSubsystem getBobSubsystem() {
