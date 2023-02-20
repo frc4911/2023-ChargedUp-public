@@ -26,7 +26,6 @@ public final class SlurppSubsystem extends SubsystemBase {
 
     /** "Slurpp" up a game piece. */
     public void slurpp() {
-        System.out.println("here");
         splurppIO.setPercentOutput(0.2);
     }
 
