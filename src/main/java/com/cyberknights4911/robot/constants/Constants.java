@@ -13,12 +13,12 @@ public class Constants {
     public static final String CANIVORE_NAME = "CANivore";
 
     //2023 Physical Robot Dimensions
-    public static final double ROBOT_WIDTH = 34.5;
-    public static final double ROBOT_LENGTH = 34.5;
-    public static final double ROBOT_WIDTH_METERS = Units.inchesToMeters(ROBOT_WIDTH);
-    public static final double ROBOT_LENGTH_METERS = Units.inchesToMeters(ROBOT_LENGTH);
-    public static final double ROBOT_HALF_WIDTH = ROBOT_WIDTH / 2.0;
-    public static final double ROBOT_HALF_LENGTH = ROBOT_LENGTH / 2.0;
+    public static final double ROBOT_WHEEL_BASE = 22.75;
+    public static final double ROBOT_WHEEL_LENGTH = 22.75;
+    public static final double ROBOT_WIDTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_BASE);
+    public static final double ROBOT_LENGTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_LENGTH);
+    public static final double ROBOT_HALF_WIDTH = ROBOT_WHEEL_BASE / 2.0;
+    public static final double ROBOT_HALF_LENGTH = ROBOT_WHEEL_LENGTH / 2.0;
 
     // Path following constants
     public static final double PATH_LOOKAHEAD_TIME = 0.25; // seconds to look ahead along the path for steering 0.4
