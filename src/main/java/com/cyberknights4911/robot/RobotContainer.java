@@ -64,9 +64,6 @@ public class RobotContainer {
         Commands.sequence(
           Commands.runOnce(
             () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
-          ),
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
           )
         )
       );
