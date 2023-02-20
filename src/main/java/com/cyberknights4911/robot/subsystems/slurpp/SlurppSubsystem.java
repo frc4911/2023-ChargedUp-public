@@ -26,12 +26,13 @@ public final class SlurppSubsystem extends SubsystemBase {
 
     /** "Slurpp" up a game piece. */
     public void slurpp() {
-        splurppIO.setPercentOutput(0.3);
+        System.out.println("here");
+        splurppIO.setPercentOutput(0.2);
     }
 
     /** "Spit" out a game piece. */
     public void spit() {
-        splurppIO.setPercentOutput(-0.3);
+        splurppIO.setPercentOutput(-0.2);
     }
     
     public void stop() {

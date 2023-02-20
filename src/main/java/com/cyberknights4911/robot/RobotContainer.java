@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public class RobotContainer {
   private final Subsystems subsystems;
   private final ControllerBinding controllerBinding;
-  // private final AutoCommandChooser autoCommandChooser;
+  private final AutoCommandChooser autoCommandChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -33,9 +33,9 @@ public class RobotContainer {
 
     controllerBinding = new XboxControllerBinding();
 
-    //configureButtonBindings();
+    configureButtonBindings();
 
-    // autoCommandChooser = new AutoCommandChooser(subsystems);
+    autoCommandChooser = new AutoCommandChooser(subsystems);
   }
 
   private void configureButtonBindings() {
@@ -64,9 +64,6 @@ public class RobotContainer {
         Commands.sequence(
           Commands.runOnce(
             () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
-          ),
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
           )
         )
       );
@@ -229,6 +226,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;//autoCommandChooser.getCurrentCommand();
+    return autoCommandChooser.getCurrentCommand();
   }
 }
