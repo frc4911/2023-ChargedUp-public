@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
 public final class ArmIOReal implements ArmIO {
+    private static final double ENCODER_DEGREES_PER_ROTATION = 360.0;
 
     private final TalonFX shoulderMotor1;
     private final TalonFX shoulderMotor2;
@@ -36,14 +37,12 @@ public final class ArmIOReal implements ArmIO {
         wristMotor = TalonFXFactory.createTalon(Ports.WRIST_MOTOR, Constants.CANIVORE_NAME);
 
         shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
-        shoulderEncoder.setPositionOffset(0.43);
-
         wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
-        wristEncoder.setPositionOffset(0.9);
 
         configMotors();
+        configureEncoders();
     }
-    
+
     private void configMotors() {
         //SHOULDER CONFIGURATION
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
@@ -87,12 +86,22 @@ public final class ArmIOReal implements ArmIO {
 
     }
     
+    private void configureEncoders() {
+        shoulderEncoder.setPositionOffset(0.43);
+        wristEncoder.setPositionOffset(0.9);
+
+        // TODO: determine and set position offset for Robot startup
+        // shoulderEncoder.setDistancePerRotation(ENCODER_DEGREES_PER_ROTATION);
+        // shoulderEncoder.reset();
+        // wristEncoder.setDistancePerRotation(ENCODER_DEGREES_PER_ROTATION);
+        // wristEncoder.reset();
+    }
+    
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        inputs.shoulderPositionRad = Units.rotationsToRadians(
-            shoulderMotor1.getSelectedSensorPosition() / ArmSubsystem.TICKS_PER_REVOLUTION / ArmSubsystem.SHOULDER_GEAR_RATIO);
-        inputs.shoulderVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(
-            shoulderMotor1.getSelectedSensorVelocity() * 10 / ArmSubsystem.TICKS_PER_REVOLUTION / ArmSubsystem.SHOULDER_GEAR_RATIO);
+        // TODO: Calculate and report rotational velocity for encoders
+        // TODO: is it useful to log falcon encoder values too?
+        inputs.shoulderPositionDeg = shoulderEncoder.get();
         inputs.shoulderAppliedVolts = new double[] {
             shoulderMotor1.getMotorOutputVoltage(),
             shoulderMotor2.getMotorOutputVoltage(),
@@ -109,10 +118,9 @@ public final class ArmIOReal implements ArmIO {
             shoulderMotor3.getTemperature()
         };
 
+        inputs.wristPositionDeg = wristEncoder.get();
         inputs.wristAppliedVolts = Units.rotationsToRadians(
             wristMotor.getSelectedSensorPosition() / ArmSubsystem.TICKS_PER_REVOLUTION / ArmSubsystem.WRIST_GEAR_RATIO);
-        inputs.wristVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(
-            shoulderMotor1.getSelectedSensorVelocity() * 10 / ArmSubsystem.TICKS_PER_REVOLUTION / ArmSubsystem.WRIST_GEAR_RATIO);
         inputs.wristAppliedVolts = shoulderMotor1.getMotorOutputVoltage();
         inputs.wristCurrentAmps = wristMotor.getSupplyCurrent();
         inputs.wristTempCelcius = wristMotor.getTemperature();

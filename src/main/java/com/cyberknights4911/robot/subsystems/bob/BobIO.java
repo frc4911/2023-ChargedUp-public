@@ -7,8 +7,8 @@ public interface BobIO {
     public static class BobIOInputs {
         public boolean extended = false;
 
-        public double positionRad = 0.0;
-        public double velocityRadPerSec = 0.0;
+        public double positionDeg = 0.0;
+        public double velocityRpm = 0.0;
         public double appliedVolts = 0.0;
         public double currentAmps = 0.0;
         public double tempCelcius = 0.0;
