@@ -1,6 +1,7 @@
 package com.cyberknights4911.robot.subsystems.slurpp;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports;
@@ -38,5 +39,6 @@ public final class SlurppIOReal implements SlurppIO {
     @Override
     public void stop() {
         motor.set(ControlMode.PercentOutput, 0.0);
+        motor.setNeutralMode(NeutralMode.Brake);
     }
 }

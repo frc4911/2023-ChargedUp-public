@@ -83,7 +83,7 @@ public final class AutoCommandChooser {
     }
 
     private Command getAutoBalanceCommand() {
-        return new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
+        return new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem());
     }
 
     private Command getAngeryCommand() {
