@@ -191,7 +191,7 @@ public class SwerveDriveModule {
         // Converts the velocity in SI units (meters per second) to a voltage (as a
         // percentage)
         // for the motor controllers.
-        setDriveOpenLoop(state.speedMetersPerSecond / mMaxSpeedInMetersPerSecond);
+        setDriveOpenLoop(Math.min(state.speedMetersPerSecond, mMaxSpeedInMetersPerSecond));
 
         setReferenceAngle(state.angle.getRadians());
     }

@@ -11,10 +11,10 @@ import edu.wpi.first.math.util.Units;
 
 public class Robot2023 implements RobotConfiguration {
 
-    private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 20.65;
-    private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 159.50;
-    private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 194.00;
-    private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 104.67;
+    private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 360.0 - 20.65;
+    private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 360.0 - 159.50;
+    private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 360.0 - 194.00;
+    private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 360.0 - 104.67;
 
     private static final double STEER_MOTOR_KP = 0.25;
     private static final double STEER_MOTOR_KI = 0.0;
@@ -26,8 +26,8 @@ public class Robot2023 implements RobotConfiguration {
         return new SwerveConfiguration(
                 Constants.ROBOT_LENGTH_METERS,
                 Constants.ROBOT_WIDTH_METERS,
-                Units.feetToMeters(7.5), //7.5 Max speed in feet per second in auto: Theoretical max is 17.065 ft per second
-                Math.toRadians(100), // 150 Max change in degrees per second
+                Units.feetToMeters(1), //7.5 Max speed in feet per second in auto: Theoretical max is 17.065 ft per second
+                Math.toRadians(30), // 150 Max change in degrees per second
                 0.01, 0, 0, 0 // kSwerveHeadingKp,kSwerveHeadingKi,kSwerveHeadingKp,kSwerveHeadingKf
         );
     }
