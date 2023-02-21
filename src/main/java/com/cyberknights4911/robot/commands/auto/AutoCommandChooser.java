@@ -7,8 +7,10 @@ import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.MoveHoodCommand;
 import com.cyberknights4911.robot.subsystems.Subsystems;
+import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
 import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem.HoodPositions;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -50,7 +52,8 @@ public final class AutoCommandChooser {
         kinematics = subsystems.getSwerveSubsystem().getKinematics();
         outputModuleStates = subsystems.getSwerveSubsystem()::setSwerveModuleStates;
 
-        loggedDashboardChooser.addDefaultOption("Test", getTestCommand());
+        loggedDashboardChooser.addDefaultOption("AutoBalance", getAutoBalanceCommand());
+        loggedDashboardChooser.addOption("Test", getTestCommand());
         loggedDashboardChooser.addOption("Angery", getAngeryCommand());
         loggedDashboardChooser.addOption("Left", getLeftCommand());
         loggedDashboardChooser.addOption("Right", getRightCommand());
@@ -78,6 +81,11 @@ public final class AutoCommandChooser {
             driveRequirements
         );
     }
+
+    private Command getAutoBalanceCommand() {
+        return new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem());
+    }
+
     private Command getAngeryCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
 
