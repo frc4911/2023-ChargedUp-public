@@ -45,12 +45,11 @@ public class RobotContainer {
 
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.RESET_IMU)) {
       //Change for real robot. Just for testing
-      trigger.onTrue(new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
-
-        //Commands.runOnce(
-          //() -> subsystems.getSwerveSubsystem().setPose(Constants.ROBOT_STARTING_POSE)
-        //)
-      //);
+      trigger.onTrue(
+        Commands.runOnce(
+          () -> subsystems.getSwerveSubsystem().setPose(Constants.ROBOT_STARTING_POSE)
+        )
+      );
     }
 
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_BACKWARD)) {
