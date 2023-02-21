@@ -2,7 +2,6 @@
 
 package com.cyberknights4911.robot;
 
-import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.auto.AutoCommandChooser;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.control.ButtonAction;
@@ -10,7 +9,6 @@ import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
-import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,6 +34,7 @@ public class RobotContainer {
     autoCommandChooser = new AutoCommandChooser(subsystems);
 
     configureStickBindinges();
+    configureButtonBindings();
   }
 
   private void configureStickBindinges() {
@@ -46,12 +45,16 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.RESET_IMU)) {
-      //Change for real robot. Just for testing
       trigger.onTrue(
         Commands.runOnce(
           () -> subsystems.getSwerveSubsystem().setPose(Constants.ROBOT_STARTING_POSE)
         )
       );
+    }
+
+    // Move ONLY safe and tested commands above this line.
+    if (true) {
+      return;
     }
 
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_BACKWARD)) {
