@@ -85,7 +85,7 @@ public final class AutoCommandChooser {
     private Command getAutoBalanceCommand() {
         return new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem());
     }
-
+    
     private Command getAngeryCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
 
