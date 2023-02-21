@@ -33,16 +33,18 @@ public class RobotContainer {
 
     controllerBinding = new XboxControllerBinding();
 
-    configureButtonBindings();
-
     autoCommandChooser = new AutoCommandChooser(subsystems);
+
+    configureStickBindinges();
   }
 
-  private void configureButtonBindings() {
+  private void configureStickBindinges() {
     subsystems.getSwerveSubsystem().setDefaultCommand(
       subsystems.getSwerveSubsystem().createDefaultCommand(controllerBinding)
     );
+  }
 
+  private void configureButtonBindings() {
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.RESET_IMU)) {
       //Change for real robot. Just for testing
       trigger.onTrue(
