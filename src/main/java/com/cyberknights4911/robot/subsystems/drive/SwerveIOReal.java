@@ -111,6 +111,8 @@ public final class SwerveIOReal implements SwerveIO {
         inputs.turnAppliedVolts = turnMotor.getMotorOutputVoltage();
         inputs.turnCurrentAmps = turnMotor.getSupplyCurrent();
         inputs.turnTempCelcius = turnMotor.getTemperature();
+        
+        inputs.turnAbsolutePositionRad = encoder.getAbsolutePosition();
     }
   
     @Override
