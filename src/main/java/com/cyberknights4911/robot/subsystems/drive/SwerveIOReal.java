@@ -96,23 +96,23 @@ public final class SwerveIOReal implements SwerveIO {
     
     @Override
     public void updateInputs(SwerveIOInputs inputs) {
-        inputs.drivePositionRad = Units.rotationsToRadians(
+        inputs.drivePositionDeg = Units.rotationsToDegrees(
             driveMotor.getSelectedSensorPosition() / DRIVE_TICKS_PER_REV / swerveConfig.kDriveReduction);
-        inputs.driveVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(
-            driveMotor.getSelectedSensorVelocity() * 10 / DRIVE_TICKS_PER_REV / swerveConfig.kDriveReduction);
+        inputs.driveVelocityRpm = 
+            driveMotor.getSelectedSensorVelocity() * 10 / DRIVE_TICKS_PER_REV / swerveConfig.kDriveReduction;
         inputs.driveAppliedVolts = driveMotor.getMotorOutputVoltage();
         inputs.driveCurrentAmps = driveMotor.getSupplyCurrent();
         inputs.driveTempCelcius = driveMotor.getTemperature();
         
-        inputs.turnPositionRad = Units.rotationsToRadians(
+        inputs.turnPositionDeg = Units.rotationsToDegrees(
             turnMotor.getSelectedSensorPosition() / TURN_TICKS_PER_REV / swerveConfig.kSteerReduction);
-        inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(
-            turnMotor.getSelectedSensorVelocity() * 10 / TURN_TICKS_PER_REV / swerveConfig.kSteerReduction);
+        inputs.turnVelocityRpm =
+            turnMotor.getSelectedSensorVelocity() * 10 / TURN_TICKS_PER_REV / swerveConfig.kSteerReduction;
         inputs.turnAppliedVolts = turnMotor.getMotorOutputVoltage();
         inputs.turnCurrentAmps = turnMotor.getSupplyCurrent();
         inputs.turnTempCelcius = turnMotor.getTemperature();
         
-        inputs.turnAbsolutePositionRad = encoder.getAbsolutePosition();
+        inputs.turnAbsolutePositionDeg = encoder.getAbsolutePosition();
     }
   
     @Override
