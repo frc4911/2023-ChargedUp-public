@@ -16,7 +16,6 @@ import com.cyberknights4911.robot.subsystems.drive.SwerveIO;
 import com.cyberknights4911.robot.subsystems.drive.SwerveIOReal;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 import com.cyberknights4911.robot.subsystems.hood.HoodIO;
-import com.cyberknights4911.robot.subsystems.hood.HoodIOReal;
 import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIO;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIOReal;
@@ -52,7 +51,7 @@ public final class Subsystems {
                 new SwerveIOReal(configuration.getBackRightModuleConstants())
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem(new HoodIOReal());
+            hoodSubsystem = new HoodSubsystem(new HoodIO() {});
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
