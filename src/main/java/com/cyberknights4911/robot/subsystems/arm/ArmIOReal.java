@@ -3,6 +3,7 @@ package com.cyberknights4911.robot.subsystems.arm;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -20,8 +21,8 @@ public final class ArmIOReal implements ArmIO {
     private final TalonFX shoulderMotor3;
     private final TalonFX wristMotor;
 
-    private final DutyCycleEncoder shoulderEncoder;
-    private final DutyCycleEncoder wristEncoder;
+    // private final DutyCycleEncoder shoulderEncoder;
+    // private final DutyCycleEncoder wristEncoder;
 
     public ArmIOReal() {
         // 1 is closest to robot center and the numbering moves out clockwise
@@ -35,11 +36,11 @@ public final class ArmIOReal implements ArmIO {
 
         configMotors();
 
-        shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
-        shoulderEncoder.reset();
+        // shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
+        // shoulderEncoder.reset();
 
-        wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
-        wristEncoder.reset();
+        // wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
+        // wristEncoder.reset();
     }
     
     private void configMotors() {
@@ -47,9 +48,10 @@ public final class ArmIOReal implements ArmIO {
         //May need to use a wpilib pid controller instead if we are not going to use an encoder
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
         //shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        shoulderConfiguration.supplyCurrLimit.currentLimit = 2.0;
-        shoulderConfiguration.statorCurrLimit.currentLimit = 2.0;
+        shoulderConfiguration.supplyCurrLimit.currentLimit = 10.0;
+        shoulderConfiguration.statorCurrLimit.currentLimit = 10.0;
         shoulderConfiguration.supplyCurrLimit.enable = true;
+        shoulderConfiguration.statorCurrLimit.enable = true;
         shoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
         shoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
         shoulderConfiguration.slot0.kI = 0.0;
@@ -70,9 +72,9 @@ public final class ArmIOReal implements ArmIO {
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
         //wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        wristConfiguration.supplyCurrLimit.currentLimit = 2.0;
+        wristConfiguration.statorCurrLimit.currentLimit = 10.0;
 
-        wristConfiguration.supplyCurrLimit.enable = true;
+        wristConfiguration.statorCurrLimit.enable = true;
         wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
         wristConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
         wristConfiguration.slot0.kI = 0.0;
@@ -81,6 +83,8 @@ public final class ArmIOReal implements ArmIO {
 
         wristMotor.configAllSettings(wristConfiguration);
         wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
+        wristMotor.setInverted(true);
+
 
     }
     
@@ -115,32 +119,39 @@ public final class ArmIOReal implements ArmIO {
         inputs.wristTempCelcius = wristMotor.getTemperature();
     }
 
-    @Override
-    public double getWristPosition() {
-        return wristEncoder.get();
-    }
+    // @Override
+    // public double getWristPosition() {
+    //     return wristEncoder.get();
+    // }
 
-    @Override
-    public double getShoulderPosition() {
-        return shoulderEncoder.get();
-    }
+    // @Override
+    // public double getShoulderPosition() {
+    //     return shoulderEncoder.get();
+    // }
 
     @Override
     public void setShoulderPosition(double position) {
         shoulderMotor1.set(ControlMode.Position, position);
+        //shoulderMotor1.set(ControlMode.PercentOutput, 0.1);
+        //shoulderMotor1.setNeutralMode(NeutralMode.Brake);
+
     }
 
     @Override
     public void setWristPosition(double position) {
         wristMotor.set(ControlMode.Position, position);
+        //wristMotor.set(ControlMode.PercentOutput, 0.2);
+        //wristMotor.setNeutralMode(NeutralMode.Brake);
+
+
     }
 
     //This will set the integrated sensors to be accurate with where the arm actually is
     //Remove error introduced by chain
     @Override
     public void adjustError() {
-        wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
-        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
+        // wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
+        // shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
     }
 
     //The following are all for the Absolute Encoder not the Integrated Falcon Sensor
