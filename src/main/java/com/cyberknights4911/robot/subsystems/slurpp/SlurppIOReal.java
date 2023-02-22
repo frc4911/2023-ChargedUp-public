@@ -21,7 +21,7 @@ public final class SlurppIOReal implements SlurppIO {
     }
 
     @Override
-    public void updateInputs(SplurppIOInputs inputs) {
+    public void updateInputs(SlurppIOInputs inputs) {
         inputs.positionDeg = Units.rotationsToDegrees(
             motor.getSelectedSensorPosition() / TICKS_PER_REV / GEAR_RATIO);
         inputs.velocityRpm = 
