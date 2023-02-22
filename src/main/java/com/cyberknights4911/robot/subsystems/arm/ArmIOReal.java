@@ -48,6 +48,7 @@ public final class ArmIOReal implements ArmIO {
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
         //shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
         shoulderConfiguration.supplyCurrLimit.currentLimit = 2.0;
+        shoulderConfiguration.statorCurrLimit.currentLimit = 2.0;
         shoulderConfiguration.supplyCurrLimit.enable = true;
         shoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
         shoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
@@ -58,6 +59,7 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor1.configAllSettings(shoulderConfiguration);
         shoulderMotor2.follow(shoulderMotor1);
         shoulderMotor3.follow(shoulderMotor1);
+        shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
 

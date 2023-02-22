@@ -40,8 +40,8 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     private void moveWrist(ArmPositions desiredArmPosition) {
-        double falconTicks = convertDegreesToTicksWrist(desiredArmPosition.getWristPosition());
-        armIO.setWristPosition(falconTicks);
+        // double falconTicks = convertDegreesToTicksWrist(desiredArmPosition.getWristPosition());
+        // armIO.setWristPosition(falconTicks);
     }
 
     public boolean wristAtDesiredPosition() {
