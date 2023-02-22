@@ -52,11 +52,6 @@ public class RobotContainer {
       );
     }
 
-    // Move ONLY safe and tested commands above this line.
-    if (true) {
-      return;
-    }
-
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_BACKWARD)) {
       trigger.onTrue(
         Commands.runOnce(
@@ -81,6 +76,18 @@ public class RobotContainer {
       );
     }
 
+    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.ARM_L2)) {
+      trigger.onTrue(
+        Commands.runOnce(()-> {
+          subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.CUBE_LEVEL_2);
+        }, subsystems.getArmSubsystem())
+      ).onFalse(
+        Commands.runOnce(()-> {
+          subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.STOWED);
+        }, subsystems.getArmSubsystem())
+      );
+    }
+    
     // Move ONLY safe and tested commands above this line.
     if (true) {
       return;
@@ -94,13 +101,6 @@ public class RobotContainer {
       );
     }
 
-    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.ARM_L2)) {
-      trigger.onTrue(
-        Commands.runOnce(()-> {
-          subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.CUBE_LEVEL_2);
-        }, subsystems.getArmSubsystem())
-      );
-    }
     
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.ARM_L3)) {
       trigger.onTrue(
