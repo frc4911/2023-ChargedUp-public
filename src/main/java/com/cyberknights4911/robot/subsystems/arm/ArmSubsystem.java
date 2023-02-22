@@ -14,8 +14,8 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final int DEGREES_PER_REVOLUTION = 360;
     //In ticks can be changed to be in degrees
     //Makes it run much faster because it does not need to be precise
-    private static final double ARM_ERROR = 100;
-    private static final double WRIST_ERROR = 100;
+    private static final double ARM_ERROR = 5000;
+    private static final double WRIST_ERROR = 5000;
 
     private final ArmIO armIO;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -28,10 +28,13 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public void setDesiredPosition(ArmPositions desiredPosition) {
-        System.out.println("here");
         this.desiredPosition = desiredPosition;
         moveWrist(desiredPosition);
         moveShoulder(desiredPosition);
+    }
+
+    public void setBrakeMode() {
+        armIO.setBrakeMode();
     }
 
     private void moveShoulder(ArmPositions desiredArmPosition) {
@@ -44,21 +47,22 @@ public final class ArmSubsystem extends SubsystemBase {
         armIO.setWristPosition(falconTicks);
     }
 
-    //Calculated in degrees at the moment
+    //Calculated in ticks at the moment
     public boolean wristAtDesiredPosition() {
         double wristPosition = armIO.getWristPosition();
-        double desiredWristPosition = desiredPosition.getWristPosition();
+        double desiredWristPosition = convertDegreesToTicksShoulder(desiredPosition.getWristPosition());
+        System.out.println(wristPosition - desiredWristPosition);
         if (Math.abs(wristPosition - desiredWristPosition) < WRIST_ERROR) {
             return true;
         }
         return false;
     }
 
-    //Calculated in degrees at the moment
+    //Calculated in ticks at the moment
     public boolean shoulderAtDesiredPosition() {
         double shoulderPosition = armIO.getShoulderPosition();
-
-        if (Math.abs(shoulderPosition - desiredPosition.getShoulderPosition()) < ARM_ERROR) {
+        System.out.println(shoulderPosition - convertDegreesToTicksShoulder(desiredPosition.getShoulderPosition()));
+        if (Math.abs(shoulderPosition - convertDegreesToTicksShoulder(desiredPosition.getShoulderPosition())) < ARM_ERROR) {
             return true;
         }
         return false;
