@@ -28,6 +28,7 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public void setDesiredPosition(ArmPositions desiredPosition) {
+        System.out.println("here");
         this.desiredPosition = desiredPosition;
         moveWrist(desiredPosition);
         moveShoulder(desiredPosition);
@@ -35,13 +36,12 @@ public final class ArmSubsystem extends SubsystemBase {
 
     private void moveShoulder(ArmPositions desiredArmPosition) {
         double falconTicks = convertDegreesToTicksShoulder(desiredArmPosition.getShoulderPosition());
-
         armIO.setShoulderPosition(falconTicks);
     }
 
     private void moveWrist(ArmPositions desiredArmPosition) {
-        // double falconTicks = convertDegreesToTicksWrist(desiredArmPosition.getWristPosition());
-        // armIO.setWristPosition(falconTicks);
+        double falconTicks = convertDegreesToTicksWrist(desiredArmPosition.getWristPosition());
+        armIO.setWristPosition(falconTicks);
     }
 
     //Calculated in degrees at the moment
