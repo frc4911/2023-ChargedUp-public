@@ -22,10 +22,10 @@ public final class SlurppIOReal implements SlurppIO {
 
     @Override
     public void updateInputs(SplurppIOInputs inputs) {
-        inputs.positionRad = Units.rotationsToRadians(
+        inputs.positionDeg = Units.rotationsToDegrees(
             motor.getSelectedSensorPosition() / TICKS_PER_REV / GEAR_RATIO);
-        inputs.velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(
-            motor.getSelectedSensorVelocity() * 10 / TICKS_PER_REV / GEAR_RATIO);
+        inputs.velocityRpm = 
+            motor.getSelectedSensorVelocity() * 10 / TICKS_PER_REV / GEAR_RATIO;
         inputs.appliedVolts = motor.getMotorOutputVoltage();
         inputs.currentAmps = motor.getSupplyCurrent();
         inputs.tempCelcius = motor.getTemperature();
