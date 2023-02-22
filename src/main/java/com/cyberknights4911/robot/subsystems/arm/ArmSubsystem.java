@@ -44,6 +44,7 @@ public final class ArmSubsystem extends SubsystemBase {
         // armIO.setWristPosition(falconTicks);
     }
 
+    //Calculated in degrees at the moment
     public boolean wristAtDesiredPosition() {
         double wristPosition = armIO.getWristPosition();
         double desiredWristPosition = desiredPosition.getWristPosition();
@@ -53,6 +54,7 @@ public final class ArmSubsystem extends SubsystemBase {
         return false;
     }
 
+    //Calculated in degrees at the moment
     public boolean shoulderAtDesiredPosition() {
         double shoulderPosition = armIO.getShoulderPosition();
 
@@ -78,12 +80,14 @@ public final class ArmSubsystem extends SubsystemBase {
         Logger.getInstance().processInputs("Arm", inputs);
 
         //Override wrist position to avoid being too tall
+
         // if (checkForHeightViolation()) {
         //     armIO.setWristPosition(0);
         // } else {
         //     moveWrist(desiredPosition);
         // }
         //TODO:Add back in
+
     }
 
     private double convertDegreesToTicksShoulder(double degrees) {

@@ -37,7 +37,7 @@ public final class Subsystems {
     private final HoodSubsystem hoodSubsystem;
 
     public Subsystems() {
-        RobotConfiguration configuration =  RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2022);
+        RobotConfiguration configuration =  RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2023);
         if (RobotBase.isReal()) {
             // TODO swap out these with real implementations once the hardware exists
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});

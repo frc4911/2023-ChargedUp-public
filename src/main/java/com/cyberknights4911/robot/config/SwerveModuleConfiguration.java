@@ -22,7 +22,6 @@ public class SwerveModuleConfiguration {
     public NeutralMode kSteerMotorInitNeutralMode = NeutralMode.Coast; // neutral mode could change
     public double kSteerMotorTicksPerRadian = (2048.0 / kSteerReduction) / (2.0 * Math.PI); // for steer motor
     public double kSteerMotorTicksPerRadianPerSecond = kSteerMotorTicksPerRadian / 10; // for steer motor
-    public double kSteerMotorEncoderHomeOffset = 0;
 
     // Steer CANCoder
     public int kCANCoderId = -1;
