@@ -51,7 +51,6 @@ public final class ArmSubsystem extends SubsystemBase {
     public boolean wristAtDesiredPosition() {
         double wristPosition = armIO.getWristPosition();
         double desiredWristPosition = convertDegreesToTicksShoulder(desiredPosition.getWristPosition());
-        System.out.println(wristPosition - desiredWristPosition);
         if (Math.abs(wristPosition - desiredWristPosition) < WRIST_ERROR) {
             return true;
         }
@@ -61,7 +60,6 @@ public final class ArmSubsystem extends SubsystemBase {
     //Calculated in ticks at the moment
     public boolean shoulderAtDesiredPosition() {
         double shoulderPosition = armIO.getShoulderPosition();
-        System.out.println(shoulderPosition - convertDegreesToTicksShoulder(desiredPosition.getShoulderPosition()));
         if (Math.abs(shoulderPosition - convertDegreesToTicksShoulder(desiredPosition.getShoulderPosition())) < ARM_ERROR) {
             return true;
         }

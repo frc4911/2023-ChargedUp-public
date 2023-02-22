@@ -9,6 +9,8 @@ import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
+import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
+import com.cyberknights4911.robot.commands.MoveArmCommand;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -77,15 +79,16 @@ public class RobotContainer {
     }
 
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.ARM_L2)) {
-      trigger.onTrue(
-        Commands.runOnce(()-> {
-          subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.CUBE_LEVEL_2);
-        }, subsystems.getArmSubsystem())
-      ).onFalse(
-        Commands.runOnce(()-> {
-          subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.STOWED);
-        }, subsystems.getArmSubsystem())
-      );
+      trigger.onTrue(new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.CUBE_LEVEL_2));
+      // trigger.onTrue(
+      //   Commands.runOnce(()-> {
+      //     subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.CUBE_LEVEL_2);
+      //   }, subsystems.getArmSubsystem())
+      // ).onFalse(
+      //   Commands.runOnce(()-> {
+      //     subsystems.getArmSubsystem().setDesiredPosition(ArmPositions.STOWED);
+      //   }, subsystems.getArmSubsystem())
+      // );
     }
     
     // Move ONLY safe and tested commands above this line.
@@ -215,6 +218,7 @@ public class RobotContainer {
       );
     }
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
