@@ -72,7 +72,7 @@ public final class ArmIOReal implements ArmIO {
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
         //wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        wristConfiguration.statorCurrLimit.currentLimit = 10.0;
+        wristConfiguration.statorCurrLimit.currentLimit = 24.0;
 
         wristConfiguration.statorCurrLimit.enable = true;
         wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
@@ -128,22 +128,20 @@ public final class ArmIOReal implements ArmIO {
     // public double getShoulderPosition() {
     //     return shoulderEncoder.get();
     // }
+    @Override
+    public void setBrakeMode() {
+        shoulderMotor1.setNeutralMode(NeutralMode.Brake);
+        wristMotor.setNeutralMode(NeutralMode.Brake);
+    }
 
     @Override
     public void setShoulderPosition(double position) {
         shoulderMotor1.set(ControlMode.Position, position);
-        //shoulderMotor1.set(ControlMode.PercentOutput, 0.1);
-        //shoulderMotor1.setNeutralMode(NeutralMode.Brake);
-
     }
 
     @Override
     public void setWristPosition(double position) {
         wristMotor.set(ControlMode.Position, position);
-        //wristMotor.set(ControlMode.PercentOutput, 0.2);
-        //wristMotor.setNeutralMode(NeutralMode.Brake);
-
-
     }
 
     //This will set the integrated sensors to be accurate with where the arm actually is

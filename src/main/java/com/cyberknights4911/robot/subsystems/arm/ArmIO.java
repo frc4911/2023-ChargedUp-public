@@ -31,6 +31,8 @@ public interface ArmIO {
         return Double.MIN_VALUE;
     }
 
+    public default void setBrakeMode(){}
+
     /** Set shoulder motors position. */
     public default void setShoulderPosition(double position) {}
     
