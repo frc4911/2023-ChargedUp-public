@@ -8,20 +8,17 @@ public class Constants {
 
     public static final String ROBOT_NAME = "QuickSlurpp";
 
-    public static final String ROBOT_NAME_2022 = "Robot2022";
+    public static final String ROBOT_NAME_2023 = "Robot2023";
 
     public static final String CANIVORE_NAME = "CANivore";
 
-    //2022 Physical Robot Dimensions (including bumpers)
-    public static final double ROBOT_WIDTH = 33;
-    public static final double ROBOT_LENGTH = 34.5;
-    public static final double ROBOT_WIDTH_METERS = 0.8382;
-    public static final double ROBOT_LENGTH_METERS = 0.8763;
-    public static final double ROBOT_HALF_WIDTH = ROBOT_WIDTH / 2.0;
-    public static final double ROBOT_HALF_LENGTH = ROBOT_LENGTH / 2.0;
-
-    public static final double ROBOT_WIDTH_METERS_2023 = 0.8763;
-    public static final double ROBOT_LENGTH_METERS_2023 = 0.8763;
+    //2023 Physical Robot Dimensions
+    public static final double ROBOT_WHEEL_BASE = 22.75;
+    public static final double ROBOT_WHEEL_LENGTH = 22.75;
+    public static final double ROBOT_WIDTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_BASE);
+    public static final double ROBOT_LENGTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_LENGTH);
+    public static final double ROBOT_HALF_WIDTH = ROBOT_WHEEL_BASE / 2.0;
+    public static final double ROBOT_HALF_LENGTH = ROBOT_WHEEL_LENGTH / 2.0;
 
     // Path following constants
     public static final double PATH_LOOKAHEAD_TIME = 0.25; // seconds to look ahead along the path for steering 0.4

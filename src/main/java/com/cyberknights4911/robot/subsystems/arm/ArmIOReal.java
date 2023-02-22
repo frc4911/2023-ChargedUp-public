@@ -46,7 +46,8 @@ public final class ArmIOReal implements ArmIO {
         //SHOULDER CONFIGURATION
         //May need to use a wpilib pid controller instead if we are not going to use an encoder
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
-        shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        //shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        shoulderConfiguration.supplyCurrLimit.currentLimit = 2.0;
         shoulderConfiguration.supplyCurrLimit.enable = true;
         shoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
         shoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
@@ -66,7 +67,9 @@ public final class ArmIOReal implements ArmIO {
 
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
-        wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        //wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        wristConfiguration.supplyCurrLimit.currentLimit = 2.0;
+
         wristConfiguration.supplyCurrLimit.enable = true;
         wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
         wristConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason

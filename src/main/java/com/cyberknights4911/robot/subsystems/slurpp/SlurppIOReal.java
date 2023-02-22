@@ -1,8 +1,10 @@
 package com.cyberknights4911.robot.subsystems.slurpp;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.constants.Ports;
 
 import edu.wpi.first.math.util.Units;
 import libraries.cyberlib.drivers.TalonFXFactory;
@@ -14,7 +16,7 @@ public final class SlurppIOReal implements SlurppIO {
     private final TalonFX motor;
 
     public SlurppIOReal() {
-        motor = TalonFXFactory.createTalon(Constants.CLAW_MOTOR_ID, Constants.CANIVORE_NAME);
+        motor = TalonFXFactory.createTalon(Ports.SLURPP_MOTOR, Constants.CANIVORE_NAME);
         motor.setInverted(false);
     }
 
@@ -37,5 +39,6 @@ public final class SlurppIOReal implements SlurppIO {
     @Override
     public void stop() {
         motor.set(ControlMode.PercentOutput, 0.0);
+        motor.setNeutralMode(NeutralMode.Brake);
     }
 }

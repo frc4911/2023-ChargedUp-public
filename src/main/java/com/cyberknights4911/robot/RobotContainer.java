@@ -2,7 +2,6 @@
 
 package com.cyberknights4911.robot;
 
-import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.auto.AutoCommandChooser;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.control.ButtonAction;
@@ -10,7 +9,6 @@ import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
-import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,64 +31,59 @@ public class RobotContainer {
 
     controllerBinding = new XboxControllerBinding();
 
-    configureButtonBindings();
-
     autoCommandChooser = new AutoCommandChooser(subsystems);
+
+    configureStickBindinges();
+    configureButtonBindings();
   }
 
-  private void configureButtonBindings() {
+  private void configureStickBindinges() {
     subsystems.getSwerveSubsystem().setDefaultCommand(
       subsystems.getSwerveSubsystem().createDefaultCommand(controllerBinding)
     );
+  }
 
+  private void configureButtonBindings() {
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.RESET_IMU)) {
-      //Change for real robot. Just for testing
-      trigger.onTrue(new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
+      trigger.onTrue(
+        Commands.runOnce(
+          () -> subsystems.getSwerveSubsystem().setPose(Constants.ROBOT_STARTING_POSE)
+        )
+      );
+    }
 
-        //Commands.runOnce(
-          //() -> subsystems.getSwerveSubsystem().setPose(Constants.ROBOT_STARTING_POSE)
-        //)
-      //);
+    // Move ONLY safe and tested commands above this line.
+    if (true) {
+      return;
     }
 
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_BACKWARD)) {
       trigger.onTrue(
-        Commands.runOnce(() -> subsystems.getSlurppSubsystem().spit())
-      );
-    }
-
-    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_FORWARD)) {
-      trigger.onTrue(
-        Commands.sequence(
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
-          ),
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
-          )
+        Commands.runOnce(
+          () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
+        )
+      ).onFalse(
+        Commands.runOnce(
+          () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
         )
       );
     }
 
     for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.COLLECTOR_FORWARD)) {
       trigger.onTrue(
-        Commands.sequence(
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
-          ),
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
-          )
+        Commands.runOnce(
+          () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
+        )
+      ).onFalse(
+        Commands.runOnce(
+          () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
         )
       );
     }
 
-    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.CLIMB_WHEEL_LOCK)) {
-      trigger.onTrue(
-        Commands.runOnce(() -> {
-          // TODO: lock wheels
-        })
-      );
+    // Move ONLY safe and tested commands above this line.
+    if (true) {
+      return;
     }
 
    for (Trigger trigger :  controllerBinding.triggerFor(ButtonAction.RESET_WHEELS)) {

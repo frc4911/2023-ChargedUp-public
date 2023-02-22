@@ -19,9 +19,9 @@ public interface RobotConfiguration {
             //     return new Junior();
             // case Constants.kDeadEyeName:
             //     return new DeadEye();
-            case Constants.ROBOT_NAME_2022:
+            case Constants.ROBOT_NAME_2023:
             default:
-                return new Robot2022();
+                return new Robot2023();
         }
     }    
 }

@@ -80,13 +80,14 @@ public final class ArmSubsystem extends SubsystemBase {
         Logger.getInstance().processInputs("Arm", inputs);
 
         //Override wrist position to avoid being too tall
-        if (checkForHeightViolation()) {
-            armIO.setWristPosition(0);
-        } else {
-            moveWrist(desiredPosition);
-        }
 
-        armIO.adjustError();
+        // if (checkForHeightViolation()) {
+        //     armIO.setWristPosition(0);
+        // } else {
+        //     moveWrist(desiredPosition);
+        // }
+        //TODO:Add back in
+
     }
 
     private double convertDegreesToTicksShoulder(double degrees) {
