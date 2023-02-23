@@ -130,9 +130,13 @@ public final class ArmIOReal implements ArmIO {
     }
     
     @Override
-    public void setBrakeMode() {
-        shoulderMotor1.setNeutralMode(NeutralMode.Brake);
+    public void setWristBrakeMode() {
         wristMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    @Override
+    public void setShoulderBrakeMode() {
+        shoulderMotor1.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override

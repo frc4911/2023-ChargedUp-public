@@ -22,7 +22,13 @@ public class MoveArmCommand extends CommandBase {
 
     @Override
     public void execute() {
-        
+        if (mArmSubsystem.wristAtDesiredPosition()) {
+            mArmSubsystem.setWristBrakeMode();
+        }
+
+        if (mArmSubsystem.shoulderAtDesiredPosition()) {
+            mArmSubsystem.setShoulderBrakeMode();
+        }
     }
 
     @Override

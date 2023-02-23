@@ -34,7 +34,16 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public void setBrakeMode() {
-        armIO.setBrakeMode();
+        armIO.setShoulderBrakeMode();
+        armIO.setWristBrakeMode();
+    }
+
+    public void setShoulderBrakeMode() {
+        armIO.setShoulderBrakeMode();
+    }
+
+    public void setWristBrakeMode() {
+        armIO.setWristBrakeMode();
     }
 
     private void moveShoulder(ArmPositions desiredArmPosition) {
