@@ -91,6 +91,9 @@ public class RobotContainer {
       // );
     }
     
+    for (Trigger trigger : controllerBinding.triggerFor(ButtonAction.ARM_L3)) {
+      trigger.onTrue(new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.CUBE_LEVEL_3));
+    }
     // Move ONLY safe and tested commands above this line.
     if (true) {
       return;

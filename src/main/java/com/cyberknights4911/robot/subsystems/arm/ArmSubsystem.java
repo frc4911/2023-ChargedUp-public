@@ -49,7 +49,7 @@ public final class ArmSubsystem extends SubsystemBase {
 
     //Calculated in ticks at the moment
     public boolean wristAtDesiredPosition() {
-        double wristPosition = armIO.getWristPosition();
+        double wristPosition = armIO.getWristPositionEncoder();
         double desiredWristPosition = convertDegreesToTicksShoulder(desiredPosition.getWristPosition());
         if (Math.abs(wristPosition - desiredWristPosition) < WRIST_ERROR) {
             return true;
@@ -59,7 +59,7 @@ public final class ArmSubsystem extends SubsystemBase {
 
     //Calculated in ticks at the moment
     public boolean shoulderAtDesiredPosition() {
-        double shoulderPosition = armIO.getShoulderPosition();
+        double shoulderPosition = armIO.getShoulderPositionEncoder();
         if (Math.abs(shoulderPosition - convertDegreesToTicksShoulder(desiredPosition.getShoulderPosition())) < ARM_ERROR) {
             return true;
         }
@@ -69,7 +69,7 @@ public final class ArmSubsystem extends SubsystemBase {
     //Check if the robot will be too tall
     //Avoid between 70-210 degrees
     public boolean checkForHeightViolation() {
-        double shoulderPosition = convertTicksToDegreesShoulder(armIO.getShoulderPosition());
+        double shoulderPosition = convertTicksToDegreesShoulder(armIO.getShoulderPositionEncoder());
         if (shoulderPosition <= 210 && shoulderPosition >= 70 ) {
             return true;
         }

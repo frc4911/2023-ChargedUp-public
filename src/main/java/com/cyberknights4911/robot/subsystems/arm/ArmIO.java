@@ -22,12 +22,12 @@ public interface ArmIO {
     public default void updateInputs(ArmIOInputs inputs) {}
 
     /** Get wrist motor position. */
-    public default double getWristPosition() {
+    public default double getWristPositionEncoder() {
         return Double.MIN_VALUE;
     }
 
     /** Get shoulder motor position. */
-    public default double getShoulderPosition() {
+    public default double getShoulderPositionEncoder() {
         return Double.MIN_VALUE;
     }
 

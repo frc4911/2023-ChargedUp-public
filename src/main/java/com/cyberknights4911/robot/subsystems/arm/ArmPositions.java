@@ -4,8 +4,8 @@ public enum ArmPositions {
     //Values are in degrees and later converted to ticks for ease of comprehension
     //0 Degrees are at stowed for both SHOULDER and WRIST
     STOWED(42, 42),
-    CONE_LEVEL_3(220, 42), 
-    CUBE_LEVEL_3(220, 42),
+    CONE_LEVEL_3(220, -10), 
+    CUBE_LEVEL_3(220, -10),
     CONE_LEVEL_2(50, -10),
     CUBE_LEVEL_2(50, -10),
     HYBRID_CONE(300, 42),

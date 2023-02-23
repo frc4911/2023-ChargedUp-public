@@ -21,8 +21,8 @@ public final class ArmIOReal implements ArmIO {
     private final TalonFX shoulderMotor3;
     private final TalonFX wristMotor;
 
-    // private final DutyCycleEncoder shoulderEncoder;
-    // private final DutyCycleEncoder wristEncoder;
+    private final DutyCycleEncoder shoulderEncoder;
+    private final DutyCycleEncoder wristEncoder;
 
     public ArmIOReal() {
         // 1 is closest to robot center and the numbering moves out clockwise
@@ -34,13 +34,13 @@ public final class ArmIOReal implements ArmIO {
             TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_3, Constants.CANIVORE_NAME);
         wristMotor = TalonFXFactory.createTalon(Ports.WRIST_MOTOR, Constants.CANIVORE_NAME);
 
+        shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
+        shoulderEncoder.reset();
+
+        wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
+        wristEncoder.reset();
+
         configMotors();
-
-        // shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
-        // shoulderEncoder.reset();
-
-        // wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
-        // wristEncoder.reset();
     }
     
     private void configMotors() {
@@ -119,15 +119,16 @@ public final class ArmIOReal implements ArmIO {
         inputs.wristTempCelcius = wristMotor.getTemperature();
     }
 
-    // @Override
-    // public double getWristPosition() {
-    //     return wristEncoder.get();
-    // }
+    @Override
+    public double getWristPositionEncoder() {
+        return wristEncoder.get();
+    }
 
-    // @Override
-    // public double getShoulderPosition() {
-    //     return shoulderEncoder.get();
-    // }
+    @Override
+    public double getShoulderPositionEncoder() {
+        return shoulderEncoder.get();
+    }
+    
     @Override
     public void setBrakeMode() {
         shoulderMotor1.setNeutralMode(NeutralMode.Brake);
@@ -155,11 +156,11 @@ public final class ArmIOReal implements ArmIO {
     //The following are all for the Absolute Encoder not the Integrated Falcon Sensor
     //TODO:Use these values to setSelectedSensorPosition() of leader falcon when it gets inaccurate
     public double getShoulderDegrees() {
-        return dutyCycleToDegrees(getShoulderPosition());
+        return dutyCycleToDegrees(getShoulderPositionEncoder());
       }
 
       public double getWristDegrees() {
-        return dutyCycleToDegrees(getWristPosition());
+        return dutyCycleToDegrees(getWristPositionEncoder());
       }
 
       public double dutyCycleToDegrees(double dutyCyclePos) {

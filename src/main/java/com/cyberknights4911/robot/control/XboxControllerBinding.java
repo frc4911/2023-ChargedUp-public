@@ -51,9 +51,10 @@ public final class XboxControllerBinding implements ControllerBinding {
             case CLIMB_WHEEL_LOCK: return Arrays.asList(driverController.povDown());
             case RESET_WHEELS: return Arrays.asList(driverController.start());
             case STOW: return Arrays.asList(operatorController.a());
-            case ARM_L3: return Arrays.asList(operatorController.b());
+            //case ARM_L3: return Arrays.asList(operatorController.b());
             //case ARM_L2: return Arrays.asList(operatorController.x());
-            case ARM_L2: return Arrays.asList(driverController.x());
+            case ARM_L3: return Arrays.asList(driverController.b());//TB Deleted
+            case ARM_L2: return Arrays.asList(driverController.x());//TB Deleted
             case CLIMB_DEPLOY: return Arrays.asList(operatorController.y());
             case CLIMB_LOCKOUT: return Arrays.asList(operatorController.rightBumper());
             case BOB_STOW: return Arrays.asList(operatorController.rightTrigger());
