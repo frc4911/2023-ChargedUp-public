@@ -36,9 +36,10 @@ public final class ArmIOReal implements ArmIO {
 
         shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
         shoulderEncoder.reset();
+        shoulderEncoder.setPositionOffset(0.43);
 
         wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
-        wristEncoder.reset();
+        //wristEncoder.setDistancePerRotation(360);
 
         configMotors();
     }
@@ -72,7 +73,8 @@ public final class ArmIOReal implements ArmIO {
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
         //wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        wristConfiguration.statorCurrLimit.currentLimit = 24.0;
+        wristConfiguration.statorCurrLimit.currentLimit = 20.0;
+        //wristConfiguration.statorCurrLimit.currentLimit = 2.0;
 
         wristConfiguration.statorCurrLimit.enable = true;
         wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
@@ -83,7 +85,7 @@ public final class ArmIOReal implements ArmIO {
 
         wristMotor.configAllSettings(wristConfiguration);
         wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
-        wristMotor.setInverted(true);
+        wristMotor.setInverted(false);
 
 
     }
@@ -153,8 +155,8 @@ public final class ArmIOReal implements ArmIO {
     //Remove error introduced by chain
     @Override
     public void adjustError() {
-        // wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
-        // shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
+        wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
+        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
     }
 
     //The following are all for the Absolute Encoder not the Integrated Falcon Sensor

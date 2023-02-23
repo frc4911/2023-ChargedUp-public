@@ -2,6 +2,7 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -14,8 +15,8 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final int DEGREES_PER_REVOLUTION = 360;
     //In ticks can be changed to be in degrees
     //Makes it run much faster because it does not need to be precise
-    private static final double ARM_ERROR = 5000;
-    private static final double WRIST_ERROR = 5000;
+    private static final double ARM_ERROR = 20000;
+    private static final double WRIST_ERROR = 20000;
 
     private final ArmIO armIO;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -89,6 +90,8 @@ public final class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         armIO.updateInputs(inputs);
         Logger.getInstance().processInputs("Arm", inputs);
+        SmartDashboard.putNumber("WRIST encoder", armIO.getWristPositionEncoder());
+        SmartDashboard.putNumber("SHOULDER encoder", armIO.getShoulderPositionEncoder());
 
         //Override wrist position to avoid being too tall
 
