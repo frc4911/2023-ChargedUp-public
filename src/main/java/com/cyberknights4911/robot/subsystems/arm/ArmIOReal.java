@@ -39,7 +39,7 @@ public final class ArmIOReal implements ArmIO {
         shoulderEncoder.setPositionOffset(0.43);
 
         wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
-        shoulderEncoder.setPositionOffset(0.18); //TODO: Does not appear to do anything for some reason
+        wristEncoder.setPositionOffset(0.18); //TODO: Does not appear to do anything for some reason
 
         configMotors();
     }
@@ -74,7 +74,6 @@ public final class ArmIOReal implements ArmIO {
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
         //wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
         wristConfiguration.statorCurrLimit.currentLimit = 10.0; //TODO:30 amps
-        //wristConfiguration.statorCurrLimit.currentLimit = 2.0;
 
         wristConfiguration.statorCurrLimit.enable = true;
         wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
