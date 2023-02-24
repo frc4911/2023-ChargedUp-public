@@ -20,8 +20,8 @@ public final class BobIOReal implements BobIO {
     private final TalonFX motor;
     
     public BobIOReal() {
-        solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.BOB_SOLENOID_PORT);
-        motor = TalonFXFactory.createTalon(Ports.BOB_MOTOR, Constants.CANIVORE_NAME);
+        solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.Bob.SOLENOID);
+        motor = TalonFXFactory.createTalon(Ports.Bob.MOTOR, Constants.CANIVORE_NAME);
 
         solenoid.set(false);
         configureMotor();

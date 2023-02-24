@@ -163,3 +163,6 @@ bin/
 
 # Version file
 src/main/java/com/cyberknights4911/robot/BuildConstants.java
+
+# Ignore intellij stuff for now
+.idea/

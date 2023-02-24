@@ -37,9 +37,9 @@ public class Robot2023 implements RobotConfiguration {
         SwerveModuleConfiguration frontRightModuleConstants = new SwerveModuleConfiguration();
 
         frontRightModuleConstants.kName = "Front Right";
-        frontRightModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_FRONT_RIGHT_DRIVE;
-        frontRightModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_FRONT_RIGHT_STEER;
-        frontRightModuleConstants.kCANCoderId = Ports.ROBOT_2022_FRONT_RIGHT_CANCODER;
+        frontRightModuleConstants.kDriveMotorTalonId = Ports.Drive.FRONT_RIGHT_DRIVE;
+        frontRightModuleConstants.kSteerMotorTalonId = Ports.Drive.FRONT_RIGHT_STEER;
+        frontRightModuleConstants.kCANCoderId = Ports.Drive.FRONT_RIGHT_CANCODER;
         frontRightModuleConstants.kCANCoderOffsetDegrees = FRONT_RIGHT_CANCODER_OFFSET_DEGREES;
         frontRightModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
         frontRightModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
@@ -59,9 +59,9 @@ public class Robot2023 implements RobotConfiguration {
         SwerveModuleConfiguration frontLeftModuleConstants = new SwerveModuleConfiguration();
 
         frontLeftModuleConstants.kName = "Front Left";
-        frontLeftModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_FRONT_LEFT_DRIVE;
-        frontLeftModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_FRONT_LEFT_STEER;
-        frontLeftModuleConstants.kCANCoderId = Ports.ROBOT_2022_FRONT_LEFT_CANCODER;
+        frontLeftModuleConstants.kDriveMotorTalonId = Ports.Drive.FRONT_LEFT_DRIVE;
+        frontLeftModuleConstants.kSteerMotorTalonId = Ports.Drive.FRONT_LEFT_STEER;
+        frontLeftModuleConstants.kCANCoderId = Ports.Drive.FRONT_LEFT_CANCODER;
         frontLeftModuleConstants.kCANCoderOffsetDegrees = FRONT_LEFT_CANCODER_OFFSET_DEGREES;
         frontLeftModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
         frontLeftModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
@@ -81,9 +81,9 @@ public class Robot2023 implements RobotConfiguration {
         SwerveModuleConfiguration backLeftModuleConstants = new SwerveModuleConfiguration();
 
         backLeftModuleConstants.kName = "Back Left";
-        backLeftModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_BACK_LEFT_DRIVE;
-        backLeftModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_BACK_LEFT_STEER;
-        backLeftModuleConstants.kCANCoderId = Ports.ROBOT_2022_BACK_LEFT_CANCODER;
+        backLeftModuleConstants.kDriveMotorTalonId = Ports.Drive.BACK_LEFT_DRIVE;
+        backLeftModuleConstants.kSteerMotorTalonId = Ports.Drive.BACK_LEFT_STEER;
+        backLeftModuleConstants.kCANCoderId = Ports.Drive.BACK_LEFT_CANCODER;
         backLeftModuleConstants.kCANCoderOffsetDegrees = BACK_LEFT_CANCODER_OFFSET_DEGREES;
         backLeftModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
         backLeftModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
@@ -103,9 +103,9 @@ public class Robot2023 implements RobotConfiguration {
         SwerveModuleConfiguration backRightModuleConstants = new SwerveModuleConfiguration();
 
         backRightModuleConstants.kName = "Back Right";
-        backRightModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_BACK_RIGHT_DRIVE;
-        backRightModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_BACK_RIGHT_STEER;
-        backRightModuleConstants.kCANCoderId = Ports.ROBOT_2022_BACK_RIGHT_CANCODER;
+        backRightModuleConstants.kDriveMotorTalonId = Ports.Drive.BACK_RIGHT_DRIVE;
+        backRightModuleConstants.kSteerMotorTalonId = Ports.Drive.BACK_RIGHT_STEER;
+        backRightModuleConstants.kCANCoderId = Ports.Drive.BACK_RIGHT_CANCODER;
         backRightModuleConstants.kCANCoderOffsetDegrees = BACK_RIGHT_CANCODER_OFFSET_DEGREES;
         backRightModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
         backRightModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;

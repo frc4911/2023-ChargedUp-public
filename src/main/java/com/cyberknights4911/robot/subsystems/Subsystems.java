@@ -33,7 +33,6 @@ public final class Subsystems {
     private final ArmSubsystem armSubsystem ;
     private final SwerveSubsystem swerveSubsystem;
     private final BobSubsystem bobSubsystem;
-    private final HoodSubsystem hoodSubsystem;
 
     public Subsystems() {
         RobotConfiguration configuration =  RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2023);
@@ -51,7 +50,6 @@ public final class Subsystems {
                 new SwerveIOReal(configuration.getBackRightModuleConstants())
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem(new HoodIO() {});
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
@@ -65,7 +63,6 @@ public final class Subsystems {
                 new SwerveIO() {}
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem(new HoodIO() {});
         }
     }
 
@@ -87,9 +84,5 @@ public final class Subsystems {
 
     public BobSubsystem getBobSubsystem() {
         return bobSubsystem;
-    }
-
-    public HoodSubsystem getHoodSubsystem() {
-        return hoodSubsystem;
     }
 }

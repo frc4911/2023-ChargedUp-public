@@ -16,7 +16,7 @@ public final class SlurppIOReal implements SlurppIO {
     private final TalonFX motor;
 
     public SlurppIOReal() {
-        motor = TalonFXFactory.createTalon(Ports.SLURPP_MOTOR, Constants.CANIVORE_NAME);
+        motor = TalonFXFactory.createTalon(Ports.Slurpp.MOTOR, Constants.CANIVORE_NAME);
         motor.setInverted(false);
     }
 
