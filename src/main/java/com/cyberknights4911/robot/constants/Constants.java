@@ -13,8 +13,8 @@ public class Constants {
     //2023 Physical Robot Dimensions
     public static final double ROBOT_WHEEL_BASE = 22.75;
     public static final double ROBOT_WHEEL_LENGTH = 22.75;
-    public static final double ROBOT_WIDTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_BASE);
-    public static final double ROBOT_LENGTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_LENGTH);
+    public static final double ROBOT_WHEEL_BASE_METERS = Units.inchesToMeters(ROBOT_WHEEL_BASE);
+    public static final double ROBOT_WHEEL_LENGTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_LENGTH);
     public static final double ROBOT_HALF_WIDTH = ROBOT_WHEEL_BASE / 2.0;
     public static final double ROBOT_HALF_LENGTH = ROBOT_WHEEL_LENGTH / 2.0;
 
