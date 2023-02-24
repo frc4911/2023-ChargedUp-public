@@ -1,9 +1,6 @@
 package com.cyberknights4911.robot.control;
 
-import java.util.List;
 import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * An abstraction layer for controller button and stick bindings. 
@@ -16,7 +13,7 @@ public interface ControllerBinding {
      * @param action the button action that is being bound.
      * @return the input triggers that maps to the given action.
      */
-    public List<Trigger> triggerFor(ButtonAction action);
+    public Triggers triggersFor(ButtonAction action);
 
     /**
      * Given a desired stick action, return the actual stick input supplier.
