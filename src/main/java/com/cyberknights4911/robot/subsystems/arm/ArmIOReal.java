@@ -39,7 +39,7 @@ public final class ArmIOReal implements ArmIO {
         shoulderEncoder.setPositionOffset(0.43);
 
         wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
-        wristEncoder.setPositionOffset(0.18); //TODO: Does not appear to do anything for some reason
+        wristEncoder.setPositionOffset(0.18);
 
         configMotors();
     }
