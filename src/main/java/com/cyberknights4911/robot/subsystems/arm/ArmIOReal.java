@@ -39,7 +39,7 @@ public final class ArmIOReal implements ArmIO {
         shoulderEncoder.setPositionOffset(0.43);
 
         wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
-        wristEncoder.setPositionOffset(0.18);
+        wristEncoder.setPositionOffset(0.9);
 
         configMotors();
     }
@@ -47,9 +47,8 @@ public final class ArmIOReal implements ArmIO {
     private void configMotors() {
         //SHOULDER CONFIGURATION
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
-        //shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        shoulderConfiguration.supplyCurrLimit.currentLimit = 0.0;
-        shoulderConfiguration.statorCurrLimit.currentLimit = 0.0;
+        shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        shoulderConfiguration.statorCurrLimit.currentLimit = 0.0;//25.0;
         shoulderConfiguration.supplyCurrLimit.enable = true;
         shoulderConfiguration.statorCurrLimit.enable = true;
         shoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
@@ -66,13 +65,13 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor3.setInverted(InvertType.FollowMaster);
 
         //TODO: May want to use setStatusFramePeriod to be lower and make motors followers if having CAN utilization issues
-        shoulderMotor3.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        shoulderMotor3.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
+        shoulderMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
 
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
         //wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        wristConfiguration.statorCurrLimit.currentLimit = 10.0; //TODO:30 amps
+        wristConfiguration.statorCurrLimit.currentLimit = 20.0; //TODO:30 amps
 
         wristConfiguration.statorCurrLimit.enable = true;
         wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();

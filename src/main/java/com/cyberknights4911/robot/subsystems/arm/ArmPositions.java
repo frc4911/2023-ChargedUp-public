@@ -2,10 +2,9 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 public enum ArmPositions {
     //Values are in degrees and later converted to ticks for ease of comprehension
-    //0 Degrees are at stowed for both SHOULDER and WRIST
     STOWED(42, 42),
-    CONE_LEVEL_3(110, 270), 
-    CUBE_LEVEL_3(110, 270),
+    CONE_LEVEL_3(180, 270), 
+    CUBE_LEVEL_3(180, 270),
     CONE_LEVEL_2(90, 90),
     CUBE_LEVEL_2(90, 90),
     HYBRID_CONE(300, 42),

@@ -109,8 +109,8 @@ public final class ArmSubsystem extends SubsystemBase {
         return degrees * TICKS_PER_REVOLUTION * SHOULDER_GEAR_RATIO / DEGREES_PER_REVOLUTION;
     }
 
-    private double convertTicksToDegreesShoulder(double degrees) {
-        return degrees * DEGREES_PER_REVOLUTION / TICKS_PER_REVOLUTION / SHOULDER_GEAR_RATIO;
+    private double convertTicksToDegreesShoulder(double ticks) {
+        return ticks * DEGREES_PER_REVOLUTION / TICKS_PER_REVOLUTION / SHOULDER_GEAR_RATIO;
     }
 
     private double convertDegreesToTicksWrist(double degrees) {
