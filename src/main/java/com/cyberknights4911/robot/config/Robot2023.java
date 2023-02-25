@@ -23,100 +23,95 @@ public class Robot2023 implements RobotConfiguration {
 
     @Override
     public SwerveConfiguration getSwerveConfiguration() {
-        return new SwerveConfiguration(
-                Constants.ROBOT_LENGTH_METERS,
-                Constants.ROBOT_WIDTH_METERS,
-                Units.feetToMeters(1), //7.5 Max speed in feet per second in auto: Theoretical max is 17.065 ft per second
-                Math.toRadians(30), // 150 Max change in degrees per second
-                0.01, 0, 0, 0 // kSwerveHeadingKp,kSwerveHeadingKi,kSwerveHeadingKp,kSwerveHeadingKf
-        );
+        return new SwerveConfiguration.Builder()
+                .setWheelbaseLengthInMeters(Constants.ROBOT_WHEEL_LENGTH_METERS)
+                .setWheelbaseWidthInMeters(Constants.ROBOT_WHEEL_BASE_METERS)
+                .setMaxSpeedInMetersPerSecond(Units.feetToMeters(1))
+                .setMaxSpeedInRadiansPerSecondLimit(Math.toRadians(30))
+                .setSwerveHeadingKp(0.01)
+                .setSwerveHeadingKi(0)
+                .setSwerveHeadingKd(0)
+                .setSwerveHeadingKf(0)
+                .build();
     }
 
     @Override
     public SwerveModuleConfiguration getFrontRightModuleConstants() {
-        SwerveModuleConfiguration frontRightModuleConstants = new SwerveModuleConfiguration();
-
-        frontRightModuleConstants.kName = "Front Right";
-        frontRightModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_FRONT_RIGHT_DRIVE;
-        frontRightModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_FRONT_RIGHT_STEER;
-        frontRightModuleConstants.kCANCoderId = Ports.ROBOT_2022_FRONT_RIGHT_CANCODER;
-        frontRightModuleConstants.kCANCoderOffsetDegrees = FRONT_RIGHT_CANCODER_OFFSET_DEGREES;
-        frontRightModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
-        frontRightModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
-        frontRightModuleConstants.kSteerReduction = MK4_L2I_STEER_REDUCTION;
-        frontRightModuleConstants.kInvertDrive = true;
-        frontRightModuleConstants.kInvertSteerMotor = true;
-        frontRightModuleConstants.kSteerMotorSlot0Kp = STEER_MOTOR_KP;
-        frontRightModuleConstants.kSteerMotorSlot0Ki = STEER_MOTOR_KI;
-        frontRightModuleConstants.kSteerMotorSlot0Kd = STEER_MOTOR_KD;
-        frontRightModuleConstants.kSteerMotorSlot0Kf = STEER_MOTOR_KF;
-
-        return frontRightModuleConstants;
+        return new SwerveModuleConfiguration.Builder()
+                .setName("Front Right")
+                .setDriveMotorTalonId(Ports.Drive.FRONT_RIGHT_DRIVE)
+                .setSteerMotorTalonId(Ports.Drive.FRONT_RIGHT_STEER)
+                .setCANCoderId(Ports.Drive.FRONT_RIGHT_CANCODER)
+                .setCANCoderOffsetDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES)
+                .setWheelDiameter(MK4_L2I_WHEEL_DIAMETER)
+                .setDriveReduction(MK4_L2I_DRIVE_REDUCTION)
+                .setSteerReduction(MK4_L2I_STEER_REDUCTION)
+                .setInvertDrive(true)
+                .setInvertSteerMotor(true)
+                .setSteerMotorSlot0Kp(STEER_MOTOR_KP)
+                .setSteerMotorSlot0Ki(STEER_MOTOR_KI)
+                .setSteerMotorSlot0Kd(STEER_MOTOR_KD)
+                .setSteerMotorSlot0Kf(STEER_MOTOR_KF)
+                .build();
     }
 
     @Override
     public SwerveModuleConfiguration getFrontLeftModuleConstants() {
-        SwerveModuleConfiguration frontLeftModuleConstants = new SwerveModuleConfiguration();
-
-        frontLeftModuleConstants.kName = "Front Left";
-        frontLeftModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_FRONT_LEFT_DRIVE;
-        frontLeftModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_FRONT_LEFT_STEER;
-        frontLeftModuleConstants.kCANCoderId = Ports.ROBOT_2022_FRONT_LEFT_CANCODER;
-        frontLeftModuleConstants.kCANCoderOffsetDegrees = FRONT_LEFT_CANCODER_OFFSET_DEGREES;
-        frontLeftModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
-        frontLeftModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
-        frontLeftModuleConstants.kSteerReduction = MK4_L2I_STEER_REDUCTION;
-        frontLeftModuleConstants.kInvertDrive = true;
-        frontLeftModuleConstants.kInvertSteerMotor = true;
-        frontLeftModuleConstants.kSteerMotorSlot0Kp = STEER_MOTOR_KP;
-        frontLeftModuleConstants.kSteerMotorSlot0Ki = STEER_MOTOR_KI;
-        frontLeftModuleConstants.kSteerMotorSlot0Kd = STEER_MOTOR_KD;
-        frontLeftModuleConstants.kSteerMotorSlot0Kf = STEER_MOTOR_KF;
-
-        return frontLeftModuleConstants;
+        return new SwerveModuleConfiguration.Builder()
+                .setName("Front Left")
+                .setDriveMotorTalonId(Ports.Drive.FRONT_LEFT_DRIVE)
+                .setSteerMotorTalonId(Ports.Drive.FRONT_LEFT_STEER)
+                .setCANCoderId(Ports.Drive.FRONT_LEFT_CANCODER)
+                .setCANCoderOffsetDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES)
+                .setWheelDiameter(MK4_L2I_WHEEL_DIAMETER)
+                .setDriveReduction(MK4_L2I_DRIVE_REDUCTION)
+                .setSteerReduction(MK4_L2I_STEER_REDUCTION)
+                .setInvertDrive(true)
+                .setInvertSteerMotor(true)
+                .setSteerMotorSlot0Kp(STEER_MOTOR_KP)
+                .setSteerMotorSlot0Ki(STEER_MOTOR_KI)
+                .setSteerMotorSlot0Kd(STEER_MOTOR_KD)
+                .setSteerMotorSlot0Kf(STEER_MOTOR_KF)
+                .build();
     }
 
     @Override
     public SwerveModuleConfiguration getBackLeftModuleConstants() {
-        SwerveModuleConfiguration backLeftModuleConstants = new SwerveModuleConfiguration();
-
-        backLeftModuleConstants.kName = "Back Left";
-        backLeftModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_BACK_LEFT_DRIVE;
-        backLeftModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_BACK_LEFT_STEER;
-        backLeftModuleConstants.kCANCoderId = Ports.ROBOT_2022_BACK_LEFT_CANCODER;
-        backLeftModuleConstants.kCANCoderOffsetDegrees = BACK_LEFT_CANCODER_OFFSET_DEGREES;
-        backLeftModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
-        backLeftModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
-        backLeftModuleConstants.kSteerReduction = MK4_L2I_STEER_REDUCTION;
-        backLeftModuleConstants.kInvertDrive = true;
-        backLeftModuleConstants.kInvertSteerMotor = true;
-        backLeftModuleConstants.kSteerMotorSlot0Kp = STEER_MOTOR_KP;
-        backLeftModuleConstants.kSteerMotorSlot0Ki = STEER_MOTOR_KI;
-        backLeftModuleConstants.kSteerMotorSlot0Kd = STEER_MOTOR_KD;
-        backLeftModuleConstants.kSteerMotorSlot0Kf = STEER_MOTOR_KF;
-
-        return backLeftModuleConstants;
+        return new SwerveModuleConfiguration.Builder()
+                .setName("Back Left")
+                .setDriveMotorTalonId(Ports.Drive.BACK_LEFT_DRIVE)
+                .setSteerMotorTalonId(Ports.Drive.BACK_LEFT_STEER)
+                .setCANCoderId(Ports.Drive.BACK_LEFT_CANCODER)
+                .setCANCoderOffsetDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES)
+                .setWheelDiameter(MK4_L2I_WHEEL_DIAMETER)
+                .setDriveReduction(MK4_L2I_DRIVE_REDUCTION)
+                .setSteerReduction(MK4_L2I_STEER_REDUCTION)
+                .setInvertDrive(true)
+                .setInvertSteerMotor(true)
+                .setSteerMotorSlot0Kp(STEER_MOTOR_KP)
+                .setSteerMotorSlot0Ki(STEER_MOTOR_KI)
+                .setSteerMotorSlot0Kd(STEER_MOTOR_KD)
+                .setSteerMotorSlot0Kf(STEER_MOTOR_KF)
+                .build();
     }
 
     @Override
     public SwerveModuleConfiguration getBackRightModuleConstants() {
-        SwerveModuleConfiguration backRightModuleConstants = new SwerveModuleConfiguration();
-
-        backRightModuleConstants.kName = "Back Right";
-        backRightModuleConstants.kDriveMotorTalonId = Ports.ROBOT_2022_BACK_RIGHT_DRIVE;
-        backRightModuleConstants.kSteerMotorTalonId = Ports.ROBOT_2022_BACK_RIGHT_STEER;
-        backRightModuleConstants.kCANCoderId = Ports.ROBOT_2022_BACK_RIGHT_CANCODER;
-        backRightModuleConstants.kCANCoderOffsetDegrees = BACK_RIGHT_CANCODER_OFFSET_DEGREES;
-        backRightModuleConstants.kWheelDiameter = MK4_L2I_WHEEL_DIAMETER;
-        backRightModuleConstants.kDriveReduction = MK4_L2I_DRIVE_REDUCTION;
-        backRightModuleConstants.kSteerReduction = MK4_L2I_STEER_REDUCTION;
-        backRightModuleConstants.kInvertDrive = true;
-        backRightModuleConstants.kInvertSteerMotor = true;
-        backRightModuleConstants.kSteerMotorSlot0Kp = STEER_MOTOR_KP;
-        backRightModuleConstants.kSteerMotorSlot0Ki = STEER_MOTOR_KI;
-        backRightModuleConstants.kSteerMotorSlot0Kd = STEER_MOTOR_KD;
-        backRightModuleConstants.kSteerMotorSlot0Kf = STEER_MOTOR_KF;
-
-        return backRightModuleConstants;
+        return new SwerveModuleConfiguration.Builder()
+                .setName("Back Right")
+                .setDriveMotorTalonId(Ports.Drive.BACK_RIGHT_DRIVE)
+                .setSteerMotorTalonId(Ports.Drive.BACK_RIGHT_STEER)
+                .setCANCoderId(Ports.Drive.BACK_RIGHT_CANCODER)
+                .setCANCoderOffsetDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES)
+                .setWheelDiameter(MK4_L2I_WHEEL_DIAMETER)
+                .setDriveReduction(MK4_L2I_DRIVE_REDUCTION)
+                .setSteerReduction(MK4_L2I_STEER_REDUCTION)
+                .setInvertDrive(true)
+                .setInvertSteerMotor(true)
+                .setSteerMotorSlot0Kp(STEER_MOTOR_KP)
+                .setSteerMotorSlot0Ki(STEER_MOTOR_KI)
+                .setSteerMotorSlot0Kd(STEER_MOTOR_KD)
+                .setSteerMotorSlot0Kf(STEER_MOTOR_KF)
+                .build();
     }
 }

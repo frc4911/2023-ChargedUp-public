@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public final class SlurppSubsystem extends SubsystemBase {
 
     private final SlurppIO splurppIO;
-    private final SplurppIOInputsAutoLogged inputs = new SplurppIOInputsAutoLogged();
+    private final SlurppIOInputsAutoLogged inputs = new SlurppIOInputsAutoLogged();
 
     public SlurppSubsystem(SlurppIO splurppIO) {
         super();

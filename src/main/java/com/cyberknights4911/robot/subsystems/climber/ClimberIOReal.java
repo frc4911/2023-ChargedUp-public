@@ -9,7 +9,7 @@ public final class ClimberIOReal implements ClimberIO, AutoCloseable {
     private final Solenoid solenoid;
 
     public ClimberIOReal() {
-        solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.CLIMB_SOLENOID_PORT);
+        solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.Climber.SOLENOID);
         solenoid.set(false);
     }
     

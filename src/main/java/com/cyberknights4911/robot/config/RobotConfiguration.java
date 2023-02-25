@@ -3,17 +3,17 @@ package com.cyberknights4911.robot.config;
 import com.cyberknights4911.robot.constants.Constants;
 
 public interface RobotConfiguration {
-    public SwerveConfiguration getSwerveConfiguration();
+    SwerveConfiguration getSwerveConfiguration();
 
-    public SwerveModuleConfiguration getFrontRightModuleConstants();
+    SwerveModuleConfiguration getFrontRightModuleConstants();
 
-    public SwerveModuleConfiguration getFrontLeftModuleConstants();
+    SwerveModuleConfiguration getFrontLeftModuleConstants();
 
-    public SwerveModuleConfiguration getBackLeftModuleConstants();
+    SwerveModuleConfiguration getBackLeftModuleConstants();
 
-    public SwerveModuleConfiguration getBackRightModuleConstants();
+    SwerveModuleConfiguration getBackRightModuleConstants();
 
-    public static RobotConfiguration getRobotConfiguration(String robotName) {
+    static RobotConfiguration getRobotConfiguration(String robotName) {
         switch (robotName) {
             // case Constants.kJuniorName:
             //     return new Junior();

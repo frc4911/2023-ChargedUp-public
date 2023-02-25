@@ -6,8 +6,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 public class Constants {
     /* All distance measurements are in inches, unless otherwise noted. */
 
-    public static final String ROBOT_NAME = "QuickSlurpp";
-
     public static final String ROBOT_NAME_2023 = "Robot2023";
 
     public static final String CANIVORE_NAME = "CANivore";
@@ -15,8 +13,8 @@ public class Constants {
     //2023 Physical Robot Dimensions
     public static final double ROBOT_WHEEL_BASE = 22.75;
     public static final double ROBOT_WHEEL_LENGTH = 22.75;
-    public static final double ROBOT_WIDTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_BASE);
-    public static final double ROBOT_LENGTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_LENGTH);
+    public static final double ROBOT_WHEEL_BASE_METERS = Units.inchesToMeters(ROBOT_WHEEL_BASE);
+    public static final double ROBOT_WHEEL_LENGTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_LENGTH);
     public static final double ROBOT_HALF_WIDTH = ROBOT_WHEEL_BASE / 2.0;
     public static final double ROBOT_HALF_LENGTH = ROBOT_WHEEL_LENGTH / 2.0;
 
@@ -54,16 +52,12 @@ public class Constants {
     //Robot Starting Pose
     public static final Pose2d ROBOT_STARTING_POSE = new Pose2d();
 
-    // END NEW SWERVE
-
     // LED/Canifier
     public static final int LONG_CAN_TIMEOUTS_MS = 100; // use for constructors
 
     // Controller port
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERATOR_CONTROLLER_PORT = 1;
-    // Claw Talon ID
-    public static final int CLAW_MOTOR_ID = 1;
 
     //auto balance
     public static final boolean PITCH_INVERSION = false;

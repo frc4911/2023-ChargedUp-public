@@ -29,27 +29,26 @@ public class SwerveDriveModule {
         OPEN_LOOP
     }
 
-    String mModuleName;
+    public final SwerveModuleConfiguration config;
+    public final String moduleName;
 
     private final SwerveIO swerveIO;
     private final SwerveIOInputsAutoLogged inputs = new SwerveIOInputsAutoLogged();
+    private final PeriodicIO periodicIO = new PeriodicIO();
+    private final double maxSpeedInMetersPerSecond;
 
-    private final PeriodicIO mPeriodicIO = new PeriodicIO();
-    private ControlState mControlState = ControlState.NEUTRAL;
-    public final SwerveModuleConfiguration mConfig;
-
-    private double mMaxSpeedInMetersPerSecond = 1.0;
+    private ControlState controlState = ControlState.NEUTRAL;
 
     public SwerveDriveModule(
         SwerveIO swerveIO, SwerveModuleConfiguration constants, double maxSpeedInMetersPerSecond
     ) {
         this.swerveIO = swerveIO;
-        this.mConfig = constants;
-        mMaxSpeedInMetersPerSecond = maxSpeedInMetersPerSecond;
-        mModuleName = String.format("%s %d", mConfig.kName, mConfig.kModuleId);
-        mPeriodicIO.moduleID = mConfig.kModuleId;
+        this.config = constants;
+        this.maxSpeedInMetersPerSecond = maxSpeedInMetersPerSecond;
+        moduleName = String.format("%s %d", config.name, config.moduleId);
+        periodicIO.moduleID = config.moduleId;
 
-        System.out.println("SwerveDriveModule " + mModuleName + "," + mConfig.kSteerMotorSlot0Kp);
+        System.out.println("SwerveDriveModule " + moduleName + "," + config.steerMotorSlot0Kp);
     }
 
     protected void convertCancoderToFX2(){
@@ -92,7 +91,7 @@ public class SwerveDriveModule {
             cancoderDegrees = cancoderPositions[0];
         }
         else{
-            System.out.println(mModuleName+" assuming wheels aligned to 0 degrees, not using CANCoders");
+            System.out.println(moduleName +" assuming wheels aligned to 0 degrees, not using CANCoders");
             cancoderDegrees = 0;
         }
         double fxTicksBefore = swerveIO.getTurnSensorPosition();
@@ -108,7 +107,7 @@ public class SwerveDriveModule {
             loops++;
         }
 
-        System.out.println(mConfig.kName + " cancoder degrees: " + cancoderDegrees +
+        System.out.println(config.name + " cancoder degrees: " + cancoderDegrees +
                 ",  fx encoder ticks (before, target, adjusted): (" + fxTicksBefore + "," + fxTicksTarget + ","
                 + fxTicksNow + ") loops:" + loops);
     }
@@ -158,15 +157,15 @@ public class SwerveDriveModule {
         // Note that Falcon is contiguous, so it can be larger than 2pi. Convert to
         // encoder readings
         // to SI units and let Rotation2d normalizes the angle between 0 and 2pi.
-        Rotation2d currentAngle = Rotation2d.fromDegrees(Math.toDegrees(encoderUnitsToRadians(mPeriodicIO.steerPosition)));
+        Rotation2d currentAngle = Rotation2d.fromDegrees(Math.toDegrees(encoderUnitsToRadians(periodicIO.steerPosition)));
 
-        return new SwerveModuleState(encVelocityToMetersPerSecond(mPeriodicIO.driveVelocity), currentAngle);
+        return new SwerveModuleState(encVelocityToMetersPerSecond(periodicIO.driveVelocity), currentAngle);
     }
 
     public synchronized SwerveModulePosition getPosition(){
-        Rotation2d currentAngle = Rotation2d.fromDegrees(Math.toDegrees(encoderUnitsToRadians(mPeriodicIO.steerPosition)));
+        Rotation2d currentAngle = Rotation2d.fromDegrees(Math.toDegrees(encoderUnitsToRadians(periodicIO.steerPosition)));
 
-        return new SwerveModulePosition(encoderUnitsToDistance(mPeriodicIO.drivePosition), currentAngle);
+        return new SwerveModulePosition(encoderUnitsToDistance(periodicIO.drivePosition), currentAngle);
     }
 
     /**
@@ -179,7 +178,7 @@ public class SwerveDriveModule {
         // Note that Falcon is contiguous, so it can be larger than 2pi. Convert to
         // encoder readings
         // to SI units and let Rotation2d normalizes the angle between 0 and 2pi.
-        Rotation2d currentAngle = Rotation2d.fromDegrees(Math.toDegrees(encoderUnitsToRadians(mPeriodicIO.steerPosition)));
+        Rotation2d currentAngle = Rotation2d.fromDegrees(Math.toDegrees(encoderUnitsToRadians(periodicIO.steerPosition)));
 
         // Minimizing the change in heading for the swerve module potentially requires
         // reversing the
@@ -191,7 +190,7 @@ public class SwerveDriveModule {
         // Converts the velocity in SI units (meters per second) to a voltage (as a
         // percentage)
         // for the motor controllers.
-        setDriveOpenLoop(Math.min(state.speedMetersPerSecond, mMaxSpeedInMetersPerSecond));
+        setDriveOpenLoop(Math.min(state.speedMetersPerSecond, maxSpeedInMetersPerSecond));
 
         setReferenceAngle(state.angle.getRadians());
     }
@@ -204,7 +203,7 @@ public class SwerveDriveModule {
      */
     private void setReferenceAngle(double referenceAngleRadians) {
         // Note that Falcon is contiguous, so it can be larger than 2pi.
-        double currentAngleRadians = encoderUnitsToRadians(mPeriodicIO.steerPosition);
+        double currentAngleRadians = encoderUnitsToRadians(periodicIO.steerPosition);
 
         // Map onto (0, 2pi)
         double currentAngleRadiansMod = Angles.normalizeAngle(currentAngleRadians);
@@ -218,8 +217,8 @@ public class SwerveDriveModule {
         double adjustedReferenceAngleRadians = currentAngleRadians + shortestDistance;
 
         // mPeriodicIO.steerControlMode = ControlMode.MotionMagic;
-        mPeriodicIO.steerControlMode = ControlMode.Position;
-        mPeriodicIO.steerDemand = radiansToEncoderUnits(adjustedReferenceAngleRadians);
+        periodicIO.steerControlMode = ControlMode.Position;
+        periodicIO.steerDemand = radiansToEncoderUnits(adjustedReferenceAngleRadians);
     }
 
     /**
@@ -229,8 +228,8 @@ public class SwerveDriveModule {
      * @param angularVelocityInRadiansPerSecond Normalized value
      */
     private void setSteerOpenLoop(double angularVelocityInRadiansPerSecond) {
-        mPeriodicIO.steerControlMode = ControlMode.PercentOutput;
-        mPeriodicIO.steerDemand = angularVelocityInRadiansPerSecond;
+        periodicIO.steerControlMode = ControlMode.PercentOutput;
+        periodicIO.steerDemand = angularVelocityInRadiansPerSecond;
     }
 
     /**
@@ -240,21 +239,21 @@ public class SwerveDriveModule {
      * @param velocity Normalized value
      */
     private void setDriveOpenLoop(double velocity) {
-        if (mControlState != ControlState.OPEN_LOOP) {
-            mControlState = ControlState.OPEN_LOOP;
+        if (controlState != ControlState.OPEN_LOOP) {
+            controlState = ControlState.OPEN_LOOP;
         }
 
-        mPeriodicIO.driveControlMode = ControlMode.PercentOutput;
-        mPeriodicIO.driveDemand = velocity;
+        periodicIO.driveControlMode = ControlMode.PercentOutput;
+        periodicIO.driveDemand = velocity;
     }
 
     // Steer motor
     private double encoderUnitsToRadians(double encUnits) {
-        return encUnits / mConfig.kSteerMotorTicksPerRadian;
+        return encUnits / config.steerMotorTicksPerRadian;
     }
 
     private double radiansToEncoderUnits(double radians) {
-        return radians * mConfig.kSteerMotorTicksPerRadian;
+        return radians * config.steerMotorTicksPerRadian;
     }
 
     private int degreesToEncUnits(double degrees) {
@@ -267,15 +266,15 @@ public class SwerveDriveModule {
 
     // Drive motor
     private double encoderUnitsToDistance(double ticks) {
-        return ticks * mConfig.kDriveTicksPerUnitDistance;
+        return ticks * config.driveTicksPerUnitDistance;
     }
 
     private double encoderUnitsToVelocity(double ticks) {
-        return ticks * mConfig.kDriveTicksPerUnitVelocity;
+        return ticks * config.driveTicksPerUnitVelocity;
     }
 
     private double distanceToEncoderUnits(double distanceInMeters) {
-        return distanceInMeters / mConfig.kDriveTicksPerUnitDistance;
+        return distanceInMeters / config.driveTicksPerUnitDistance;
     }
 
     // private double encUnitsToInches(double encUnits) {
@@ -287,11 +286,11 @@ public class SwerveDriveModule {
     // }
 
     private double metersPerSecondToEncVelocity(double metersPerSecond) {
-        return metersPerSecond / mConfig.kDriveTicksPerUnitVelocity;
+        return metersPerSecond / config.driveTicksPerUnitVelocity;
     }
 
     private double encVelocityToMetersPerSecond(double encUnitsPer100ms) {
-        return encUnitsPer100ms * mConfig.kDriveTicksPerUnitVelocity;
+        return encUnitsPer100ms * config.driveTicksPerUnitVelocity;
     }
 
     /**
@@ -316,48 +315,48 @@ public class SwerveDriveModule {
     }
 
     public synchronized void stop() {
-        if (mControlState != ControlState.NEUTRAL) {
-            mControlState = ControlState.NEUTRAL;
+        if (controlState != ControlState.NEUTRAL) {
+            controlState = ControlState.NEUTRAL;
         }
 
         swerveIO.setDrive(ControlMode.PercentOutput, 0.0);
         swerveIO.setTurn(ControlMode.PercentOutput, 0.0);
-        mPeriodicIO.driveDemand = 0;
-        mPeriodicIO.steerDemand = 0;
-        mPeriodicIO.driveControlMode = ControlMode.PercentOutput;
-        mPeriodicIO.steerControlMode = ControlMode.PercentOutput;
+        periodicIO.driveDemand = 0;
+        periodicIO.steerDemand = 0;
+        periodicIO.driveControlMode = ControlMode.PercentOutput;
+        periodicIO.steerControlMode = ControlMode.PercentOutput;
     }
 
     public synchronized void readPeriodicInputs() {
-        mPeriodicIO.steerPosition = (int) swerveIO.getTurnPosition();
-        mPeriodicIO.drivePosition = (int) swerveIO.getDrivePosition();
-        mPeriodicIO.driveVelocity = swerveIO.getDriveVelocity();
-        mPeriodicIO.steerVelocity = swerveIO.getTurnVelocity();
+        periodicIO.steerPosition = (int) swerveIO.getTurnPosition();
+        periodicIO.drivePosition = (int) swerveIO.getDrivePosition();
+        periodicIO.driveVelocity = swerveIO.getDriveVelocity();
+        periodicIO.steerVelocity = swerveIO.getTurnVelocity();
         // mPeriodicIO.steerError = mSteerMotor.getClosedLoopError(0);
 
         swerveIO.updateInputs(inputs);
-        Logger.getInstance().processInputs(mModuleName, inputs);
+        Logger.getInstance().processInputs(moduleName, inputs);
     }
 
     public synchronized void writePeriodicOutputs() {
-        switch (mControlState) {
+        switch (controlState) {
             case OPEN_LOOP:
                 // don't move if throttle is 0
-                if (Util.epsilonEquals(mPeriodicIO.driveDemand, 0.0, mConfig.kDriveDeadband)) {
+                if (Util.epsilonEquals(periodicIO.driveDemand, 0.0, config.driveDeadband)) {
                     stop();
                 } else {
-                    swerveIO.setDrive(mPeriodicIO.driveControlMode, mPeriodicIO.driveDemand);
-                    swerveIO.setTurn(mPeriodicIO.steerControlMode, mPeriodicIO.steerDemand);
+                    swerveIO.setDrive(periodicIO.driveControlMode, periodicIO.driveDemand);
+                    swerveIO.setTurn(periodicIO.steerControlMode, periodicIO.steerDemand);
                 }
                 break;
             case NEUTRAL:
             default:
-                swerveIO.setDrive(mPeriodicIO.driveControlMode, mPeriodicIO.driveDemand);
-                swerveIO.setTurn(mPeriodicIO.steerControlMode, mPeriodicIO.steerDemand);
+                swerveIO.setDrive(periodicIO.driveControlMode, periodicIO.driveDemand);
+                swerveIO.setTurn(periodicIO.steerControlMode, periodicIO.steerDemand);
                 break;
         }
-        SmartDashboard.putNumber(mModuleName + " Steering", mPeriodicIO.steerDemand);
-        SmartDashboard.putNumber(mModuleName + " Drive", mPeriodicIO.driveDemand);
+        SmartDashboard.putNumber(moduleName + " Steering", periodicIO.steerDemand);
+        SmartDashboard.putNumber(moduleName + " Drive", periodicIO.driveDemand);
 
     }
 

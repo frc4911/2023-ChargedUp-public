@@ -25,9 +25,9 @@ public final class SwerveIOReal implements SwerveIO {
 
     public SwerveIOReal(SwerveModuleConfiguration swerveConfig) {
         this.swerveConfig = swerveConfig;
-        turnMotor = TalonFXFactory.createTalon(swerveConfig.kSteerMotorTalonId);
-        driveMotor = TalonFXFactory.createTalon(swerveConfig.kDriveMotorTalonId);
-        encoder = new CANCoder(swerveConfig.kCANCoderId);
+        turnMotor = TalonFXFactory.createTalon(swerveConfig.steerMotorTalonId);
+        driveMotor = TalonFXFactory.createTalon(swerveConfig.driveMotorTalonId);
+        encoder = new CANCoder(swerveConfig.CANCoderId);
         
         configCancoder();
         configureMotors();
@@ -35,9 +35,9 @@ public final class SwerveIOReal implements SwerveIO {
 
     private void configCancoder() {
         CANCoderConfiguration config = new CANCoderConfiguration();
-        config.initializationStrategy = swerveConfig.kCANCoderSensorInitializationStrategy;
+        config.initializationStrategy = swerveConfig.CAN_CODER_SENSOR_INITIALIZATION_STRATEGY;
         config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        config.magnetOffsetDegrees = swerveConfig.kCANCoderOffsetDegrees;
+        config.magnetOffsetDegrees = swerveConfig.CANCoderOffsetDegrees;
         config.sensorDirection = false;
 
         encoder.configAllSettings(config, Constants.LONG_CAN_TIMEOUTS_MS);
@@ -47,26 +47,26 @@ public final class SwerveIOReal implements SwerveIO {
      * Configure motors based on current SwerveModuleConstants.
      */
     private void configureMotors() {
-        encoder.configMagnetOffset(swerveConfig.kCANCoderOffsetDegrees, 200);
+        encoder.configMagnetOffset(swerveConfig.CANCoderOffsetDegrees, 200);
 
         commonMotorConfig(driveMotor, "Drive");
         commonMotorConfig(turnMotor, "Steer");
 
-        turnMotor.setInverted(swerveConfig.kInvertSteerMotor);
-        turnMotor.configMotionAcceleration(0.9 * swerveConfig.kSteerTicksPerUnitVelocity * 0.25, Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.configMotionCruiseVelocity(0.9 * swerveConfig.kSteerTicksPerUnitVelocity,Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.configVelocityMeasurementPeriod(swerveConfig.kSteerMotorVelocityMeasurementPeriod, Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.configVelocityMeasurementWindow(swerveConfig.kSteerMotorVelocityMeasurementWindow, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.setInverted(swerveConfig.invertSteerMotor);
+        turnMotor.configMotionAcceleration(0.9 * swerveConfig.steerTicksPerUnitVelocity * 0.25, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.configMotionCruiseVelocity(0.9 * swerveConfig.steerTicksPerUnitVelocity,Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.configVelocityMeasurementPeriod(swerveConfig.STEER_MOTOR_VELOCITY_MEASUREMENT_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.configVelocityMeasurementWindow(swerveConfig.STEER_MOTOR_VELOCITY_MEASUREMENT_WINDOW, Constants.LONG_CAN_TIMEOUTS_MS);
         turnMotor.selectProfileSlot(0, 0);
 
         // Slot 0 is for normal use (tuned for fx integrated encoder)
-        turnMotor.config_kP(0, swerveConfig.kSteerMotorSlot0Kp, Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.config_kI(0, swerveConfig.kSteerMotorSlot0Ki, Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.config_kD(0, swerveConfig.kSteerMotorSlot0Kd, Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.config_kF(0, swerveConfig.kSteerMotorSlot0Kf, Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.config_IntegralZone(0, swerveConfig.kSteerMotorSlot0IZone, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.config_kP(0, swerveConfig.steerMotorSlot0Kp, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.config_kI(0, swerveConfig.steerMotorSlot0Ki, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.config_kD(0, swerveConfig.steerMotorSlot0Kd, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.config_kF(0, swerveConfig.steerMotorSlot0Kf, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.config_IntegralZone(0, swerveConfig.STEER_MOTOR_SLOT_0_I_ZONE, Constants.LONG_CAN_TIMEOUTS_MS);
         
-        driveMotor.setInverted(swerveConfig.kInvertDrive);
+        driveMotor.setInverted(swerveConfig.invertDrive);
         driveMotor.configOpenloopRamp(0.3, Constants.LONG_CAN_TIMEOUTS_MS); // Increase if swerve acceleration is too fast
 
         FramePeriodSwitch.configStatorCurrentLimitPermanent(
@@ -97,17 +97,17 @@ public final class SwerveIOReal implements SwerveIO {
     @Override
     public void updateInputs(SwerveIOInputs inputs) {
         inputs.drivePositionDeg = Units.rotationsToDegrees(
-            driveMotor.getSelectedSensorPosition() / DRIVE_TICKS_PER_REV / swerveConfig.kDriveReduction);
+            driveMotor.getSelectedSensorPosition() / DRIVE_TICKS_PER_REV / swerveConfig.driveReduction);
         inputs.driveVelocityRpm = 
-            driveMotor.getSelectedSensorVelocity() * 10 / DRIVE_TICKS_PER_REV / swerveConfig.kDriveReduction;
+            driveMotor.getSelectedSensorVelocity() * 10 / DRIVE_TICKS_PER_REV / swerveConfig.driveReduction;
         inputs.driveAppliedVolts = driveMotor.getMotorOutputVoltage();
         inputs.driveCurrentAmps = driveMotor.getSupplyCurrent();
         inputs.driveTempCelcius = driveMotor.getTemperature();
         
         inputs.turnPositionDeg = Units.rotationsToDegrees(
-            turnMotor.getSelectedSensorPosition() / TURN_TICKS_PER_REV / swerveConfig.kSteerReduction);
+            turnMotor.getSelectedSensorPosition() / TURN_TICKS_PER_REV / swerveConfig.steerReduction);
         inputs.turnVelocityRpm =
-            turnMotor.getSelectedSensorVelocity() * 10 / TURN_TICKS_PER_REV / swerveConfig.kSteerReduction;
+            turnMotor.getSelectedSensorVelocity() * 10 / TURN_TICKS_PER_REV / swerveConfig.steerReduction;
         inputs.turnAppliedVolts = turnMotor.getMotorOutputVoltage();
         inputs.turnCurrentAmps = turnMotor.getSupplyCurrent();
         inputs.turnTempCelcius = turnMotor.getTemperature();

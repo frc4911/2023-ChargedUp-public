@@ -238,14 +238,6 @@ public final class AutoCommandChooser {
 
     private Command getTestCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put(
-            "hood",
-            new MoveHoodCommand(subsystems.getHoodSubsystem(), HoodPositions.H2)
-        );
-        eventMap.put(
-            "hoodStow",
-            new MoveHoodCommand(subsystems.getHoodSubsystem(), HoodPositions.STOWED)
-        );
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,

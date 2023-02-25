@@ -31,15 +31,16 @@ public final class ArmIOReal implements ArmIO {
     public ArmIOReal() {
         // 1 is closest to robot front (battery side) and the numbering inceases rearward
         shoulderMotor1 =
-            TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
+            TalonFXFactory.createTalon(Ports.Arm.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
         shoulderMotor2 =
-            TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_2, Constants.CANIVORE_NAME);
+            TalonFXFactory.createTalon(Ports.Arm.SHOULDER_MOTOR_2, Constants.CANIVORE_NAME);
         shoulderMotor3 =
-            TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_3, Constants.CANIVORE_NAME);
-        wristMotor = TalonFXFactory.createTalon(Ports.WRIST_MOTOR, Constants.CANIVORE_NAME);
+            TalonFXFactory.createTalon(Ports.Arm.SHOULDER_MOTOR_3, Constants.CANIVORE_NAME);
+        wristMotor = TalonFXFactory.createTalon(Ports.Arm.WRIST_MOTOR, Constants.CANIVORE_NAME);
 
-        shoulderEncoder = new DutyCycleEncoder(Ports.ARM_SHOULDER_ENCODER);
-        wristEncoder = new DutyCycleEncoder(Ports.ARM_WRIST_ENCODER);
+        shoulderEncoder = new DutyCycleEncoder(Ports.Arm.SHOULDER_ENCODER);
+
+        wristEncoder = new DutyCycleEncoder(Ports.Arm.WRIST_ENCODER);
 
         configMotors();
         configureEncoders();

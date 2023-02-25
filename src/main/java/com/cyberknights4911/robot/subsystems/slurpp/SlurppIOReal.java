@@ -16,12 +16,12 @@ public final class SlurppIOReal implements SlurppIO {
     private final TalonFX motor;
 
     public SlurppIOReal() {
-        motor = TalonFXFactory.createTalon(Ports.SLURPP_MOTOR, Constants.CANIVORE_NAME);
+        motor = TalonFXFactory.createTalon(Ports.Slurpp.MOTOR, Constants.CANIVORE_NAME);
         motor.setInverted(false);
     }
 
     @Override
-    public void updateInputs(SplurppIOInputs inputs) {
+    public void updateInputs(SlurppIOInputs inputs) {
         inputs.positionDeg = Units.rotationsToDegrees(
             motor.getSelectedSensorPosition() / TICKS_PER_REV / GEAR_RATIO);
         inputs.velocityRpm = 
