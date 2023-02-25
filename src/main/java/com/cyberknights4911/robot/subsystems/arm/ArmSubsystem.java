@@ -93,6 +93,7 @@ public final class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("WRIST encoder", armIO.getWristPositionEncoder());
         SmartDashboard.putNumber("SHOULDER encoder", armIO.getShoulderPositionEncoder());
 
+
         //Override wrist position to avoid being too tall
 
         // if (checkForHeightViolation()) {

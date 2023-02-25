@@ -46,11 +46,10 @@ public final class ArmIOReal implements ArmIO {
     
     private void configMotors() {
         //SHOULDER CONFIGURATION
-        //May need to use a wpilib pid controller instead if we are not going to use an encoder
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
         //shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        shoulderConfiguration.supplyCurrLimit.currentLimit = 10.0;
-        shoulderConfiguration.statorCurrLimit.currentLimit = 3.0;
+        shoulderConfiguration.supplyCurrLimit.currentLimit = 0.0;
+        shoulderConfiguration.statorCurrLimit.currentLimit = 0.0;
         shoulderConfiguration.supplyCurrLimit.enable = true;
         shoulderConfiguration.statorCurrLimit.enable = true;
         shoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
@@ -59,12 +58,12 @@ public final class ArmIOReal implements ArmIO {
         shoulderConfiguration.slot0.kD = 0.0;
         shoulderConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
         
-        shoulderMotor3.configAllSettings(shoulderConfiguration);
-        shoulderMotor1.follow(shoulderMotor3);
-        shoulderMotor2.follow(shoulderMotor3);
-        shoulderMotor3.setInverted(true);
+        shoulderMotor1.configAllSettings(shoulderConfiguration);
+        shoulderMotor1.follow(shoulderMotor1);
+        shoulderMotor2.follow(shoulderMotor1);
+        shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
-        shoulderMotor1.setInverted(InvertType.FollowMaster);
+        shoulderMotor3.setInverted(InvertType.FollowMaster);
 
         //TODO: May want to use setStatusFramePeriod to be lower and make motors followers if having CAN utilization issues
         shoulderMotor3.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -137,12 +136,12 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public void setShoulderBrakeMode() {
-        shoulderMotor3.setNeutralMode(NeutralMode.Brake);
+        shoulderMotor1.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override
     public void setShoulderPosition(double position) {
-        shoulderMotor3.set(ControlMode.Position, position);
+        shoulderMotor1.set(ControlMode.Position, position);
     }
 
     @Override
@@ -155,7 +154,7 @@ public final class ArmIOReal implements ArmIO {
     @Override
     public void adjustError() {
         wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
-        shoulderMotor3.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
+        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
     }
 
     //The following are all for the Absolute Encoder not the Integrated Falcon Sensor
