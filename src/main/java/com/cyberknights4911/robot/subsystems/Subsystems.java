@@ -15,8 +15,6 @@ import com.cyberknights4911.robot.subsystems.drive.GyroIOReal;
 import com.cyberknights4911.robot.subsystems.drive.SwerveIO;
 import com.cyberknights4911.robot.subsystems.drive.SwerveIOReal;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
-import com.cyberknights4911.robot.subsystems.hood.HoodIO;
-import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIO;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIOReal;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppSubsystem;
