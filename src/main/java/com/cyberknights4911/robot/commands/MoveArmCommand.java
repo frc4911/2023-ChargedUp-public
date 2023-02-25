@@ -17,28 +17,34 @@ public class MoveArmCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        System.out.println("ARM COMMAND INIT");
         mArmSubsystem.setDesiredPosition(mDesiredArmPosition);
     }
 
     @Override
     public void execute() {
-        if (mArmSubsystem.wristAtDesiredPosition()) {
+        System.out.println("ARM COMMAND EXECUTE");
+        if (mArmSubsystem.wristAtDesiredPosition(mDesiredArmPosition)) {
+            System.out.println("ARM COMMAND WRIST OKAY");
             mArmSubsystem.setWristBrakeMode();
         }
 
-        if (mArmSubsystem.shoulderAtDesiredPosition()) {
+        if (mArmSubsystem.shoulderAtDesiredPosition(mDesiredArmPosition)) {
+            System.out.println("ARM COMMAND SHOULDER OKAY");
             mArmSubsystem.setShoulderBrakeMode();
         }
     }
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("ARM COMMAND END");
         mArmSubsystem.setBrakeMode();
     }
 
     @Override
     public boolean isFinished() {
-        return mArmSubsystem.wristAtDesiredPosition() && mArmSubsystem.shoulderAtDesiredPosition();
+        return mArmSubsystem.wristAtDesiredPosition(mDesiredArmPosition) &&
+        mArmSubsystem.shoulderAtDesiredPosition(mDesiredArmPosition);
     }
 
     

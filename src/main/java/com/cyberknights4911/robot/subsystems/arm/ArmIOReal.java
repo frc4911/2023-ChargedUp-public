@@ -16,6 +16,8 @@ import libraries.cyberlib.drivers.TalonFXFactory;
 
 public final class ArmIOReal implements ArmIO {
     private static final double ENCODER_DEGREES_PER_ROTATION = 360.0;
+    private static final double ENCODER_DEGREES_SHOULDER_OFFSET = -210.0;
+    private static final double ENCODER_DEGREES_WRIST_OFFSET = 64.0;
 
     private final TalonFX shoulderMotor1;
     private final TalonFX shoulderMotor2;
@@ -27,7 +29,7 @@ public final class ArmIOReal implements ArmIO {
     private final DutyCycleEncoder wristEncoder;
 
     public ArmIOReal() {
-        // 1 is closest to robot center and the numbering moves out clockwise
+        // 1 is closest to robot front (battery side) and the numbering inceases rearward
         shoulderMotor1 =
             TalonFXFactory.createTalon(Ports.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
         shoulderMotor2 =
@@ -47,61 +49,39 @@ public final class ArmIOReal implements ArmIO {
         //SHOULDER CONFIGURATION
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
         shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        shoulderConfiguration.statorCurrLimit.currentLimit = 0.0;//25.0;
+        shoulderConfiguration.statorCurrLimit.currentLimit = 25.0;
         shoulderConfiguration.supplyCurrLimit.enable = true;
         shoulderConfiguration.statorCurrLimit.enable = true;
-        shoulderConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        shoulderConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
-        shoulderConfiguration.slot0.kI = 0.0;
-        shoulderConfiguration.slot0.kD = 0.0;
-        shoulderConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
         
         shoulderMotor1.configAllSettings(shoulderConfiguration);
-        shoulderMotor1.follow(shoulderMotor1);
         shoulderMotor2.follow(shoulderMotor1);
+        shoulderMotor3.follow(shoulderMotor1);
         shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
 
-        //TODO: May want to use setStatusFramePeriod to be lower and make motors followers if having CAN utilization issues
-        shoulderMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
-
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
-        //wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
+        wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
         wristConfiguration.statorCurrLimit.currentLimit = 20.0; //TODO:30 amps
 
         wristConfiguration.statorCurrLimit.enable = true;
-        wristConfiguration.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        wristConfiguration.slot0.kP = 0.25; //Default PID values no rhyme or reason
-        wristConfiguration.slot0.kI = 0.0;
-        wristConfiguration.slot0.kD = 0.0;
-        wristConfiguration.slot0.kF = 0.0; // No idea if this is neccessary
+        wristConfiguration.statorCurrLimit.enable = true;
 
         wristMotor.configAllSettings(wristConfiguration);
-        wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
         wristMotor.setInverted(false);
-
-
     }
     
     private void configureEncoders() {
-        shoulderEncoder.setPositionOffset(0.43);
-        wristEncoder.setPositionOffset(0.9);
-
-        // TODO: determine and set position offset for Robot startup
-        // shoulderEncoder.setDistancePerRotation(ENCODER_DEGREES_PER_ROTATION);
-        // shoulderEncoder.reset();
-        // wristEncoder.setDistancePerRotation(ENCODER_DEGREES_PER_ROTATION);
-        // wristEncoder.reset();
+        shoulderEncoder.setDistancePerRotation(ENCODER_DEGREES_PER_ROTATION);
+        wristEncoder.setDistancePerRotation(ENCODER_DEGREES_PER_ROTATION);
     }
     
     @Override
     public void updateInputs(ArmIOInputs inputs) {
         // TODO: Calculate and report rotational velocity for encoders
         // TODO: is it useful to log falcon encoder values too?
-        inputs.shoulderPositionDeg = shoulderEncoder.get();
+        inputs.shoulderPositionDeg = getShoulderEncoderDegrees();
         inputs.shoulderAppliedVolts = new double[] {
             shoulderMotor1.getMotorOutputVoltage(),
             shoulderMotor2.getMotorOutputVoltage(),
@@ -118,7 +98,7 @@ public final class ArmIOReal implements ArmIO {
             shoulderMotor3.getTemperature()
         };
 
-        inputs.wristPositionDeg = wristEncoder.get();
+        inputs.wristPositionDeg = getWristEncoderDegrees();
         inputs.wristAppliedVolts = Units.rotationsToRadians(
             wristMotor.getSelectedSensorPosition() / ArmSubsystem.TICKS_PER_REVOLUTION / ArmSubsystem.WRIST_GEAR_RATIO);
         inputs.wristAppliedVolts = shoulderMotor1.getMotorOutputVoltage();
@@ -127,13 +107,13 @@ public final class ArmIOReal implements ArmIO {
     }
 
     @Override
-    public double getWristPositionEncoder() {
-        return Math.abs(wristEncoder.get());
+    public double getWristEncoderDegrees() {
+        return (ENCODER_DEGREES_PER_ROTATION - wristEncoder.getDistance() + ENCODER_DEGREES_WRIST_OFFSET) % ENCODER_DEGREES_PER_ROTATION;
     }
 
     @Override
-    public double getShoulderPositionEncoder() {
-        return Math.abs(shoulderEncoder.get());
+    public double getShoulderEncoderDegrees() {
+        return (ENCODER_DEGREES_PER_ROTATION - shoulderEncoder.getDistance() + ENCODER_DEGREES_SHOULDER_OFFSET) % ENCODER_DEGREES_PER_ROTATION;
     }
     
     @Override
@@ -143,42 +123,30 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public void setShoulderBrakeMode() {
+        System.out.println("setShoulderBrakeMode");
         shoulderMotor1.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override
-    public void setShoulderPosition(double position) {
-        shoulderMotor1.set(ControlMode.Position, position);
+    public void setShoulderOutput(double output) {
+        System.out.println("setShoulderOutput " + output);
+        shoulderMotor1.set(ControlMode.PercentOutput, output);
     }
 
     @Override
-    public void setWristPosition(double position) {
-        wristMotor.set(ControlMode.Position, position);
+    public void setWristOutput(double output) {
+        wristMotor.set(ControlMode.PercentOutput, output);
     }
 
     //This will set the integrated sensors to be accurate with where the arm actually is
     //Remove error introduced by chain
     @Override
     public void adjustError() {
-        wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristDegrees()));
-        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderDegrees()));
+        wristMotor.setSelectedSensorPosition(convertDegreesToTicksWrist(getWristEncoderDegrees()));
+        shoulderMotor1.setSelectedSensorPosition(convertDegreesToTicksShoulder(getShoulderEncoderDegrees()));
     }
 
-    //The following are all for the Absolute Encoder not the Integrated Falcon Sensor
-    //TODO:Use these values to setSelectedSensorPosition() of leader falcon when it gets inaccurate
-    public double getShoulderDegrees() {
-        return dutyCycleToDegrees(getShoulderPositionEncoder());
-      }
-
-      public double getWristDegrees() {
-        return dutyCycleToDegrees(getWristPositionEncoder());
-      }
-
-      public double dutyCycleToDegrees(double dutyCyclePos) {
-        return dutyCyclePos * 360;
-      }
-
-      //Start of Falcon Sensor Methods
+    // Start of Falcon Sensor Methods
     private double convertDegreesToTicksShoulder(double degrees) {
         return degrees * ArmSubsystem.TICKS_PER_REVOLUTION * ArmSubsystem.SHOULDER_GEAR_RATIO / ArmSubsystem.DEGREES_PER_REVOLUTION;
     }

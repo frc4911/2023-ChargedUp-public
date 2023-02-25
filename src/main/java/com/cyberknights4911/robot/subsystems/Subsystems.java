@@ -52,7 +52,7 @@ public final class Subsystems {
                 new SwerveIOReal(configuration.getBackRightModuleConstants())
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem(new HoodIOReal());
+            hoodSubsystem = new HoodSubsystem(new HoodIO() {});
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
