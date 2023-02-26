@@ -18,7 +18,7 @@ public class MoveArmCommand extends CommandBase {
     @Override
     public void initialize() {
         System.out.println("ARM COMMAND INIT");
-        mArmSubsystem.setDesiredPosition(mDesiredArmPosition);
+        mArmSubsystem.setCurrentPosition(mDesiredArmPosition);
     }
 
     @Override
@@ -46,6 +46,4 @@ public class MoveArmCommand extends CommandBase {
         return mArmSubsystem.wristAtDesiredPosition(mDesiredArmPosition) &&
         mArmSubsystem.shoulderAtDesiredPosition(mDesiredArmPosition);
     }
-
-    
 }

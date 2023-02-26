@@ -2,6 +2,8 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.cyberknights4911.robot.commands.DefaultArmCommand;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -13,22 +15,22 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final double WRIST_GEAR_RATIO = 60.0;
     public static final int TICKS_PER_REVOLUTION = 2048;
     public static final int DEGREES_PER_REVOLUTION = 360;
-    private static final double SHOULDER_ERROR_DEGREES = 2.0;
-    private static final double WRIST_ERROR_DEGREES = 2.0;
+    private static final double SHOULDER_ERROR_DEGREES = 1.0;
+    private static final double WRIST_ERROR_DEGREES = 1.0;
 
     private final ArmIO armIO;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 
-    private ArmPositions desiredPosition = ArmPositions.STOWED;
+    private ArmPositions currentPosition = ArmPositions.STOWED;
 
     public ArmSubsystem(ArmIO armIO) {
         super();
         this.armIO = armIO;
-        // TODO set a default command to keep positions (unsless brake mode actually works for this)
+        setDefaultCommand(new DefaultArmCommand(this));
     }
 
-    public void setDesiredPosition(ArmPositions desiredPosition) {
-        this.desiredPosition = desiredPosition;
+    public void setCurrentPosition(ArmPositions desiredPosition) {
+        this.currentPosition = desiredPosition;
         moveWrist(desiredPosition);
         moveShoulder(desiredPosition);
     }
@@ -68,6 +70,9 @@ public final class ArmSubsystem extends SubsystemBase {
         System.out.println("MOVE WRIST");
         System.out.println("  DESIRED: " + desiredArmPosition.wristPosition);
         System.out.println("  CURRENT: " + armIO.getWristEncoderDegrees());
+        if (true) {
+            return;
+        }
         double deltaDegrees = desiredArmPosition.wristPosition - armIO.getWristEncoderDegrees();
         if (deltaDegrees > 0) {
             System.out.println("POSITIVE");
@@ -80,10 +85,16 @@ public final class ArmSubsystem extends SubsystemBase {
         }
     }
 
+    public void checkAndCorrectCurrentPosition() {
+        moveWrist(currentPosition);
+        moveShoulder(currentPosition);
+    }
+
     //Calculated in ticks at the moment
     public boolean wristAtDesiredPosition(ArmPositions armPosition) {
-        double wristPosition = armIO.getWristEncoderDegrees();
-        return Math.abs(wristPosition - armPosition.wristPosition) < WRIST_ERROR_DEGREES;
+        return true;
+        // double wristPosition = armIO.getWristEncoderDegrees();
+        // return Math.abs(wristPosition - armPosition.wristPosition) < WRIST_ERROR_DEGREES;
     }
 
     //Calculated in ticks at the moment

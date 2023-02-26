@@ -37,7 +37,6 @@ public final class ArmIOReal implements ArmIO {
         wristMotor = TalonFXFactory.createTalon(Ports.Arm.WRIST_MOTOR, Constants.CANIVORE_NAME);
 
         shoulderEncoder = new DutyCycleEncoder(Ports.Arm.SHOULDER_ENCODER);
-
         wristEncoder = new DutyCycleEncoder(Ports.Arm.WRIST_ENCODER);
 
         configMotors();
@@ -58,6 +57,9 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
+        shoulderMotor1.setNeutralMode(NeutralMode.Coast);
+        shoulderMotor2.setNeutralMode(NeutralMode.Coast);
+        shoulderMotor3.setNeutralMode(NeutralMode.Coast);
 
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
@@ -69,6 +71,7 @@ public final class ArmIOReal implements ArmIO {
 
         wristMotor.configAllSettings(wristConfiguration);
         wristMotor.setInverted(false);
+        wristMotor.setNeutralMode(NeutralMode.Coast);
     }
     
     private void configureEncoders() {

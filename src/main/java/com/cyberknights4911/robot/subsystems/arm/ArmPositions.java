@@ -1,16 +1,16 @@
 package com.cyberknights4911.robot.subsystems.arm;
 
 public enum ArmPositions {
-    //Values are in degrees and later converted to ticks for ease of comprehension
-    STOWED(42, 42),
-    CONE_LEVEL_3(180, 270), 
-    CUBE_LEVEL_3(180, 270),
-    CONE_LEVEL_2(90, 90),
-    CUBE_LEVEL_2(90, 90),
-    HYBRID_CONE(300, 42),
-    HYBRID_CUBE(300, 42),
-    COLLECT_PORTAL(240, 42),
-    COLLECT_GROUND(300, 42);
+    STOWED(35, 325), // actual value
+    COLLECT_SUBSTATION_BACK(256, 167), // actual values
+    COLLECT_SUBSTATION_FRONT(101, 198), // actual values
+    SCORE_L3(238, 204), // actual values
+    // TODO: determine the rest of these by positioning the arm and checking shuffleboard
+    SCORE_L2(42, 42),
+    COLLECT_FLOOR_FRONT_CUBE(42, 42),
+    COLLECT_FLOOR_FRONT_CONE(42, 42),
+    COLLECT_FLOOR_BACK_CUBE(42, 42),
+    COLLECT_FLOOR_BACK_CONE(42, 42);
 
     public final double shoulderPosition;
     public final double wristPosition;
