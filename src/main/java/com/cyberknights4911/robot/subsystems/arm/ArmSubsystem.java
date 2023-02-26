@@ -3,7 +3,11 @@ package com.cyberknights4911.robot.subsystems.arm;
 import org.littletonrobotics.junction.Logger;
 
 import com.cyberknights4911.robot.commands.DefaultArmCommand;
+import com.cyberknights4911.robot.constants.Constants;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -19,6 +23,10 @@ public final class ArmSubsystem extends SubsystemBase {
     private static final double WRIST_ERROR_DEGREES = 1.0;
 
     private final ArmIO armIO;
+    private final ProfiledPIDController shoulderController;
+    private final ProfiledPIDController wristController;
+    private final ArmFeedforward shoulderFeedforward;
+    private final ArmFeedforward wristFeedforward;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 
     private ArmPositions currentPosition = ArmPositions.STOWED;
@@ -26,6 +34,20 @@ public final class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem(ArmIO armIO) {
         super();
         this.armIO = armIO;
+        shoulderController = new ProfiledPIDController(
+            Constants.SHOULDER_P,
+            Constants.SHOULDER_I,
+            Constants.SHOULDER_D,
+            new TrapezoidProfile.Constraints(Constants.SHOULDER_VELOCITY, Constants.SHOULDER_ACCELERATION)
+        );
+        wristController = new ProfiledPIDController(
+            Constants.WRIST_P,
+            Constants.WRIST_I,
+            Constants.WRIST_D,
+            new TrapezoidProfile.Constraints(Constants.WRIST_VELOCITY, Constants.WRIST_ACCELERATION)
+        );
+        shoulderFeedforward = new ArmFeedforward(Constants.SHOULDER_S, Constants.SHOULDER_V, Constants.SHOULDER_G);
+        wristFeedforward = new ArmFeedforward(Constants.WRIST_S, Constants.WRIST_V, Constants.WRIST_G);
         setDefaultCommand(new DefaultArmCommand(this));
     }
 
@@ -48,6 +70,23 @@ public final class ArmSubsystem extends SubsystemBase {
     public void setWristBrakeMode() {
         armIO.setWristOutput(0);
         armIO.setWristBrakeMode();
+    }
+
+    public void moveShoulderPid() {
+        // TODO use the feedforward
+        armIO.setShoulderOutput(
+            shoulderController.calculate(
+            armIO.getShoulderEncoderDegrees(),
+            currentPosition.shoulderPosition)
+        );
+    }
+
+    public void moveWristPid() {
+        armIO.setWristOutput(
+            wristController.calculate(
+            armIO.getWristEncoderDegrees(),
+            currentPosition.wristPosition)
+        );
     }
 
     private void moveShoulder(ArmPositions desiredArmPosition) {

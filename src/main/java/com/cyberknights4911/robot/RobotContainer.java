@@ -69,11 +69,11 @@ public class RobotContainer {
     );
 
     controllerBinding.triggersFor(ButtonAction.ARM_L2).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.CUBE_LEVEL_2)
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT)
     );
     
     controllerBinding.triggersFor(ButtonAction.ARM_L3).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.CUBE_LEVEL_3));
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK));
 
     // Move ONLY safe and tested commands above this line.
     if (true) {
