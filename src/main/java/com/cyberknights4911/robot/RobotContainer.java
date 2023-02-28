@@ -71,14 +71,28 @@ public class RobotContainer {
     );
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_FRONT).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT)
-    );
-    
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT));
+
     controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_BACK).onTrue(
       new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK));
+    
+    controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_BACK_CONE).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CONE));
+    
+    controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_BACK_CUBE).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CUBE));
+  
+    controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_FRONT_CONE).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE));
+
+    controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_FRONT_CUBE).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CUBE));
 
     controllerBinding.triggersFor(ButtonAction.STOW).onTrue(
       new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.STOWED));
+
+    controllerBinding.triggersFor(ButtonAction.SCORE_L2).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2));
 
     controllerBinding.triggersFor(ButtonAction.SCORE_L3).onTrue(
       new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));

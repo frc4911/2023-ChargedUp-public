@@ -74,8 +74,8 @@ public class Constants {
     public static final double WRIST_P = 0.03;
     public static final double WRIST_I = 0.0;
     public static final double WRIST_D = 0.0015;
-    public static final double SHOULDER_TOLERANCE = 5.0;
-    public static final double WRIST_TOLERANCE = 5.0;
+    public static final double SHOULDER_TOLERANCE = 1.0;
+    public static final double WRIST_TOLERANCE = 1.0;
 
     // Arm feed forward
     public static final double SHOULDER_S = 0;
