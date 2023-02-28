@@ -48,7 +48,7 @@ public final class XboxControllerBinding implements ControllerBinding {
             case COLLECTOR_FORWARD: return new Triggers(driverController.rightTrigger(), driverController.leftTrigger());
             case CLIMB_WHEEL_LOCK: return new Triggers(driverController.povDown());
             case RESET_WHEELS: return new Triggers(driverController.start());
-            case STOW: return new Triggers(operatorController.a());
+            case STOW: return new Triggers(operatorController.a(), driverController.a());
             case ARM_L3: return new Triggers(operatorController.b(), driverController.b()); // TODO: remove driver input
             case ARM_L2: return new Triggers(operatorController.x(), driverController.x()); // TODO: remove driver input
             case CLIMB_DEPLOY: return new Triggers(operatorController.y());

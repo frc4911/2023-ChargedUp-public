@@ -1,49 +1,39 @@
 package com.cyberknights4911.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
+import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
-public class MoveArmCommand extends CommandBase {
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-    private final ArmSubsystem mArmSubsystem;
-    private final ArmPositions mDesiredArmPosition;
+public final class MoveArmCommand extends CommandBase {
+
+    private final ArmSubsystem armSubsystem;
+    private final ArmPositions desiredPosition;
+
     public MoveArmCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-
-        mArmSubsystem = armSubsystem;
-        mDesiredArmPosition = desiredPosition;
-        addRequirements(mArmSubsystem);
+        this.armSubsystem = armSubsystem;
+        this.desiredPosition = desiredPosition;
+        addRequirements(armSubsystem);
     }
 
     @Override
     public void initialize() {
-        System.out.println("ARM COMMAND INIT");
-        mArmSubsystem.setCurrentPosition(mDesiredArmPosition);
+        armSubsystem.reset();
     }
 
     @Override
     public void execute() {
-        System.out.println("ARM COMMAND EXECUTE");
-        if (mArmSubsystem.wristAtDesiredPosition(mDesiredArmPosition)) {
-            System.out.println("ARM COMMAND WRIST OKAY");
-            mArmSubsystem.setWristBrakeMode();
-        }
-
-        if (mArmSubsystem.shoulderAtDesiredPosition(mDesiredArmPosition)) {
-            System.out.println("ARM COMMAND SHOULDER OKAY");
-            mArmSubsystem.setShoulderBrakeMode();
-        }
+        armSubsystem.moveWristPid(desiredPosition);
+        armSubsystem.moveShoulderPid(desiredPosition);
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("ARM COMMAND END");
-        mArmSubsystem.setBrakeMode();
+        armSubsystem.setBrakeMode();
     }
 
     @Override
     public boolean isFinished() {
-        return mArmSubsystem.wristAtDesiredPosition(mDesiredArmPosition) &&
-        mArmSubsystem.shoulderAtDesiredPosition(mDesiredArmPosition);
+        return false;
     }
 }

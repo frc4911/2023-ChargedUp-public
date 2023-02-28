@@ -2,7 +2,6 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.cyberknights4911.robot.commands.DefaultArmCommand;
 import com.cyberknights4911.robot.constants.Constants;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -21,6 +20,7 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final int DEGREES_PER_REVOLUTION = 360;
     private static final double SHOULDER_ERROR_DEGREES = 1.0;
     private static final double WRIST_ERROR_DEGREES = 1.0;
+    private static final double SPEED_STOPPED = 0.0;
 
     private final ArmIO armIO;
     private final ProfiledPIDController shoulderController;
@@ -40,21 +40,23 @@ public final class ArmSubsystem extends SubsystemBase {
             Constants.SHOULDER_D,
             new TrapezoidProfile.Constraints(Constants.SHOULDER_VELOCITY, Constants.SHOULDER_ACCELERATION)
         );
+        shoulderController.setTolerance(Constants.SHOULDER_TOLERANCE);
         wristController = new ProfiledPIDController(
             Constants.WRIST_P,
             Constants.WRIST_I,
             Constants.WRIST_D,
             new TrapezoidProfile.Constraints(Constants.WRIST_VELOCITY, Constants.WRIST_ACCELERATION)
         );
+        wristController.setTolerance(Constants.WRIST_TOLERANCE);
         shoulderFeedforward = new ArmFeedforward(Constants.SHOULDER_S, Constants.SHOULDER_V, Constants.SHOULDER_G);
         wristFeedforward = new ArmFeedforward(Constants.WRIST_S, Constants.WRIST_V, Constants.WRIST_G);
-        setDefaultCommand(new DefaultArmCommand(this));
+
+        reset();
     }
 
-    public void setCurrentPosition(ArmPositions desiredPosition) {
-        this.currentPosition = desiredPosition;
-        moveWrist(desiredPosition);
-        moveShoulder(desiredPosition);
+    public void reset() {
+        shoulderController.reset(armIO.getShoulderEncoderDegrees());
+        wristController.reset(armIO.getWristEncoderDegrees());
     }
 
     public void setBrakeMode() {
@@ -72,21 +74,24 @@ public final class ArmSubsystem extends SubsystemBase {
         armIO.setWristBrakeMode();
     }
 
-    public void moveShoulderPid() {
+    public void moveShoulderPid(ArmPositions desiredArmPosition) {
+        shoulderController.setGoal(
+            new TrapezoidProfile.State(desiredArmPosition.shoulderPosition, SPEED_STOPPED));
+        double profiledPidValue = shoulderController.calculate(armIO.getShoulderEncoderDegrees());
+        
+        System.out.println("measurement: " + armIO.getShoulderEncoderDegrees());
+        System.out.println("goal: " + desiredArmPosition.shoulderPosition);
+        System.out.println("profiled pid: " + profiledPidValue + "\n");
         // TODO use the feedforward
-        armIO.setShoulderOutput(
-            shoulderController.calculate(
-            armIO.getShoulderEncoderDegrees(),
-            currentPosition.shoulderPosition)
-        );
+        armIO.setShoulderOutput(profiledPidValue);
     }
 
-    public void moveWristPid() {
-        armIO.setWristOutput(
-            wristController.calculate(
-            armIO.getWristEncoderDegrees(),
-            currentPosition.wristPosition)
-        );
+    public void moveWristPid(ArmPositions desiredArmPosition) {
+        wristController.setGoal(
+            new TrapezoidProfile.State(desiredArmPosition.wristPosition, SPEED_STOPPED));
+        double profiledPidValue = wristController.calculate(armIO.getWristEncoderDegrees());
+        System.out.println("wrist pid value:" + profiledPidValue);
+        armIO.setWristOutput(profiledPidValue);
     }
 
     private void moveShoulder(ArmPositions desiredArmPosition) {

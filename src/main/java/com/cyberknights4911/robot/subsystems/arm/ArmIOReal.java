@@ -57,9 +57,9 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
-        shoulderMotor1.setNeutralMode(NeutralMode.Coast);
-        shoulderMotor2.setNeutralMode(NeutralMode.Coast);
-        shoulderMotor3.setNeutralMode(NeutralMode.Coast);
+        shoulderMotor1.setNeutralMode(NeutralMode.Brake);
+        shoulderMotor2.setNeutralMode(NeutralMode.Brake);
+        shoulderMotor3.setNeutralMode(NeutralMode.Brake);
 
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
@@ -70,8 +70,8 @@ public final class ArmIOReal implements ArmIO {
         wristConfiguration.statorCurrLimit.enable = true;
 
         wristMotor.configAllSettings(wristConfiguration);
-        wristMotor.setInverted(false);
-        wristMotor.setNeutralMode(NeutralMode.Coast);
+        wristMotor.setInverted(true);
+        wristMotor.setNeutralMode(NeutralMode.Brake);
     }
     
     private void configureEncoders() {
@@ -131,7 +131,6 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public void setShoulderOutput(double output) {
-        System.out.println("setShoulderOutput " + output);
         shoulderMotor1.set(ControlMode.PercentOutput, output);
     }
 

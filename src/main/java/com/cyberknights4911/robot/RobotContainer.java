@@ -26,13 +26,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     subsystems = new Subsystems();
-
     controllerBinding = new XboxControllerBinding();
-
     autoCommandChooser = new AutoCommandChooser(subsystems);
 
     configureStickBindinges();
     configureButtonBindings();
+
+    subsystems.getArmSubsystem().setDefaultCommand(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.STOWED)
+    );
   }
 
   private void configureStickBindinges() {
@@ -73,7 +75,12 @@ public class RobotContainer {
     );
     
     controllerBinding.triggersFor(ButtonAction.ARM_L3).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK));
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK)
+    );
+    
+    controllerBinding.triggersFor(ButtonAction.STOW).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.STOWED)
+    );
 
     // Move ONLY safe and tested commands above this line.
     if (true) {
@@ -92,12 +99,6 @@ public class RobotContainer {
       Commands.runOnce(() -> {
         subsystems.getClimberSubsystem().setExtended(true);
       }, subsystems.getClimberSubsystem())
-    );
-    
-    controllerBinding.triggersFor(ButtonAction.STOW).onTrue(
-      Commands.runOnce(() -> {
-        // TODO: stow the arm & claw
-      }, subsystems.getArmSubsystem())
     );
 
     controllerBinding.triggersFor(ButtonAction.REAR_COLLECT).onTrue(
