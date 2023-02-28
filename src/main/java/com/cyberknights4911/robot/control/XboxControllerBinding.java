@@ -42,23 +42,24 @@ public final class XboxControllerBinding implements ControllerBinding {
     @Override
     public Triggers triggersFor(ButtonAction action) {
         switch(action) {
-            case ALIGN_COLLECT: return new Triggers(driverController.a());
+            case ALIGN_COLLECT: return new Triggers();
             case RESET_IMU: return new Triggers(driverController.y());
-            case COLLECTOR_BACKWARD: return new Triggers(driverController.rightBumper(), driverController.leftBumper());
-            case COLLECTOR_FORWARD: return new Triggers(driverController.rightTrigger(), driverController.leftTrigger());
-            case CLIMB_WHEEL_LOCK: return new Triggers(driverController.povDown());
+            case SLURPP_BACKWARD: return new Triggers(driverController.rightBumper(), driverController.leftBumper());
+            case SLURPP_FORWARD: return new Triggers(driverController.rightTrigger(), driverController.leftTrigger());
+            case CLIMB_WHEEL_LOCK: return new Triggers();
             case RESET_WHEELS: return new Triggers(driverController.start());
-            case STOW: return new Triggers(operatorController.a(), driverController.a());
-            case ARM_L3: return new Triggers(operatorController.b(), driverController.b()); // TODO: remove driver input
-            case ARM_L2: return new Triggers(operatorController.x(), driverController.x()); // TODO: remove driver input
-            case CLIMB_DEPLOY: return new Triggers(operatorController.y());
-            case CLIMB_LOCKOUT: return new Triggers(operatorController.rightBumper());
+            case STOW: return new Triggers(driverController.povDown());
+            case SCORE_L3: return new Triggers(operatorController.leftBumper(), driverController.x());
+            case SCORE_L2: return new Triggers(operatorController.rightBumper(), driverController.a());
+            case CLIMB_DEPLOY: return new Triggers();
+            case CLIMB_LOCKOUT: return new Triggers();
             case BOB_STOW: return new Triggers(operatorController.rightTrigger());
             case BOB_DEPLOY: return new Triggers(operatorController.leftTrigger());
-            case REAR_COLLECT: return new Triggers(operatorController.povUp());
-            case FRONT_COLLECT_CUBE: return new Triggers(operatorController.povRight());
-            case FRONT_COLLECT_CONE: return new Triggers(operatorController.povLeft());
-            case FLOOR_COLLECT: return new Triggers(operatorController.povDown());
+            case COLLECT_SUBSTATION_BACK: return new Triggers(operatorController.povUp());
+            case COLLECT_FLOOR_FRONT_CONE: return new Triggers(operatorController.a());
+            case COLLECT_FLOOR_FRONT_CUBE: return new Triggers(operatorController.b());
+            case COLLECT_FLOOR_BACK_CONE: return new Triggers(operatorController.x());
+            case COLLECT_FLOOR_BACK_CUBE: return new Triggers(operatorController.y());
             case HOME: return new Triggers(ALWAYS_FALSE); // TODO: figure out how to bind to home button
             case HOME_CLAW: return new Triggers(ALWAYS_FALSE); // TODO: figure out how to bind to share button
             default: return new Triggers(ALWAYS_FALSE);

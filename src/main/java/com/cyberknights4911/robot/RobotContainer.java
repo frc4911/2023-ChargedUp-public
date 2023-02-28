@@ -50,7 +50,7 @@ public class RobotContainer {
       )
     );
 
-    controllerBinding.triggersFor(ButtonAction.COLLECTOR_BACKWARD).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD).onTrue(
       Commands.runOnce(
         () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
       )
@@ -60,7 +60,7 @@ public class RobotContainer {
       )
     );
 
-    controllerBinding.triggersFor(ButtonAction.COLLECTOR_FORWARD).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD).onTrue(
       Commands.runOnce(
         () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
       )
@@ -70,18 +70,20 @@ public class RobotContainer {
       )
     );
 
-    controllerBinding.triggersFor(ButtonAction.ARM_L2).onTrue(
+    controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_FRONT).onTrue(
       new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT)
     );
     
-    controllerBinding.triggersFor(ButtonAction.ARM_L3).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK)
-    );
-    
-    controllerBinding.triggersFor(ButtonAction.STOW).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.STOWED)
-    );
+    controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_BACK).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK));
 
+    controllerBinding.triggersFor(ButtonAction.STOW).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.STOWED));
+
+    controllerBinding.triggersFor(ButtonAction.SCORE_L3).onTrue(
+      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));
+  
+    
     // Move ONLY safe and tested commands above this line.
     if (true) {
       return;
@@ -99,70 +101,6 @@ public class RobotContainer {
       Commands.runOnce(() -> {
         subsystems.getClimberSubsystem().setExtended(true);
       }, subsystems.getClimberSubsystem())
-    );
-
-    controllerBinding.triggersFor(ButtonAction.REAR_COLLECT).onTrue(
-      Commands.sequence(
-        Commands.parallel(
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
-          ),
-          Commands.runOnce(() -> {
-            // TODO move to rear collect
-          }, subsystems.getArmSubsystem())
-        ),
-        Commands.runOnce(
-          () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
-        )
-      )
-    );
-
-    controllerBinding.triggersFor(ButtonAction.FRONT_COLLECT_CONE).onTrue(
-      Commands.sequence(
-        Commands.parallel(
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
-          ),
-          Commands.runOnce(() -> {
-            // TODO move to front collect
-          }, subsystems.getArmSubsystem())
-        ),
-        Commands.runOnce(
-          () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
-        )
-      )
-    );
-
-    controllerBinding.triggersFor(ButtonAction.FRONT_COLLECT_CUBE).onTrue(
-      Commands.sequence(
-        Commands.parallel(
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
-          ),
-          Commands.runOnce(() -> {
-            // TODO move to front collect
-          }, subsystems.getArmSubsystem())
-        ),
-        Commands.runOnce(
-          () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
-        )
-      )
-    );
-
-    controllerBinding.triggersFor(ButtonAction.FLOOR_COLLECT).onTrue(
-      Commands.sequence(
-        Commands.parallel(
-          Commands.runOnce(
-            () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
-          ),
-          Commands.runOnce(() -> {
-            // TODO move to floor collect
-          }, subsystems.getArmSubsystem())
-        ),
-        Commands.runOnce(
-          () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
-        )
-      )
     );
 
     controllerBinding.triggersFor(ButtonAction.BOB_STOW).onTrue(
