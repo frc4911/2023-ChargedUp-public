@@ -1,17 +1,15 @@
 package com.cyberknights4911.robot.subsystems.arm;
 
 public enum ArmPositions {
-    //Values are in degrees and later converted to ticks for ease of comprehension
-    //0 Degrees are at stowed for both SHOULDER and WRIST
-    STOWED(42, 42),
-    CONE_LEVEL_3(220, 42), 
-    CUBE_LEVEL_3(220, 42),
-    CONE_LEVEL_2(240, 42),
-    CUBE_LEVEL_2(240, 42),
-    HYBRID_CONE(300, 42),
-    HYBRID_CUBE(300, 42),
-    COLLECT_PORTAL(240, 42),
-    COLLECT_GROUND(300, 42);
+    STOWED(35, 325),
+    COLLECT_SUBSTATION_BACK(249, 160),
+    COLLECT_SUBSTATION_FRONT(105, 205),
+    COLLECT_FLOOR_FRONT_CONE(35, 256),
+    COLLECT_FLOOR_FRONT_CUBE(50, 186),
+    COLLECT_FLOOR_BACK_CUBE(320, 117),
+    COLLECT_FLOOR_BACK_CONE(320, 105),
+    SCORE_L3(230, 195),
+    SCORE_L2(93, 220);
 
     public final double shoulderPosition;
     public final double wristPosition;

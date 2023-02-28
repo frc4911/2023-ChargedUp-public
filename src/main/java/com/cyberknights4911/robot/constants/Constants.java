@@ -1,6 +1,7 @@
 package com.cyberknights4911.robot.constants;
 
 import edu.wpi.first.math.util.Units;
+import libraries.cyberlib.control.PidGains;
 import edu.wpi.first.math.geometry.Pose2d;
 
 public class Constants {
@@ -64,5 +65,30 @@ public class Constants {
     public static final boolean ROLL_INVERSION = false;
 
     public static final double MAX_SPEED = 1;
+
+    // Arm
+    // PID values
+    public static final double SHOULDER_P = 0.01;
+    public static final double SHOULDER_I = 0.0;
+    public static final double SHOULDER_D = 0.0;
+    public static final double WRIST_P = 0.03;
+    public static final double WRIST_I = 0.0;
+    public static final double WRIST_D = 0.0015;
+    public static final double SHOULDER_TOLERANCE = 1.0;
+    public static final double WRIST_TOLERANCE = 1.0;
+
+    // Arm feed forward
+    public static final double SHOULDER_S = 0;
+    public static final double SHOULDER_V = 0;
+    public static final double SHOULDER_G = 0;
+    public static final double WRIST_S = 0;
+    public static final double WRIST_V = 0;
+    public static final double WRIST_G = 0;
+
+    // Constraints
+    public static final double SHOULDER_VELOCITY = 25;
+    public static final double SHOULDER_ACCELERATION = 37.5;
+    public static final double WRIST_VELOCITY = 30;
+    public static final double WRIST_ACCELERATION = 45;
 
 }

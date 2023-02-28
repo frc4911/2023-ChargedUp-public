@@ -21,21 +21,26 @@ public interface ArmIO {
     /** Updates the set of loggable inputs. */
     public default void updateInputs(ArmIOInputs inputs) {}
 
-    /** Get wrist motor position. */
-    public default double getWristPosition() {
-        return Double.MIN_VALUE;
+    /** Get wrist encoder degrees. */
+    public default double getWristEncoderDegrees() {
+        return 0.0;
     }
 
-    /** Get shoulder motor position. */
-    public default double getShoulderPosition() {
-        return Double.MIN_VALUE;
+    /** Get shoulder encoder degrees. */
+    public default double getShoulderEncoderDegrees() {
+        return 0.0;
     }
 
-    /** Set shoulder motors position. */
-    public default void setShoulderPosition(double position) {}
+    public default void setShoulderBrakeMode(){}
+
+    public default void setWristBrakeMode(){}
+
+
+    /** Set shoulder motors output. */
+    public default void setShoulderOutput(double output) {}
     
-    /** Set wrist motor position. */
-    public default void setWristPosition(double position) {}
+    /** Set wrist motor output. */
+    public default void setWristOutput(double output) {}
 
     public default void adjustError(){}
 }

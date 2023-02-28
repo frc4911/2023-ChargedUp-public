@@ -27,8 +27,8 @@ public final class Ports {
         public static final int SHOULDER_MOTOR_2 = 11;
         public static final int SHOULDER_MOTOR_3 = 12;
         public static final int WRIST_MOTOR = 13;
-        public static final int SHOULDER_ENCODER = 2;
-        public static final int WRIST_ENCODER = 3;
+        public static final int SHOULDER_ENCODER = 0;
+        public static final int WRIST_ENCODER = 1;
     }
 
     public static final class Slurpp {

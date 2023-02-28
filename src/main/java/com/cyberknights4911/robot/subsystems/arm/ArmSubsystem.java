@@ -2,6 +2,12 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.cyberknights4911.robot.constants.Constants;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -12,62 +18,139 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final double WRIST_GEAR_RATIO = 60.0;
     public static final int TICKS_PER_REVOLUTION = 2048;
     public static final int DEGREES_PER_REVOLUTION = 360;
-    //In ticks can be changed to be in degrees
-    //Makes it run much faster because it does not need to be precise
-    private static final double ARM_ERROR = 100;
-    private static final double WRIST_ERROR = 100;
+    private static final double SHOULDER_ERROR_DEGREES = 1.0;
+    private static final double WRIST_ERROR_DEGREES = 1.0;
+    private static final double SPEED_STOPPED = 0.0;
 
     private final ArmIO armIO;
+    private final ProfiledPIDController shoulderController;
+    private final ProfiledPIDController wristController;
+    private final ArmFeedforward shoulderFeedforward;
+    private final ArmFeedforward wristFeedforward;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 
-    private ArmPositions desiredPosition = ArmPositions.STOWED;
+    private ArmPositions currentPosition = ArmPositions.STOWED;
 
     public ArmSubsystem(ArmIO armIO) {
         super();
         this.armIO = armIO;
+        shoulderController = new ProfiledPIDController(
+            Constants.SHOULDER_P,
+            Constants.SHOULDER_I,
+            Constants.SHOULDER_D,
+            new TrapezoidProfile.Constraints(Constants.SHOULDER_VELOCITY, Constants.SHOULDER_ACCELERATION)
+        );
+        shoulderController.setTolerance(Constants.SHOULDER_TOLERANCE);
+        wristController = new ProfiledPIDController(
+            Constants.WRIST_P,
+            Constants.WRIST_I,
+            Constants.WRIST_D,
+            new TrapezoidProfile.Constraints(Constants.WRIST_VELOCITY, Constants.WRIST_ACCELERATION)
+        );
+        wristController.setTolerance(Constants.WRIST_TOLERANCE);
+        shoulderFeedforward = new ArmFeedforward(Constants.SHOULDER_S, Constants.SHOULDER_V, Constants.SHOULDER_G);
+        wristFeedforward = new ArmFeedforward(Constants.WRIST_S, Constants.WRIST_V, Constants.WRIST_G);
+
+        reset();
     }
 
-    public void setDesiredPosition(ArmPositions desiredPosition) {
-        this.desiredPosition = desiredPosition;
-        moveWrist(desiredPosition);
-        moveShoulder(desiredPosition);
+    public void reset() {
+        shoulderController.reset(armIO.getShoulderEncoderDegrees());
+        wristController.reset(armIO.getWristEncoderDegrees());
+    }
+
+    public void setBrakeMode() {
+        armIO.setShoulderBrakeMode();
+        armIO.setWristBrakeMode();
+    }
+
+    public void setShoulderBrakeMode() {
+        armIO.setShoulderOutput(0);
+        armIO.setShoulderBrakeMode();
+    }
+
+    public void setWristBrakeMode() {
+        armIO.setWristOutput(0);
+        armIO.setWristBrakeMode();
+    }
+
+    public void moveShoulderPid(ArmPositions desiredArmPosition) {
+        shoulderController.setGoal(
+            new TrapezoidProfile.State(desiredArmPosition.shoulderPosition, SPEED_STOPPED));
+        double profiledPidValue = shoulderController.calculate(armIO.getShoulderEncoderDegrees());
+        
+        System.out.println("measurement: " + armIO.getShoulderEncoderDegrees());
+        System.out.println("goal: " + desiredArmPosition.shoulderPosition);
+        System.out.println("profiled pid: " + profiledPidValue + "\n");
+        // TODO use the feedforward
+        armIO.setShoulderOutput(profiledPidValue);
+    }
+
+    public void moveWristPid(ArmPositions desiredArmPosition) {
+        wristController.setGoal(
+            new TrapezoidProfile.State(desiredArmPosition.wristPosition, SPEED_STOPPED));
+        double profiledPidValue = wristController.calculate(armIO.getWristEncoderDegrees());
+        System.out.println("wrist pid value:" + profiledPidValue);
+        armIO.setWristOutput(profiledPidValue);
     }
 
     private void moveShoulder(ArmPositions desiredArmPosition) {
-        double falconTicks = convertDegreesToTicksShoulder(desiredArmPosition.getShoulderPosition());
-
-        armIO.setShoulderPosition(falconTicks);
+        System.out.println("MOVE SHOULDER");
+        System.out.println("  DESIRED: " + desiredArmPosition.shoulderPosition);
+        System.out.println("  CURRENT: " + armIO.getShoulderEncoderDegrees());
+        double deltaDegrees = desiredArmPosition.shoulderPosition - armIO.getShoulderEncoderDegrees();
+        if (deltaDegrees > 0) {
+            System.out.println("POSITIVE");
+            // Positive for away from front stowed position
+            armIO.setShoulderOutput(.1);
+        } else {
+            System.out.println("NEGATIVE");
+            // Negative for toward front stowed position
+            armIO.setShoulderOutput(-0.1);
+        }
     }
 
     private void moveWrist(ArmPositions desiredArmPosition) {
-        double falconTicks = convertDegreesToTicksWrist(desiredArmPosition.getWristPosition());
-        armIO.setWristPosition(falconTicks);
+        System.out.println("MOVE WRIST");
+        System.out.println("  DESIRED: " + desiredArmPosition.wristPosition);
+        System.out.println("  CURRENT: " + armIO.getWristEncoderDegrees());
+        if (true) {
+            return;
+        }
+        double deltaDegrees = desiredArmPosition.wristPosition - armIO.getWristEncoderDegrees();
+        if (deltaDegrees > 0) {
+            System.out.println("POSITIVE");
+            // Positive for toward slurpp motor
+            armIO.setWristOutput(.1);
+        } else {
+            System.out.println("NEGATIVE");
+            // Negative for away from slurpp motor
+            armIO.setWristOutput(-0.1);
+        }
     }
 
-    //Calculated in degrees at the moment
-    public boolean wristAtDesiredPosition() {
-        double wristPosition = armIO.getWristPosition();
-        double desiredWristPosition = desiredPosition.getWristPosition();
-        if (Math.abs(wristPosition - desiredWristPosition) < WRIST_ERROR) {
-            return true;
-        }
-        return false;
+    public void checkAndCorrectCurrentPosition() {
+        moveWrist(currentPosition);
+        moveShoulder(currentPosition);
     }
 
-    //Calculated in degrees at the moment
-    public boolean shoulderAtDesiredPosition() {
-        double shoulderPosition = armIO.getShoulderPosition();
+    //Calculated in ticks at the moment
+    public boolean wristAtDesiredPosition(ArmPositions armPosition) {
+        return true;
+        // double wristPosition = armIO.getWristEncoderDegrees();
+        // return Math.abs(wristPosition - armPosition.wristPosition) < WRIST_ERROR_DEGREES;
+    }
 
-        if (Math.abs(shoulderPosition - desiredPosition.getShoulderPosition()) < ARM_ERROR) {
-            return true;
-        }
-        return false;
+    //Calculated in ticks at the moment
+    public boolean shoulderAtDesiredPosition(ArmPositions armPosition) {
+        double shoulderPosition = armIO.getShoulderEncoderDegrees();
+        return Math.abs(shoulderPosition - armPosition.shoulderPosition) < SHOULDER_ERROR_DEGREES;
     }
 
     //Check if the robot will be too tall
     //Avoid between 70-210 degrees
     public boolean checkForHeightViolation() {
-        double shoulderPosition = convertTicksToDegreesShoulder(armIO.getShoulderPosition());
+        double shoulderPosition = convertTicksToDegreesShoulder(armIO.getShoulderEncoderDegrees());
         if (shoulderPosition <= 210 && shoulderPosition >= 70 ) {
             return true;
         }
@@ -78,6 +161,9 @@ public final class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         armIO.updateInputs(inputs);
         Logger.getInstance().processInputs("Arm", inputs);
+        SmartDashboard.putNumber("WRIST encoder", armIO.getWristEncoderDegrees());
+        SmartDashboard.putNumber("SHOULDER encoder", armIO.getShoulderEncoderDegrees());
+
 
         //Override wrist position to avoid being too tall
 
@@ -94,8 +180,8 @@ public final class ArmSubsystem extends SubsystemBase {
         return degrees * TICKS_PER_REVOLUTION * SHOULDER_GEAR_RATIO / DEGREES_PER_REVOLUTION;
     }
 
-    private double convertTicksToDegreesShoulder(double degrees) {
-        return degrees * DEGREES_PER_REVOLUTION / TICKS_PER_REVOLUTION / SHOULDER_GEAR_RATIO;
+    private double convertTicksToDegreesShoulder(double ticks) {
+        return ticks * DEGREES_PER_REVOLUTION / TICKS_PER_REVOLUTION / SHOULDER_GEAR_RATIO;
     }
 
     private double convertDegreesToTicksWrist(double degrees) {
