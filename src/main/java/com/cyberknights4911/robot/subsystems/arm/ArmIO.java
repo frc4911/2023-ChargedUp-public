@@ -31,9 +31,17 @@ public interface ArmIO {
         return 0.0;
     }
 
-    public default void setShoulderBrakeMode(){}
+    public default boolean isWristEncoderConnected() {
+        return true;
+    }
 
-    public default void setWristBrakeMode(){}
+    public default boolean isShoulderEncoderConnected() {
+        return true;
+    }
+
+    public default void setShoulderBrakeMode() {}
+
+    public default void setWristBrakeMode() {}
 
 
     /** Set shoulder motors output. */
@@ -42,5 +50,5 @@ public interface ArmIO {
     /** Set wrist motor output. */
     public default void setWristOutput(double output) {}
 
-    public default void adjustError(){}
+    public default void adjustError() {}
 }
