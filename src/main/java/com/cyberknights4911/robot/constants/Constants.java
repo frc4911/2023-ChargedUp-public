@@ -68,6 +68,12 @@ public class Constants {
 
     // Arm
     // PID values
+    // public static final double SHOULDER_P = 0.04;
+    // public static final double SHOULDER_I = 0.0;
+    // public static final double SHOULDER_D = 0.00034;
+    // public static final double WRIST_P = 0.04;
+    // public static final double WRIST_I = 0.0;
+    // public static final double WRIST_D = 0.002;
     public static final double SHOULDER_P = 0.01;
     public static final double SHOULDER_I = 0.0;
     public static final double SHOULDER_D = 0.0;
@@ -86,9 +92,13 @@ public class Constants {
     public static final double WRIST_G = 0;
 
     // Constraints
-    public static final double SHOULDER_VELOCITY = 25;
-    public static final double SHOULDER_ACCELERATION = 37.5;
-    public static final double WRIST_VELOCITY = 30;
+    // public static final double SHOULDER_VELOCITY = 25;
+    // public static final double SHOULDER_ACCELERATION = 37.5;
+    // public static final double WRIST_VELOCITY = 30;
+    // public static final double WRIST_ACCELERATION = 45;
+    public static final double SHOULDER_VELOCITY = 150;
+    public static final double SHOULDER_ACCELERATION = 75;
+    public static final double WRIST_VELOCITY = 80;
     public static final double WRIST_ACCELERATION = 45;
 
 }
