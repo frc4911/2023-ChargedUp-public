@@ -29,8 +29,6 @@ public final class ArmSubsystem extends SubsystemBase {
     private final ArmFeedforward wristFeedforward;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 
-    private ArmPositions currentPosition = ArmPositions.STOWED;
-
     public ArmSubsystem(ArmIO armIO) {
         super();
         this.armIO = armIO;
@@ -75,63 +73,28 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public void moveShoulderPid(ArmPositions desiredArmPosition) {
+        if (!armIO.isShoulderEncoderConnected()) {
+            System.out.println("ERROR: shoulder encoder offline. Moving shoulder may cause damage.");
+            return;
+        }
         shoulderController.setGoal(
             new TrapezoidProfile.State(desiredArmPosition.shoulderPosition, SPEED_STOPPED));
         double profiledPidValue = shoulderController.calculate(armIO.getShoulderEncoderDegrees());
         
-        System.out.println("measurement: " + armIO.getShoulderEncoderDegrees());
-        System.out.println("goal: " + desiredArmPosition.shoulderPosition);
-        System.out.println("profiled pid: " + profiledPidValue + "\n");
         // TODO use the feedforward
         armIO.setShoulderOutput(profiledPidValue);
     }
 
     public void moveWristPid(ArmPositions desiredArmPosition) {
+        if (!armIO.isWristEncoderConnected()) {
+            System.out.println("ERROR: wrist encoder offline. Moving wrist may cause damage.");
+            return;
+        }
         wristController.setGoal(
             new TrapezoidProfile.State(desiredArmPosition.wristPosition, SPEED_STOPPED));
         double profiledPidValue = wristController.calculate(armIO.getWristEncoderDegrees());
-        System.out.println("wrist pid value:" + profiledPidValue);
+        
         armIO.setWristOutput(profiledPidValue);
-    }
-
-    private void moveShoulder(ArmPositions desiredArmPosition) {
-        System.out.println("MOVE SHOULDER");
-        System.out.println("  DESIRED: " + desiredArmPosition.shoulderPosition);
-        System.out.println("  CURRENT: " + armIO.getShoulderEncoderDegrees());
-        double deltaDegrees = desiredArmPosition.shoulderPosition - armIO.getShoulderEncoderDegrees();
-        if (deltaDegrees > 0) {
-            System.out.println("POSITIVE");
-            // Positive for away from front stowed position
-            armIO.setShoulderOutput(.1);
-        } else {
-            System.out.println("NEGATIVE");
-            // Negative for toward front stowed position
-            armIO.setShoulderOutput(-0.1);
-        }
-    }
-
-    private void moveWrist(ArmPositions desiredArmPosition) {
-        System.out.println("MOVE WRIST");
-        System.out.println("  DESIRED: " + desiredArmPosition.wristPosition);
-        System.out.println("  CURRENT: " + armIO.getWristEncoderDegrees());
-        if (true) {
-            return;
-        }
-        double deltaDegrees = desiredArmPosition.wristPosition - armIO.getWristEncoderDegrees();
-        if (deltaDegrees > 0) {
-            System.out.println("POSITIVE");
-            // Positive for toward slurpp motor
-            armIO.setWristOutput(.1);
-        } else {
-            System.out.println("NEGATIVE");
-            // Negative for away from slurpp motor
-            armIO.setWristOutput(-0.1);
-        }
-    }
-
-    public void checkAndCorrectCurrentPosition() {
-        moveWrist(currentPosition);
-        moveShoulder(currentPosition);
     }
 
     //Calculated in ticks at the moment

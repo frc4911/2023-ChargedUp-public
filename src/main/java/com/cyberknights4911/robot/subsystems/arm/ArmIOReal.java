@@ -119,6 +119,16 @@ public final class ArmIOReal implements ArmIO {
     }
     
     @Override
+    public boolean isShoulderEncoderConnected() {
+        return shoulderEncoder.isConnected();
+    }
+
+    @Override
+    public boolean isWristEncoderConnected() {
+        return wristEncoder.isConnected();
+    }
+
+    @Override
     public void setWristBrakeMode() {
         wristMotor.setNeutralMode(NeutralMode.Brake);
     }
