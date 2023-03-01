@@ -44,11 +44,11 @@ public final class XboxControllerBinding implements ControllerBinding {
         switch(action) {
             case ALIGN_COLLECT: return new Triggers();
             case RESET_IMU: return new Triggers(driverController.y());
-            case SLURPP_BACKWARD: return new Triggers(driverController.rightBumper(), driverController.leftBumper());
-            case SLURPP_FORWARD: return new Triggers(driverController.rightTrigger(), driverController.leftTrigger());
+            case SLURPP_BACKWARD: return new Triggers(driverController.rightBumper(), driverController.rightTrigger());
+            case SLURPP_FORWARD: return new Triggers(driverController.leftBumper(), driverController.leftTrigger());
             case CLIMB_WHEEL_LOCK: return new Triggers();
             case RESET_WHEELS: return new Triggers(driverController.start());
-            case STOW: return new Triggers(driverController.povDown());
+            case STOW: return new Triggers(operatorController.povDown(), driverController.povDown());
             case SCORE_L3: return new Triggers(operatorController.leftBumper(), driverController.x());
             case SCORE_L2: return new Triggers(operatorController.rightBumper(), driverController.a());
             case CLIMB_DEPLOY: return new Triggers();
