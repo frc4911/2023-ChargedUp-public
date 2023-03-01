@@ -46,8 +46,8 @@ public final class ArmIOReal implements ArmIO {
     private void configMotors() {
         //SHOULDER CONFIGURATION
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
-        shoulderConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        shoulderConfiguration.statorCurrLimit.currentLimit = 25.0;
+        shoulderConfiguration.supplyCurrLimit.currentLimit = 30.0;
+        shoulderConfiguration.statorCurrLimit.currentLimit = 30.0;
         shoulderConfiguration.supplyCurrLimit.enable = true;
         shoulderConfiguration.statorCurrLimit.enable = true;
         
@@ -63,8 +63,8 @@ public final class ArmIOReal implements ArmIO {
 
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
-        wristConfiguration.supplyCurrLimit.currentLimit = 20.0;
-        wristConfiguration.statorCurrLimit.currentLimit = 20.0; //TODO:30 amps
+        wristConfiguration.supplyCurrLimit.currentLimit = 30.0;
+        wristConfiguration.statorCurrLimit.currentLimit = 30.0; 
 
         wristConfiguration.statorCurrLimit.enable = true;
         wristConfiguration.statorCurrLimit.enable = true;
