@@ -72,10 +72,10 @@ public final class ArmSubsystem extends SubsystemBase {
         armIO.setWristBrakeMode();
     }
 
-    public void moveShoulderPid(ArmPositions desiredArmPosition) {
+    public boolean moveShoulderPid(ArmPositions desiredArmPosition) {
         if (!armIO.isShoulderEncoderConnected()) {
-            System.out.println("ERROR: shoulder encoder offline. Moving shoulder may cause damage.");
-            return;
+            System.out.println("ERROR: shoulder encoder offline.");
+            return false;
         }
         shoulderController.setGoal(
             new TrapezoidProfile.State(desiredArmPosition.shoulderPosition, SPEED_STOPPED));
@@ -83,18 +83,20 @@ public final class ArmSubsystem extends SubsystemBase {
         
         // TODO use the feedforward
         armIO.setShoulderOutput(profiledPidValue);
+        return true;
     }
 
-    public void moveWristPid(ArmPositions desiredArmPosition) {
+    public boolean moveWristPid(ArmPositions desiredArmPosition) {
         if (!armIO.isWristEncoderConnected()) {
-            System.out.println("ERROR: wrist encoder offline. Moving wrist may cause damage.");
-            return;
+            System.out.println("ERROR: wrist encoder offline.");
+            return false;
         }
         wristController.setGoal(
             new TrapezoidProfile.State(desiredArmPosition.wristPosition, SPEED_STOPPED));
         double profiledPidValue = wristController.calculate(armIO.getWristEncoderDegrees());
         
         armIO.setWristOutput(profiledPidValue);
+        return true;
     }
 
     public boolean isCurrentArmFront() {

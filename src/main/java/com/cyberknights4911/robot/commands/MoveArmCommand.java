@@ -35,10 +35,13 @@ public final class MoveArmCommand extends CommandBase {
 
     @Override
     public void execute() {
-        armSubsystem.moveWristPid(desiredPosition);
-        armSubsystem.moveShoulderPid(desiredPosition);
-
-        if (isIntermediate) {
+        boolean success = armSubsystem.moveWristPid(desiredPosition) &&
+            armSubsystem.moveShoulderPid(desiredPosition);
+        if (!success) {
+            // Shoulder or wrist encoder are offline. Movements may cause damage.
+            armSubsystem.setBrakeMode();
+            isFinished = true;
+        } else if (isIntermediate) {
             isFinished = armSubsystem.atDesiredPosition(desiredPosition);
         }
     }
