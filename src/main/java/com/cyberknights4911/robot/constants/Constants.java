@@ -74,12 +74,12 @@ public class Constants {
     // public static final double WRIST_P = 0.04;
     // public static final double WRIST_I = 0.0;
     // public static final double WRIST_D = 0.002;
-    public static final double SHOULDER_P = 0.01;
+    public static final double SHOULDER_P = 0.03;
     public static final double SHOULDER_I = 0.0;
     public static final double SHOULDER_D = 0.0;
-    public static final double WRIST_P = 0.03;
+    public static final double WRIST_P = 0.02;
     public static final double WRIST_I = 0.0;
-    public static final double WRIST_D = 0.0015;
+    public static final double WRIST_D = 0.0;//0.0015;
     public static final double SHOULDER_TOLERANCE = 1.0;
     public static final double WRIST_TOLERANCE = 1.0;
 
@@ -96,9 +96,9 @@ public class Constants {
     // public static final double SHOULDER_ACCELERATION = 37.5;
     // public static final double WRIST_VELOCITY = 30;
     // public static final double WRIST_ACCELERATION = 45;
-    public static final double SHOULDER_VELOCITY = 150;
-    public static final double SHOULDER_ACCELERATION = 75;
-    public static final double WRIST_VELOCITY = 80;
-    public static final double WRIST_ACCELERATION = 45;
+    public static final double SHOULDER_VELOCITY = 200;
+    public static final double SHOULDER_ACCELERATION = 150;
+    public static final double WRIST_VELOCITY = 100;
+    public static final double WRIST_ACCELERATION = 75;
 
 }

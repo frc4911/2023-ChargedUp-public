@@ -18,8 +18,8 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final double WRIST_GEAR_RATIO = 60.0;
     public static final int TICKS_PER_REVOLUTION = 2048;
     public static final int DEGREES_PER_REVOLUTION = 360;
-    private static final double SHOULDER_ERROR_DEGREES = 5.0;
-    private static final double WRIST_ERROR_DEGREES = 5.0;
+    private static final double SHOULDER_ERROR_DEGREES = 10.0; //TODO:decrease
+    private static final double WRIST_ERROR_DEGREES = 10.0;
     private static final double SPEED_STOPPED = 0.0;
 
     private final ArmIO armIO;
