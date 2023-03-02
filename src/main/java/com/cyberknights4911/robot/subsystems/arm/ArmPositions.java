@@ -9,7 +9,10 @@ public enum ArmPositions {
     COLLECT_FLOOR_BACK_CUBE(320, 117),
     COLLECT_FLOOR_BACK_CONE(320, 105),
     SCORE_L3(230, 195),
-    SCORE_L2(93, 220);
+    SCORE_L2(93, 220),
+    // These are for preventing height violations. Don't use them directly
+    INTERMEDIATE_FRONT(150, 300),
+    INTERMEDIATE_BACK(210, 300);
 
     public final double shoulderPosition;
     public final double wristPosition;

@@ -18,8 +18,8 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final double WRIST_GEAR_RATIO = 60.0;
     public static final int TICKS_PER_REVOLUTION = 2048;
     public static final int DEGREES_PER_REVOLUTION = 360;
-    private static final double SHOULDER_ERROR_DEGREES = 1.0;
-    private static final double WRIST_ERROR_DEGREES = 1.0;
+    private static final double SHOULDER_ERROR_DEGREES = 5.0;
+    private static final double WRIST_ERROR_DEGREES = 5.0;
     private static final double SPEED_STOPPED = 0.0;
 
     private final ArmIO armIO;
@@ -97,27 +97,15 @@ public final class ArmSubsystem extends SubsystemBase {
         armIO.setWristOutput(profiledPidValue);
     }
 
-    //Calculated in ticks at the moment
-    public boolean wristAtDesiredPosition(ArmPositions armPosition) {
-        return true;
-        // double wristPosition = armIO.getWristEncoderDegrees();
-        // return Math.abs(wristPosition - armPosition.wristPosition) < WRIST_ERROR_DEGREES;
+    public boolean isCurrentArmFront() {
+        return armIO.getShoulderEncoderDegrees() < 180;
     }
 
-    //Calculated in ticks at the moment
-    public boolean shoulderAtDesiredPosition(ArmPositions armPosition) {
+    public boolean atDesiredPosition(ArmPositions armPosition) {
+        double wristPosition = armIO.getWristEncoderDegrees();
         double shoulderPosition = armIO.getShoulderEncoderDegrees();
-        return Math.abs(shoulderPosition - armPosition.shoulderPosition) < SHOULDER_ERROR_DEGREES;
-    }
-
-    //Check if the robot will be too tall
-    //Avoid between 70-210 degrees
-    public boolean checkForHeightViolation() {
-        double shoulderPosition = convertTicksToDegreesShoulder(armIO.getShoulderEncoderDegrees());
-        if (shoulderPosition <= 210 && shoulderPosition >= 70 ) {
-            return true;
-        }
-        return false;
+        return Math.abs(wristPosition - armPosition.wristPosition) < WRIST_ERROR_DEGREES &&
+            Math.abs(shoulderPosition - armPosition.shoulderPosition) < SHOULDER_ERROR_DEGREES;
     }
 
     @Override
@@ -126,16 +114,6 @@ public final class ArmSubsystem extends SubsystemBase {
         Logger.getInstance().processInputs("Arm", inputs);
         SmartDashboard.putNumber("WRIST encoder", armIO.getWristEncoderDegrees());
         SmartDashboard.putNumber("SHOULDER encoder", armIO.getShoulderEncoderDegrees());
-
-
-        //Override wrist position to avoid being too tall
-
-        // if (checkForHeightViolation()) {
-        //     armIO.setWristPosition(0);
-        // } else {
-        //     moveWrist(desiredPosition);
-        // }
-        //TODO:Add back in
 
     }
 
