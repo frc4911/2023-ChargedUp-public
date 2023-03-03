@@ -50,9 +50,9 @@ public class RobotContainer {
       )
     );
 
-    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_FAST).onTrue(
       Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
+        () -> subsystems.getSlurppSubsystem().slurpp(-0.85), subsystems.getSlurppSubsystem()
       )
     ).onFalse(
       Commands.runOnce(
@@ -60,9 +60,29 @@ public class RobotContainer {
       )
     );
 
-    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_SLOW).onTrue(
       Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
+        () -> subsystems.getSlurppSubsystem().slurpp(-0.2), subsystems.getSlurppSubsystem()
+      )
+    ).onFalse(
+      Commands.runOnce(
+        () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
+      )
+    );
+
+    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_FAST).onTrue(
+      Commands.runOnce(
+        () -> subsystems.getSlurppSubsystem().slurpp(0.85), subsystems.getSlurppSubsystem()
+      )
+    ).onFalse(
+      Commands.runOnce(
+        () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
+      )
+    );
+
+    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_SLOW).onTrue(
+      Commands.runOnce(
+        () -> subsystems.getSlurppSubsystem().slurpp(0.2), subsystems.getSlurppSubsystem()
       )
     ).onFalse(
       Commands.runOnce(
