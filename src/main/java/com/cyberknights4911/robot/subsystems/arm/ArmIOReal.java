@@ -15,7 +15,7 @@ import libraries.cyberlib.drivers.TalonFXFactory;
 public final class ArmIOReal implements ArmIO {
     private static final double ENCODER_DEGREES_PER_ROTATION = 360.0;
     private static final double ENCODER_DEGREES_SHOULDER_OFFSET = -210.0;
-    private static final double ENCODER_DEGREES_WRIST_OFFSET = 64.0;
+    private static final double ENCODER_DEGREES_WRIST_OFFSET = 180.0;
 
     private final TalonFX shoulderMotor1;
     private final TalonFX shoulderMotor2;
