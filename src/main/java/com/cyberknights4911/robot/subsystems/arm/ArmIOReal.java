@@ -63,8 +63,8 @@ public final class ArmIOReal implements ArmIO {
 
         //WRIST CONFIGURATION
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
-        wristConfiguration.supplyCurrLimit.currentLimit = 25.0;
-        wristConfiguration.statorCurrLimit.currentLimit = 25.0; 
+        wristConfiguration.supplyCurrLimit.currentLimit = 30.0;
+        wristConfiguration.statorCurrLimit.currentLimit = 30.0; 
 
         wristConfiguration.statorCurrLimit.enable = true;
         wristConfiguration.statorCurrLimit.enable = true;
