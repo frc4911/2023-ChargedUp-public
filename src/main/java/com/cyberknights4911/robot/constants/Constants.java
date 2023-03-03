@@ -92,13 +92,17 @@ public class Constants {
     public static final double WRIST_G = 0;
 
     // Constraints
-    // public static final double SHOULDER_VELOCITY = 25;
-    // public static final double SHOULDER_ACCELERATION = 37.5;
-    // public static final double WRIST_VELOCITY = 30;
-    // public static final double WRIST_ACCELERATION = 45;
-    public static final double SHOULDER_VELOCITY = 100;//200;
-    public static final double SHOULDER_ACCELERATION = 100;
-    public static final double WRIST_VELOCITY = 150;//200;
-    public static final double WRIST_ACCELERATION = 150;//300
+    // public static final double SHOULDER_VELOCITY = 100;//200;
+    // public static final double SHOULDER_ACCELERATION = 100;
+    // public static final double WRIST_VELOCITY = 150;//200;
+    // public static final double WRIST_ACCELERATION = 150;//300
+    public static final double SHOULDER_VELOCITY = 150;
+    public static final double SHOULDER_ACCELERATION = 75;
+    public static final double WRIST_VELOCITY = 80;
+    public static final double WRIST_ACCELERATION = 45;
+    
+    public static final double PROFILE_ARM_SPEED_STOPPED = 0.0;
+    public static final double PROFILE_ARM_SPEED_FORWARD = 0.0;
+    public static final double PROFILE_ARM_SPEED_BACKWARD = 0.0;
 
 }
