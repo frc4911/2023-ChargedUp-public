@@ -1,5 +1,11 @@
 package com.cyberknights4911.robot.subsystems.arm;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
+import static com.cyberknights4911.robot.constants.Constants.PROFILE_ARM_SPEED_STOPPED;
+import static com.cyberknights4911.robot.constants.Constants.PROFILE_ARM_SPEED_FORWARD;
+import static com.cyberknights4911.robot.constants.Constants.PROFILE_ARM_SPEED_BACKWARD;
+
 public enum ArmPositions {
     STOWED(35, 325),
     COLLECT_SUBSTATION_BACK(249, 160),
@@ -11,22 +17,24 @@ public enum ArmPositions {
     SCORE_L3(230, 195),
     SCORE_L2(93, 220),
     // These are for preventing height violations. Don't use them directly
-    INTERMEDIATE_FRONT(110, 300),
-    INTERMEDIATE_BACK(240, 300);
+    INTERMEDIATE_FRONT_FROM_FRONT(110, 300, PROFILE_ARM_SPEED_BACKWARD),
+    INTERMEDIATE_BACK_FROM_FRONT(240, 300, PROFILE_ARM_SPEED_BACKWARD),
+    INTERMEDIATE_FRONT_FROM_BACK(110, 300, PROFILE_ARM_SPEED_FORWARD),
+    INTERMEDIATE_BACK_FROM_BACK(240, 300, PROFILE_ARM_SPEED_FORWARD);
 
-    public final double shoulderPosition;
-    public final double wristPosition;
+    public final TrapezoidProfile.State shoulderState;
+    public final TrapezoidProfile.State wristState;
 
     private ArmPositions(double shoulderPosition, double wristPosition) {
-        this.shoulderPosition = shoulderPosition;
-        this.wristPosition = wristPosition;
+        this.shoulderState =
+            new TrapezoidProfile.State(shoulderPosition, PROFILE_ARM_SPEED_STOPPED);
+        this.wristState = new TrapezoidProfile.State(wristPosition, PROFILE_ARM_SPEED_STOPPED);
     }
 
-    public double getShoulderPosition() {
-        return shoulderPosition;
-    }
-
-    public double getWristPosition() {
-        return wristPosition;
+    private ArmPositions(
+        double shoulderPosition, double wristPosition, double shoulderVelocity
+    ) {
+        this.shoulderState = new TrapezoidProfile.State(shoulderPosition, shoulderVelocity);
+        this.wristState = new TrapezoidProfile.State(wristPosition, PROFILE_ARM_SPEED_STOPPED);
     }
 }

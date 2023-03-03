@@ -100,5 +100,9 @@ public class Constants {
     public static final double SHOULDER_ACCELERATION = 75;
     public static final double WRIST_VELOCITY = 80;
     public static final double WRIST_ACCELERATION = 45;
+    
+    public static final double PROFILE_ARM_SPEED_STOPPED = 0.0;
+    public static final double PROFILE_ARM_SPEED_FORWARD = 0.0;
+    public static final double PROFILE_ARM_SPEED_BACKWARD = 0.0;
 
 }
