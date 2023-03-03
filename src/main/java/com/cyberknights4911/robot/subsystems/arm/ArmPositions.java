@@ -11,8 +11,8 @@ public enum ArmPositions {
     SCORE_L3(230, 195),
     SCORE_L2(93, 220),
     // These are for preventing height violations. Don't use them directly
-    INTERMEDIATE_FRONT(110, 300),
-    INTERMEDIATE_BACK(240, 300);
+    INTERMEDIATE_FRONT(140, 250),
+    INTERMEDIATE_BACK(220, 250);
 
     public final double shoulderPosition;
     public final double wristPosition;

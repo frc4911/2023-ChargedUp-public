@@ -18,14 +18,13 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final double WRIST_GEAR_RATIO = 60.0;
     public static final int TICKS_PER_REVOLUTION = 2048;
     public static final int DEGREES_PER_REVOLUTION = 360;
-<<<<<<< HEAD
-    private static final double SHOULDER_ERROR_DEGREES = 10.0; //TODO:decrease
-    private static final double WRIST_ERROR_DEGREES = 10.0;
-=======
     private static final double SHOULDER_ERROR_DEGREES = 10.0;
-    private static final double WRIST_ERROR_DEGREES = 5.0;
->>>>>>> defer-arm-command-create
+    private static final double WRIST_ERROR_DEGREES = 10.0;
     private static final double SPEED_STOPPED = 0.0;
+    private static final double SPEED_INTERMEDIATE_WRIST = 200.0;
+    private static final double SPEED_INTERMEDIATE_SHOULDER = 100.0;
+
+
 
     private final ArmIO armIO;
     private final ProfiledPIDController shoulderController;
@@ -63,8 +62,8 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public void setBrakeMode() {
-        armIO.setShoulderBrakeMode();
-        armIO.setWristBrakeMode();
+        setShoulderBrakeMode();
+        setWristBrakeMode();
     }
 
     public void setShoulderBrakeMode() {
@@ -77,13 +76,21 @@ public final class ArmSubsystem extends SubsystemBase {
         armIO.setWristBrakeMode();
     }
 
-    public boolean moveShoulderPid(ArmPositions desiredArmPosition) {
+    public boolean moveShoulderPid(ArmPositions desiredArmPosition, boolean isIntermediate) {
+        double endSpeed;
+
+        if (isIntermediate) {
+            endSpeed = SPEED_INTERMEDIATE_SHOULDER;
+        } else {
+            endSpeed = SPEED_STOPPED;
+        }
+
         if (!armIO.isShoulderEncoderConnected()) {
             System.out.println("ERROR: shoulder encoder offline.");
             return false;
         }
         shoulderController.setGoal(
-            new TrapezoidProfile.State(desiredArmPosition.shoulderPosition, SPEED_STOPPED));
+            new TrapezoidProfile.State(desiredArmPosition.shoulderPosition, endSpeed));
         double profiledPidValue = shoulderController.calculate(armIO.getShoulderEncoderDegrees());
         
         // TODO use the feedforward
@@ -92,6 +99,7 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public boolean moveWristPid(ArmPositions desiredArmPosition) {
+
         if (!armIO.isWristEncoderConnected()) {
             System.out.println("ERROR: wrist encoder offline.");
             return false;
