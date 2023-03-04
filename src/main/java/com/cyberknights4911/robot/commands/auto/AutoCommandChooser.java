@@ -89,7 +89,7 @@ public final class AutoCommandChooser {
 
     private Command getAutoBalanceCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(0.40), subsystems.getSlurppSubsystem()));
+        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurrp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
         eventMap.put("autoBalance", new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
 
@@ -108,7 +108,7 @@ public final class AutoCommandChooser {
 
     private Command getScoreAndLeaveCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(0.40), subsystems.getSlurppSubsystem()));
+        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurrp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
 
 
