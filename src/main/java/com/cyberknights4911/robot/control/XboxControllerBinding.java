@@ -46,8 +46,8 @@ public final class XboxControllerBinding implements ControllerBinding {
             case RESET_IMU: return new Triggers(driverController.y());
             case SLURPP_BACKWARD_FAST: return new Triggers(driverController.rightTrigger());
             case SLURPP_FORWARD_FAST: return new Triggers( driverController.leftTrigger());
-            case SLURPP_BACKWARD_SLOW: return new Triggers(driverController.leftBumper());
-            case SLURPP_FORWARD_SLOW: return new Triggers(driverController.rightBumper());
+            case SLURPP_BACKWARD_SLOW: return new Triggers(driverController.rightBumper());
+            case SLURPP_FORWARD_SLOW: return new Triggers(driverController.leftBumper());
             case CLIMB_WHEEL_LOCK: return new Triggers();
             case RESET_WHEELS: return new Triggers(driverController.start());
             case STOW: return new Triggers(operatorController.povDown(), driverController.povDown());
