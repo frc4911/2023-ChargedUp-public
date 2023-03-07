@@ -110,7 +110,11 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public double getWristEncoderDegrees() {
-        return (ENCODER_DEGREES_PER_ROTATION - wristEncoder.getDistance() + ENCODER_DEGREES_WRIST_OFFSET) % ENCODER_DEGREES_PER_ROTATION;
+        double degrees = (ENCODER_DEGREES_PER_ROTATION - wristEncoder.getDistance() + ENCODER_DEGREES_WRIST_OFFSET) % ENCODER_DEGREES_PER_ROTATION;
+        if (degrees < 0) {
+            degrees += 360;
+        }
+        return degrees;
     }
 
     @Override
