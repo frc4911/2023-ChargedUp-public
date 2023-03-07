@@ -6,8 +6,10 @@ package com.cyberknights4911.robot.control;
 public enum ButtonAction {
     ALIGN_COLLECT,
     RESET_IMU,
-    SLURPP_BACKWARD,
-    SLURPP_FORWARD,
+    SLURPP_BACKWARD_FAST,
+    SLURPP_FORWARD_FAST,
+    SLURPP_BACKWARD_SLOW,
+    SLURPP_FORWARD_SLOW,
     CLIMB_WHEEL_LOCK,
     RESET_WHEELS,
     CLIMB_DEPLOY,

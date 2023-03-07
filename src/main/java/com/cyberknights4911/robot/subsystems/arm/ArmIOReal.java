@@ -15,7 +15,7 @@ import libraries.cyberlib.drivers.TalonFXFactory;
 public final class ArmIOReal implements ArmIO {
     private static final double ENCODER_DEGREES_PER_ROTATION = 360.0;
     private static final double ENCODER_DEGREES_SHOULDER_OFFSET = -210.0;
-    private static final double ENCODER_DEGREES_WRIST_OFFSET = 64.0;
+    private static final double ENCODER_DEGREES_WRIST_OFFSET = 180.0;
 
     private final TalonFX shoulderMotor1;
     private final TalonFX shoulderMotor2;
@@ -110,7 +110,11 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public double getWristEncoderDegrees() {
-        return (ENCODER_DEGREES_PER_ROTATION - wristEncoder.getDistance() + ENCODER_DEGREES_WRIST_OFFSET) % ENCODER_DEGREES_PER_ROTATION;
+        double degrees = (ENCODER_DEGREES_PER_ROTATION - wristEncoder.getDistance() + ENCODER_DEGREES_WRIST_OFFSET) % ENCODER_DEGREES_PER_ROTATION;
+        if (degrees < 0) {
+            degrees += 360;
+        }
+        return degrees;
     }
 
     @Override

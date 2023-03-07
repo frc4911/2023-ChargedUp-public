@@ -1,7 +1,5 @@
 package com.cyberknights4911.robot.commands;
 
-import java.util.function.Supplier;
-
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
@@ -19,15 +17,20 @@ public final class MoveArmCommand extends CommandBase {
     private boolean isFinished = false;
 
     private MoveArmCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        this(armSubsystem, desiredPosition, false);
-    }
-
-    private MoveArmCommand(
-        ArmSubsystem armSubsystem, ArmPositions desiredPosition, boolean isIntermediate
-    ) {
         this.armSubsystem = armSubsystem;
         this.desiredPosition = desiredPosition;
-        this.isIntermediate = isIntermediate;
+
+        switch(desiredPosition) {
+            case INTERMEDIATE_FRONT_FROM_FRONT:
+            case INTERMEDIATE_BACK_FROM_FRONT:
+            case INTERMEDIATE_FRONT_FROM_BACK:
+            case INTERMEDIATE_BACK_FROM_BACK:
+                this.isIntermediate = true;
+                break;
+            default:
+                this.isIntermediate = false;
+                break;
+        }
         addRequirements(armSubsystem);
     }
 
@@ -39,7 +42,7 @@ public final class MoveArmCommand extends CommandBase {
     @Override
     public void execute() {
         boolean success = armSubsystem.moveWristPid(desiredPosition) &&
-            armSubsystem.moveShoulderPid(desiredPosition);
+            armSubsystem.moveShoulderPid(desiredPosition, isIntermediate);
         if (!success) {
             // Shoulder or wrist encoder are offline. Movements may cause damage.
             armSubsystem.setBrakeMode();
@@ -71,19 +74,21 @@ public final class MoveArmCommand extends CommandBase {
     }
 
     private static Command createImmediate(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        boolean isDesiredPositionFront = desiredPosition.shoulderPosition < 180 ;
+        boolean isDesiredPositionFront = desiredPosition.shoulderState.position < 180 ;
         boolean isCurrentPositionFront = armSubsystem.isCurrentArmFront();
 
         if (isDesiredPositionFront && !isCurrentPositionFront) {
+            // Moving back to front
             return new SequentialCommandGroup(
-                new MoveArmCommand(armSubsystem, ArmPositions.INTERMEDIATE_BACK, true),
-                new MoveArmCommand(armSubsystem, ArmPositions.INTERMEDIATE_FRONT, true),
+                new MoveArmCommand(armSubsystem, ArmPositions.INTERMEDIATE_BACK_FROM_FRONT),
+                new MoveArmCommand(armSubsystem, ArmPositions.INTERMEDIATE_FRONT_FROM_FRONT),
                 new MoveArmCommand(armSubsystem, desiredPosition)
             );
         } else if (!isDesiredPositionFront && isCurrentPositionFront) {
+            // Moving front to back
             return new SequentialCommandGroup(
-                new MoveArmCommand(armSubsystem, ArmPositions.INTERMEDIATE_FRONT, true),
-                new MoveArmCommand(armSubsystem, ArmPositions.INTERMEDIATE_BACK, true),
+                new MoveArmCommand(armSubsystem, ArmPositions.INTERMEDIATE_FRONT_FROM_FRONT),
+                new MoveArmCommand(armSubsystem, ArmPositions.INTERMEDIATE_BACK_FROM_FRONT),
                 new MoveArmCommand(armSubsystem, desiredPosition)
             );
         } else {
