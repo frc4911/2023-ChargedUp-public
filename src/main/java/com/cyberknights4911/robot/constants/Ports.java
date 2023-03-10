@@ -29,6 +29,11 @@ public final class Ports {
         public static final int WRIST_MOTOR = 13;
         public static final int SHOULDER_ENCODER = 0;
         public static final int WRIST_ENCODER = 1;
+        
+        // TODO: change these to the real ids when they are installed
+        // These must be less than 15: https://docs.ctre-phoenix.com/en/stable/ch21_Errata.html#talonfx-remoteid-errata
+        public static final int SHOULDER_CANCODER = 10;
+        public static final int WRIST_CANCODER = 11;
     }
 
     public static final class Slurpp {
