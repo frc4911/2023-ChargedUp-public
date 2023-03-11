@@ -2,9 +2,9 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
-import static com.cyberknights4911.robot.constants.Constants.PROFILE_ARM_SPEED_STOPPED;
-import static com.cyberknights4911.robot.constants.Constants.PROFILE_ARM_SPEED_FORWARD;
-import static com.cyberknights4911.robot.constants.Constants.PROFILE_ARM_SPEED_BACKWARD;
+import static com.cyberknights4911.robot.constants.Constants.Arm.PROFILE_ARM_SPEED_STOPPED;
+import static com.cyberknights4911.robot.constants.Constants.Arm.PROFILE_ARM_SPEED_FORWARD;
+import static com.cyberknights4911.robot.constants.Constants.Arm.PROFILE_ARM_SPEED_BACKWARD;
 
 public enum ArmPositions {
     STOWED(35, 325),

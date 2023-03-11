@@ -3,6 +3,7 @@ package com.cyberknights4911.robot.subsystems.arm;
 import org.littletonrobotics.junction.Logger;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.constants.Constants.Arm;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -32,21 +33,21 @@ public final class ArmSubsystem extends SubsystemBase {
         super();
         this.armIO = armIO;
         shoulderController = new ProfiledPIDController(
-            Constants.SHOULDER_P,
-            Constants.SHOULDER_I,
-            Constants.SHOULDER_D,
-            new TrapezoidProfile.Constraints(Constants.SHOULDER_VELOCITY, Constants.SHOULDER_ACCELERATION)
+            Arm.SHOULDER_P,
+            Arm.SHOULDER_I,
+            Arm.SHOULDER_D,
+            new TrapezoidProfile.Constraints(Arm.SHOULDER_VELOCITY, Arm.SHOULDER_ACCELERATION)
         );
-        shoulderController.setTolerance(Constants.SHOULDER_TOLERANCE);
+        shoulderController.setTolerance(Arm.SHOULDER_TOLERANCE);
         wristController = new ProfiledPIDController(
-            Constants.WRIST_P,
-            Constants.WRIST_I,
-            Constants.WRIST_D,
-            new TrapezoidProfile.Constraints(Constants.WRIST_VELOCITY, Constants.WRIST_ACCELERATION)
+            Arm.WRIST_P,
+            Arm.WRIST_I,
+            Arm.WRIST_D,
+            new TrapezoidProfile.Constraints(Arm.WRIST_VELOCITY, Arm.WRIST_ACCELERATION)
         );
-        wristController.setTolerance(Constants.WRIST_TOLERANCE);
-        shoulderFeedforward = new ArmFeedforward(Constants.SHOULDER_S, Constants.SHOULDER_G, Constants.SHOULDER_V);
-        wristFeedforward = new ArmFeedforward(Constants.WRIST_S, Constants.WRIST_G, Constants.WRIST_V);
+        wristController.setTolerance(Arm.WRIST_TOLERANCE);
+        shoulderFeedforward = new ArmFeedforward(Arm.SHOULDER_S, Arm.SHOULDER_G, Arm.SHOULDER_V);
+        wristFeedforward = new ArmFeedforward(Arm.WRIST_S, Arm.WRIST_G, Arm.WRIST_V);
 
         reset();
     }
