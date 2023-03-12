@@ -3,6 +3,7 @@ package com.cyberknights4911.robot.subsystems.arm;
 import org.littletonrobotics.junction.Logger;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.constants.Constants.Arm;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -18,9 +19,8 @@ public final class ArmSubsystem extends SubsystemBase {
     public static final double WRIST_GEAR_RATIO = 60.0;
     public static final int TICKS_PER_REVOLUTION = 2048;
     public static final int DEGREES_PER_REVOLUTION = 360;
-    private static final double SHOULDER_ERROR_DEGREES = 1.0;
-    private static final double WRIST_ERROR_DEGREES = 1.0;
-    private static final double SPEED_STOPPED = 0.0;
+    private static final double SHOULDER_ERROR_DEGREES = 5.0;
+    private static final double WRIST_ERROR_DEGREES = 2.0;
 
     private final ArmIO armIO;
     private final ProfiledPIDController shoulderController;
@@ -33,21 +33,21 @@ public final class ArmSubsystem extends SubsystemBase {
         super();
         this.armIO = armIO;
         shoulderController = new ProfiledPIDController(
-            Constants.SHOULDER_P,
-            Constants.SHOULDER_I,
-            Constants.SHOULDER_D,
-            new TrapezoidProfile.Constraints(Constants.SHOULDER_VELOCITY, Constants.SHOULDER_ACCELERATION)
+            Arm.SHOULDER_P,
+            Arm.SHOULDER_I,
+            Arm.SHOULDER_D,
+            new TrapezoidProfile.Constraints(Arm.SHOULDER_VELOCITY, Arm.SHOULDER_ACCELERATION)
         );
-        shoulderController.setTolerance(Constants.SHOULDER_TOLERANCE);
+        shoulderController.setTolerance(Arm.SHOULDER_TOLERANCE);
         wristController = new ProfiledPIDController(
-            Constants.WRIST_P,
-            Constants.WRIST_I,
-            Constants.WRIST_D,
-            new TrapezoidProfile.Constraints(Constants.WRIST_VELOCITY, Constants.WRIST_ACCELERATION)
+            Arm.WRIST_P,
+            Arm.WRIST_I,
+            Arm.WRIST_D,
+            new TrapezoidProfile.Constraints(Arm.WRIST_VELOCITY, Arm.WRIST_ACCELERATION)
         );
-        wristController.setTolerance(Constants.WRIST_TOLERANCE);
-        shoulderFeedforward = new ArmFeedforward(Constants.SHOULDER_S, Constants.SHOULDER_V, Constants.SHOULDER_G);
-        wristFeedforward = new ArmFeedforward(Constants.WRIST_S, Constants.WRIST_V, Constants.WRIST_G);
+        wristController.setTolerance(Arm.WRIST_TOLERANCE);
+        shoulderFeedforward = new ArmFeedforward(Arm.SHOULDER_S, Arm.SHOULDER_G, Arm.SHOULDER_V);
+        wristFeedforward = new ArmFeedforward(Arm.WRIST_S, Arm.WRIST_G, Arm.WRIST_V);
 
         reset();
     }
@@ -58,8 +58,8 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public void setBrakeMode() {
-        armIO.setShoulderBrakeMode();
-        armIO.setWristBrakeMode();
+        setShoulderBrakeMode();
+        setWristBrakeMode();
     }
 
     public void setShoulderBrakeMode() {
@@ -72,52 +72,45 @@ public final class ArmSubsystem extends SubsystemBase {
         armIO.setWristBrakeMode();
     }
 
-    public void moveShoulderPid(ArmPositions desiredArmPosition) {
+    public boolean moveShoulderPid(ArmPositions desiredArmPosition, boolean isIntermediate) {
+
         if (!armIO.isShoulderEncoderConnected()) {
-            System.out.println("ERROR: shoulder encoder offline. Moving shoulder may cause damage.");
-            return;
+            System.out.println("ERROR: shoulder encoder offline.");
+            return false;
         }
-        shoulderController.setGoal(
-            new TrapezoidProfile.State(desiredArmPosition.shoulderPosition, SPEED_STOPPED));
+
+        shoulderController.setGoal(desiredArmPosition.shoulderState);
         double profiledPidValue = shoulderController.calculate(armIO.getShoulderEncoderDegrees());
         
         // TODO use the feedforward
         armIO.setShoulderOutput(profiledPidValue);
+        return true;
     }
 
-    public void moveWristPid(ArmPositions desiredArmPosition) {
+    public boolean moveWristPid(ArmPositions desiredArmPosition) {
+
         if (!armIO.isWristEncoderConnected()) {
-            System.out.println("ERROR: wrist encoder offline. Moving wrist may cause damage.");
-            return;
+            System.out.println("ERROR: wrist encoder offline.");
+            return false;
         }
-        wristController.setGoal(
-            new TrapezoidProfile.State(desiredArmPosition.wristPosition, SPEED_STOPPED));
+        wristController.setGoal(desiredArmPosition.wristState);
         double profiledPidValue = wristController.calculate(armIO.getWristEncoderDegrees());
         
         armIO.setWristOutput(profiledPidValue);
-    }
-
-    //Calculated in ticks at the moment
-    public boolean wristAtDesiredPosition(ArmPositions armPosition) {
         return true;
-        // double wristPosition = armIO.getWristEncoderDegrees();
-        // return Math.abs(wristPosition - armPosition.wristPosition) < WRIST_ERROR_DEGREES;
     }
 
-    //Calculated in ticks at the moment
-    public boolean shoulderAtDesiredPosition(ArmPositions armPosition) {
+    public boolean isCurrentArmFront() {
+        return armIO.getShoulderEncoderDegrees() < 180;
+    }
+
+    public boolean isNearPosition(ArmPositions armPosition) {
+        double wristPosition = armIO.getWristEncoderDegrees();
         double shoulderPosition = armIO.getShoulderEncoderDegrees();
-        return Math.abs(shoulderPosition - armPosition.shoulderPosition) < SHOULDER_ERROR_DEGREES;
-    }
-
-    //Check if the robot will be too tall
-    //Avoid between 70-210 degrees
-    public boolean checkForHeightViolation() {
-        double shoulderPosition = convertTicksToDegreesShoulder(armIO.getShoulderEncoderDegrees());
-        if (shoulderPosition <= 210 && shoulderPosition >= 70 ) {
-            return true;
-        }
-        return false;
+        // System.out.println("Wrist is off by: " + Math.abs(wristPosition - armPosition.wristPosition));
+        // System.out.println("Shoulder is off by: " + Math.abs(shoulderPosition - armPosition.shoulderPosition));
+        return Math.abs(wristPosition - armPosition.wristState.position) < WRIST_ERROR_DEGREES &&
+            Math.abs(shoulderPosition - armPosition.shoulderState.position) < SHOULDER_ERROR_DEGREES;
     }
 
     @Override
@@ -126,16 +119,6 @@ public final class ArmSubsystem extends SubsystemBase {
         Logger.getInstance().processInputs("Arm", inputs);
         SmartDashboard.putNumber("WRIST encoder", armIO.getWristEncoderDegrees());
         SmartDashboard.putNumber("SHOULDER encoder", armIO.getShoulderEncoderDegrees());
-
-
-        //Override wrist position to avoid being too tall
-
-        // if (checkForHeightViolation()) {
-        //     armIO.setWristPosition(0);
-        // } else {
-        //     moveWrist(desiredPosition);
-        // }
-        //TODO:Add back in
 
     }
 

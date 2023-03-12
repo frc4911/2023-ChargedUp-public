@@ -12,21 +12,20 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
-public final class ArmIOReal implements ArmIO {
+public final class ArmIORevEncoders implements ArmIO {
     private static final double ENCODER_DEGREES_PER_ROTATION = 360.0;
     private static final double ENCODER_DEGREES_SHOULDER_OFFSET = -210.0;
-    private static final double ENCODER_DEGREES_WRIST_OFFSET = 64.0;
+    private static final double ENCODER_DEGREES_WRIST_OFFSET = 180.0;
 
     private final TalonFX shoulderMotor1;
     private final TalonFX shoulderMotor2;
     private final TalonFX shoulderMotor3;
     private final TalonFX wristMotor;
 
-
     private final DutyCycleEncoder shoulderEncoder;
     private final DutyCycleEncoder wristEncoder;
 
-    public ArmIOReal() {
+    public ArmIORevEncoders() {
         // 1 is closest to robot front (battery side) and the numbering inceases rearward
         shoulderMotor1 =
             TalonFXFactory.createTalon(Ports.Arm.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
@@ -110,7 +109,11 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public double getWristEncoderDegrees() {
-        return (ENCODER_DEGREES_PER_ROTATION - wristEncoder.getDistance() + ENCODER_DEGREES_WRIST_OFFSET) % ENCODER_DEGREES_PER_ROTATION;
+        double degrees = (ENCODER_DEGREES_PER_ROTATION - wristEncoder.getDistance() + ENCODER_DEGREES_WRIST_OFFSET) % ENCODER_DEGREES_PER_ROTATION;
+        if (degrees < 0) {
+            degrees += 360;
+        }
+        return degrees;
     }
 
     @Override

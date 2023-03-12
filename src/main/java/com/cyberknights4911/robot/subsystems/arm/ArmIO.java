@@ -43,12 +43,17 @@ public interface ArmIO {
 
     public default void setWristBrakeMode() {}
 
-
     /** Set shoulder motors output. */
     public default void setShoulderOutput(double output) {}
     
     /** Set wrist motor output. */
     public default void setWristOutput(double output) {}
+
+    /** Set shoulder motors position. */
+    public default void setShoulderPosition(double position) {}
+    
+    /** Set wrist motor position. */
+    public default void setWristPosition(double position) {}
 
     public default void adjustError() {}
 }

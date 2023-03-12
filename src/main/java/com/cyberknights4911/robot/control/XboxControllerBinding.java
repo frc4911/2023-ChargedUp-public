@@ -44,23 +44,25 @@ public final class XboxControllerBinding implements ControllerBinding {
         switch(action) {
             case ALIGN_COLLECT: return new Triggers();
             case RESET_IMU: return new Triggers(driverController.y());
-            case SLURPP_BACKWARD: return new Triggers(driverController.rightBumper(), driverController.rightTrigger());
-            case SLURPP_FORWARD: return new Triggers(driverController.leftBumper(), driverController.leftTrigger());
+            case SLURPP_BACKWARD_FAST: return new Triggers(driverController.rightTrigger());
+            case SLURPP_FORWARD_FAST: return new Triggers( driverController.leftTrigger());
+            case SLURPP_BACKWARD_SLOW: return new Triggers(driverController.rightBumper());
+            case SLURPP_FORWARD_SLOW: return new Triggers(driverController.leftBumper());
             case CLIMB_WHEEL_LOCK: return new Triggers();
             case RESET_WHEELS: return new Triggers(driverController.start());
             case STOW: return new Triggers(operatorController.povDown(), driverController.povDown());
-            case SCORE_L3: return new Triggers(operatorController.leftBumper(), driverController.x());
+            case SCORE_L3: return new Triggers(); //return new Triggers(operatorController.leftBumper(), driverController.x());
             case SCORE_L2: return new Triggers(operatorController.rightBumper(), driverController.a());
             case CLIMB_DEPLOY: return new Triggers();
             case CLIMB_LOCKOUT: return new Triggers();
-            case BOB_STOW: return new Triggers(operatorController.rightTrigger());
-            case BOB_DEPLOY: return new Triggers(operatorController.leftTrigger());
-            case COLLECT_SUBSTATION_FRONT: return new Triggers(operatorController.povLeft(), driverController.povLeft());
-            case COLLECT_SUBSTATION_BACK: return new Triggers(operatorController.povRight(), driverController.povRight());
+            case BOB_STOW: return new Triggers();//Triggers(operatorController.rightTrigger());
+            case BOB_DEPLOY: return new Triggers();//Triggers(operatorController.leftTrigger());
+            case COLLECT_SUBSTATION_FRONT: return new Triggers(operatorController.povRight(), driverController.povLeft());
+            case COLLECT_SUBSTATION_BACK: return new Triggers();//Triggers(operatorController.povLeft(), driverController.povRight());
             case COLLECT_FLOOR_FRONT_CONE: return new Triggers(operatorController.a());
             case COLLECT_FLOOR_FRONT_CUBE: return new Triggers(operatorController.b());
-            case COLLECT_FLOOR_BACK_CONE: return new Triggers(operatorController.x());
-            case COLLECT_FLOOR_BACK_CUBE: return new Triggers(operatorController.y());
+            case COLLECT_FLOOR_BACK_CONE: return new Triggers();//Triggers(operatorController.x());
+            case COLLECT_FLOOR_BACK_CUBE: return new Triggers();//Triggers(operatorController.y());
             case HOME: return new Triggers(ALWAYS_FALSE); // TODO: figure out how to bind to home button
             case HOME_CLAW: return new Triggers(ALWAYS_FALSE); // TODO: figure out how to bind to share button
             default: return new Triggers(ALWAYS_FALSE);

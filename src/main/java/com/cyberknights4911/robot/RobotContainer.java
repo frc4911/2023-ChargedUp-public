@@ -33,7 +33,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     subsystems.getArmSubsystem().setDefaultCommand(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.STOWED)
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED)
     );
   }
 
@@ -50,9 +50,9 @@ public class RobotContainer {
       )
     );
 
-    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_FAST).onTrue(
       Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().spit(), subsystems.getSlurppSubsystem()
+        () -> subsystems.getSlurppSubsystem().slurpp(-0.85), subsystems.getSlurppSubsystem()
       )
     ).onFalse(
       Commands.runOnce(
@@ -60,9 +60,29 @@ public class RobotContainer {
       )
     );
 
-    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_SLOW).onTrue(
       Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().slurpp(), subsystems.getSlurppSubsystem()
+        () -> subsystems.getSlurppSubsystem().slurpp(-0.2), subsystems.getSlurppSubsystem()
+      )
+    ).onFalse(
+      Commands.runOnce(
+        () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
+      )
+    );
+
+    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_FAST).onTrue(
+      Commands.runOnce(
+        () -> subsystems.getSlurppSubsystem().slurpp(0.85), subsystems.getSlurppSubsystem()
+      )
+    ).onFalse(
+      Commands.runOnce(
+        () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
+      )
+    );
+
+    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_SLOW).onTrue(
+      Commands.runOnce(
+        () -> subsystems.getSlurppSubsystem().slurpp(0.2), subsystems.getSlurppSubsystem()
       )
     ).onFalse(
       Commands.runOnce(
@@ -71,31 +91,31 @@ public class RobotContainer {
     );
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_FRONT).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT));
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_BACK).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK));
     
     controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_BACK_CONE).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CONE));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CONE));
     
     controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_BACK_CUBE).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CUBE));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CUBE));
   
     controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_FRONT_CONE).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE));
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_FRONT_CUBE).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CUBE));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CUBE));
 
     controllerBinding.triggersFor(ButtonAction.STOW).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.STOWED));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));
 
     controllerBinding.triggersFor(ButtonAction.SCORE_L2).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2));
 
     controllerBinding.triggersFor(ButtonAction.SCORE_L3).onTrue(
-      new MoveArmCommand(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));
+     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));
   
     
     // Move ONLY safe and tested commands above this line.
