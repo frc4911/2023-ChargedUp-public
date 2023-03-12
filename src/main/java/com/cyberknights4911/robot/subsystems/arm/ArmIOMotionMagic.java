@@ -66,9 +66,9 @@ public final class ArmIOMotionMagic implements ArmIO {
         shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
-        shoulderMotor1.setNeutralMode(NeutralMode.Brake);
-        shoulderMotor2.setNeutralMode(NeutralMode.Brake);
-        shoulderMotor3.setNeutralMode(NeutralMode.Brake);
+        shoulderMotor1.setNeutralMode(NeutralMode.Coast);
+        shoulderMotor2.setNeutralMode(NeutralMode.Coast);
+        shoulderMotor3.setNeutralMode(NeutralMode.Coast);
 
         //WRIST CONFIGURATION
         wristMotor.configRemoteFeedbackFilter(
@@ -88,15 +88,14 @@ public final class ArmIOMotionMagic implements ArmIO {
 
         wristMotor.configAllSettings(wristConfiguration);
         wristMotor.setInverted(true);
-        wristMotor.setNeutralMode(NeutralMode.Brake);
+        wristMotor.setNeutralMode(NeutralMode.Coast);
     }
     
     private void configureEncoders() {
         CANCoderConfiguration shoulderConfig = new CANCoderConfiguration();
         shoulderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         shoulderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        // TODO: determine magnet offset after installation
-        shoulderConfig.magnetOffsetDegrees = 0;
+        shoulderConfig.magnetOffsetDegrees = Constants.Arm.SHOULDER_CANCODER_OFFSET;
         shoulderConfig.sensorDirection = false;
 
         shoulderEncoder.configAllSettings(shoulderConfig, Constants.LONG_CAN_TIMEOUTS_MS);
@@ -104,8 +103,7 @@ public final class ArmIOMotionMagic implements ArmIO {
         CANCoderConfiguration wristConfig = new CANCoderConfiguration();
         wristConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         wristConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        // TODO: determine magnet offset after installation
-        wristConfig.magnetOffsetDegrees = 0;
+        wristConfig.magnetOffsetDegrees = Constants.Arm.WRIST_CANCODER_OFFSET;
         wristConfig.sensorDirection = false;
 
         wristEncoder.configAllSettings(wristConfig, Constants.LONG_CAN_TIMEOUTS_MS);

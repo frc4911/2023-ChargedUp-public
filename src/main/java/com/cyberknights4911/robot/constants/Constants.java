@@ -106,6 +106,9 @@ public class Constants {
         public static final double PROFILE_ARM_SPEED_STOPPED = 0.0;
         public static final double PROFILE_ARM_SPEED_FORWARD = -50.0;
         public static final double PROFILE_ARM_SPEED_BACKWARD = 50.0;
+        
+        public static final double SHOULDER_CANCODER_OFFSET = 360 - 233.9;
+        public static final double WRIST_CANCODER_OFFSET = 360 - 237.0;
 
         private static final boolean IS_MOTION_MAGIC = false;
 
