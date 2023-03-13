@@ -67,6 +67,17 @@ public class Constants {
 
     public static final double MAX_SPEED = 1;
 
+    // pidIdx for BaseMotorController indicating primary closed-loop
+    public static final int PRIMARY_PID = 0;
+    
+    // remoteOrdinal for BaseMotorController indicating remote sensor 0
+    public static final int REMOTE_ZERO = 0;
+
+    // period frame to use for primary pid
+    public static final int PRIMARY_PID_PERIOD = 10;
+    // period fram to use for motion magic
+    public static final int MOTION_MAGIC_PERIOD = 10;
+
     public static class Arm {
         private Arm() {}
         
@@ -110,7 +121,12 @@ public class Constants {
         public static final double SHOULDER_CANCODER_OFFSET = 360 - 233.9;
         public static final double WRIST_CANCODER_OFFSET = 360 - 237.0;
 
-        private static final boolean IS_MOTION_MAGIC = false;
+        private static final boolean IS_MOTION_MAGIC = true;
+        public static final double WRIST_VELOCITY_MOTION_MAGIC = 5000;
+        public static final double WRIST_ACCELERATION_MOTION_MAGIC = 2000;
+
+        public static final double SHOULDER_VELOCITY_MOTION_MAGIC = 2000;
+        public static final double SHOULDER_ACCELERATION_MOTION_MAGIC = 800;
 
         public static boolean isMotionMagic() {
             return Preferences.getBoolean("Arm Motion Magic enabled", IS_MOTION_MAGIC);

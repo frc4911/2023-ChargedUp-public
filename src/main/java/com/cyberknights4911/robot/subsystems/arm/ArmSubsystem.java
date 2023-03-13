@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public final class ArmSubsystem extends SubsystemBase {
     public static final double SHOULDER_GEAR_RATIO = 120.0;
     public static final double WRIST_GEAR_RATIO = 60.0;
-    public static final int TICKS_PER_REVOLUTION = 2048;
-    public static final int DEGREES_PER_REVOLUTION = 360;
+    public static final double TICKS_PER_REVOLUTION = 4096;
+    public static final double DEGREES_PER_REVOLUTION = 360;
     private static final double SHOULDER_ERROR_DEGREES = 5.0;
     private static final double WRIST_ERROR_DEGREES = 2.0;
 
@@ -100,6 +100,16 @@ public final class ArmSubsystem extends SubsystemBase {
         return true;
     }
 
+    public boolean moveShoulder(ArmPositions desiredArmPosition, boolean isIntermediate) {
+        armIO.setShoulderPosition(convertDegreesToCtreTicks(desiredArmPosition.shoulderState.position));
+        return true;
+    }
+
+    public boolean moveWrist(ArmPositions desiredArmPosition) {
+        armIO.setWristPosition(convertDegreesToCtreTicks(desiredArmPosition.wristState.position));
+        return true;
+    }
+
     public boolean isCurrentArmFront() {
         return armIO.getShoulderEncoderDegrees() < 180;
     }
@@ -122,16 +132,12 @@ public final class ArmSubsystem extends SubsystemBase {
 
     }
 
-    private double convertDegreesToTicksShoulder(double degrees) {
-        return degrees * TICKS_PER_REVOLUTION * SHOULDER_GEAR_RATIO / DEGREES_PER_REVOLUTION;
+    public static double convertDegreesToCtreTicks(double degrees) {
+        return degrees * TICKS_PER_REVOLUTION / DEGREES_PER_REVOLUTION;
     }
 
-    private double convertTicksToDegreesShoulder(double ticks) {
-        return ticks * DEGREES_PER_REVOLUTION / TICKS_PER_REVOLUTION / SHOULDER_GEAR_RATIO;
-    }
-
-    private double convertDegreesToTicksWrist(double degrees) {
-        return degrees * TICKS_PER_REVOLUTION * WRIST_GEAR_RATIO / DEGREES_PER_REVOLUTION;
+    public static double convertCtreTicksToDegrees(double ticks) {
+        return ticks / TICKS_PER_REVOLUTION * DEGREES_PER_REVOLUTION;
     }
 
 }

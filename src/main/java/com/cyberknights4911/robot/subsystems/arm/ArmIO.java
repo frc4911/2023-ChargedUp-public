@@ -6,12 +6,16 @@ public interface ArmIO {
     @AutoLog
     public static class ArmIOInputs {
         public double shoulderPositionDeg = 0.0;
+        public double shoulderSelectedSensorPosition = 0.0;
+        public double shoulderRemoteEncoderPosition = 0.0;
         public double shoulderVelocityDegPerSec = 0.0;
         public double[] shoulderAppliedVolts = new double[] {};
         public double[] shoulderCurrentAmps = new double[] {};
         public double[] shoulderTempCelcius = new double[] {};
         
         public double wristPositionDeg = 0.0;
+        public double wristSelectedSensorPosition = 0.0;
+        public double wristRemoteEncoderPosition = 0.0;
         public double wristVelocityDegPerSec = 0.0;
         public double wristAppliedVolts = 0.0;
         public double wristCurrentAmps = 0.0;
