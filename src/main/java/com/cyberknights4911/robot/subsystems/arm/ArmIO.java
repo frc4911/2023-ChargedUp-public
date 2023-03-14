@@ -8,7 +8,7 @@ public interface ArmIO {
         public double shoulderPositionDeg = 0.0;
         public double shoulderSelectedSensorPosition = 0.0;
         public double shoulderRemoteEncoderPosition = 0.0;
-        public double shoulderVelocityDegPerSec = 0.0;
+        public double shoulderVelocityUnitsPerHundredMs = 0.0;
         public double[] shoulderAppliedVolts = new double[] {};
         public double[] shoulderCurrentAmps = new double[] {};
         public double[] shoulderTempCelcius = new double[] {};

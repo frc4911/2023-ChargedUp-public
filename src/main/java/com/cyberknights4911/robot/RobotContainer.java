@@ -12,6 +12,7 @@ import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,7 +35,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     subsystems.getArmSubsystem().setDefaultCommand(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED)
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED)
     );
   }
 
