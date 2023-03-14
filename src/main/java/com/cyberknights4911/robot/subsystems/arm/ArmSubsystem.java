@@ -100,7 +100,7 @@ public final class ArmSubsystem extends SubsystemBase {
         return true;
     }
 
-    public boolean moveShoulder(ArmPositions desiredArmPosition, boolean isIntermediate) {
+    public boolean moveShoulder(ArmPositions desiredArmPosition) {
         armIO.setShoulderPosition(convertDegreesToCtreTicks(desiredArmPosition.shoulderState.position));
         return true;
     }
@@ -130,6 +130,10 @@ public final class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("WRIST encoder", armIO.getWristEncoderDegrees());
         SmartDashboard.putNumber("SHOULDER encoder", armIO.getShoulderEncoderDegrees());
 
+    }
+
+    public double getShoulderPositionDegrees() {
+        return armIO.getShoulderEncoderDegrees();
     }
 
     public static double convertDegreesToCtreTicks(double degrees) {

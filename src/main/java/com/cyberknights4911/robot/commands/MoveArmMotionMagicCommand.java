@@ -12,48 +12,72 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
     private final ArmSubsystem armSubsystem;
     private final ArmPositions desiredPosition;
-    private final boolean isIntermediate;
 
-    private boolean isFinished = false;
+    private boolean shouldTuckwrist;
+    private double safePosition;
+    private boolean isShoulderSafe;
 
     private MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
         this.armSubsystem = armSubsystem;
         this.desiredPosition = desiredPosition;
 
-        switch(desiredPosition) {
-            case INTERMEDIATE_FRONT_FROM_FRONT:
-            case INTERMEDIATE_BACK_FROM_FRONT:
-            case INTERMEDIATE_FRONT_FROM_BACK:
-            case INTERMEDIATE_BACK_FROM_BACK:
-                this.isIntermediate = true;
-                break;
-            default:
-                this.isIntermediate = false;
-                break;
-        }
+
         addRequirements(armSubsystem);
     }
 
     @Override
     public void initialize() {
         armSubsystem.reset();
-        armSubsystem.moveWrist(desiredPosition);
-        armSubsystem.moveShoulder(desiredPosition, isIntermediate);
+
+        shouldTuckwrist = false;
+        safePosition = 0;
+
+        double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
+        
+        switch (desiredPosition) {
+            case STOWED:
+            case SCORE_L2:
+            case COLLECT_SUBSTATION_FRONT:
+            case COLLECT_FLOOR_FRONT_CONE:
+            case COLLECT_FLOOR_FRONT_CUBE:
+                if (currentArmPosition > 180) {
+                    this.shouldTuckwrist = true;
+                    this.safePosition = ArmPositions.INTERMEDIATE_FRONT_FROM_BACK.shoulderState.position;
+                }
+                break;
+            case SCORE_L3:
+            case COLLECT_SUBSTATION_BACK:
+                if (currentArmPosition < 180) {
+                    this.shouldTuckwrist = true;
+                    this.safePosition = ArmPositions.INTERMEDIATE_BACK_FROM_FRONT.shoulderState.position;
+                }
+                break;
+            case COLLECT_FLOOR_BACK_CUBE:
+            case COLLECT_FLOOR_BACK_CONE:
+                break;
+            default:
+                this.shouldTuckwrist = false;
+                break;
+        }
+
+        if (shouldTuckwrist) {
+            armSubsystem.moveWrist(ArmPositions.INTERMEDIATE_BACK_FROM_BACK);
+        } else {
+            armSubsystem.moveWrist(desiredPosition);
+        }
+        armSubsystem.moveShoulder(desiredPosition);
     }
 
     @Override
     public void execute() {
-        // TODO: do intermediate stuff
+        if (shouldTuckwrist && armSubsystem.getShoulderPositionDegrees() > safePosition) {
+            armSubsystem.moveWrist(desiredPosition);
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
         armSubsystem.setBrakeMode();
-    }
-
-    @Override
-    public boolean isFinished() {
-        return isFinished;
     }
     
     /**
