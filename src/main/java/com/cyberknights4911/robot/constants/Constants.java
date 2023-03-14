@@ -2,13 +2,19 @@ package com.cyberknights4911.robot.constants;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
-import libraries.cyberlib.control.PidGains;
+
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.FilterConfiguration;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
+
 import edu.wpi.first.math.geometry.Pose2d;
 
 public class Constants {
     /* All distance measurements are in inches, unless otherwise noted. */
 
-    public static final String ROBOT_NAME_2023 = "Robot2023";
+    public static final String ROBOT_NAME_2023 = "WHAM!";
 
     public static final String CANIVORE_NAME = "CANivore";
 
@@ -71,23 +77,19 @@ public class Constants {
     public static final int PRIMARY_PID = 0;
     
     // remoteOrdinal for BaseMotorController indicating remote sensor 0
-    public static final int REMOTE_ZERO = 0;
+    public static final int REMOTE_SENSOR_ZERO = 0;
 
-    // period frame to use for primary pid
+    // period frame to use for primary PID[0]
     public static final int PRIMARY_PID_PERIOD = 10;
-    // period fram to use for motion magic
+    // period frame to use for motion magic
     public static final int MOTION_MAGIC_PERIOD = 10;
+    // period frame to use for selected sensor on primary PID[0]
+    public static final int PRIMARY_PID0_PERIOD = 5;
 
     public static class Arm {
         private Arm() {}
         
         // PID values
-        // public static final double SHOULDER_P = 0.04;
-        // public static final double SHOULDER_I = 0.0;
-        // public static final double SHOULDER_D = 0.00034;
-        // public static final double WRIST_P = 0.04;
-        // public static final double WRIST_I = 0.0;
-        // public static final double WRIST_D = 0.002;
         public static final double SHOULDER_P = 0.025;
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
@@ -103,12 +105,20 @@ public class Constants {
         public static final double WRIST_S = 0;
         public static final double WRIST_V = 0;
         public static final double WRIST_G = 0;
+
         // Constraints
-        public static final double SHOULDER_VELOCITY = 200;
-        public static final double SHOULDER_ACCELERATION = 200;
-        public static final double WRIST_VELOCITY = 250;
-    
-        public static final double WRIST_ACCELERATION = 350;
+        public static final double SHOULDER_NEUTRAL_DEADBAND = 0.001;
+        public static final double SHOULDER_VELOCITY = 250; // Mr. Brewer broke it @ 350 >:(
+        public static final double SHOULDER_ACCELERATION = 100;
+        public static final double SHOULDER_PEAK_OUTPUT = 0.40;
+        public static final int SHOULDER_INTEGRAL_ZONE = 100;
+
+        public static final double WRIST_NEUTRAL_DEADBAND = 0.001;
+        public static final double WRIST_VELOCITY = 600;
+        public static final double WRIST_ACCELERATION = 240;
+        public static final double WRIST_PEAK_OUTPUT = 0.75;
+        public static final int WRIST_INTEGRAL_ZONE = 100;
+        
         // public static final double SHOULDER_VELOCITY_FLIP = 200;
         // public static final double SHOULDER_ACCELERATION_FLIP = 200;
         // public static final double WRIST_VELOCITY_FLIP = 250;
@@ -122,11 +132,57 @@ public class Constants {
         public static final double WRIST_CANCODER_OFFSET = 360 - 237.0;
 
         private static final boolean IS_MOTION_MAGIC = true;
-        public static final double WRIST_VELOCITY_MOTION_MAGIC = 5000;
-        public static final double WRIST_ACCELERATION_MOTION_MAGIC = 2000;
+        public static final double WRIST_VELOCITY_MOTION_MAGIC = 600;
+        public static final double WRIST_ACCELERATION_MOTION_MAGIC = 240;
 
-        public static final double SHOULDER_VELOCITY_MOTION_MAGIC = 2000;
-        public static final double SHOULDER_ACCELERATION_MOTION_MAGIC = 800;
+        public static final double SHOULDER_VELOCITY_MOTION_MAGIC = 250;
+        public static final double SHOULDER_ACCELERATION_MOTION_MAGIC = 100;
+        
+        public static final SupplyCurrentLimitConfiguration WRIST_SUPPLY_LIMIT =
+            new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);
+        public static final StatorCurrentLimitConfiguration WRIST_STATOR_LIMIT =
+            new StatorCurrentLimitConfiguration(true, 30.0, 0, 0);
+        public static final SupplyCurrentLimitConfiguration SHOULDER_SUPPLY_LIMIT =
+            new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);
+        public static final StatorCurrentLimitConfiguration SHOULDER_STATOR_LIMIT =
+            new StatorCurrentLimitConfiguration(true, 30.0, 0, 0);
+
+        public static final FilterConfiguration SHOULDER_FILTER_CONFIG =
+            new FilterConfiguration() {
+                {
+                    remoteSensorDeviceID = Ports.Arm.SHOULDER_CANCODER;
+                    remoteSensorSource = RemoteSensorSource.CANCoder;
+                }
+            };
+        public static final FilterConfiguration WRIST_FILTER_CONFIG =
+            new FilterConfiguration() {
+                {
+                    remoteSensorDeviceID = Ports.Arm.WRIST_CANCODER;
+                    remoteSensorSource = RemoteSensorSource.CANCoder;
+                }
+            };
+        public static final SlotConfiguration SHOULDER_SLOT_CONFIG =
+            new SlotConfiguration() {
+                {
+                    kP = 0.25;
+                    kI = 0.0;
+                    kD = 0.0;
+                    kF = 0.0;
+                    integralZone = SHOULDER_INTEGRAL_ZONE;
+                    closedLoopPeakOutput = SHOULDER_PEAK_OUTPUT;
+                }
+            };
+        public static final SlotConfiguration WRIST_SLOT_CONFIG =
+            new SlotConfiguration() {
+                {
+                    kP = 0.25;
+                    kI = 0.0;
+                    kD = 0.0;
+                    kF = 0.0;
+                    integralZone = WRIST_INTEGRAL_ZONE;
+                    closedLoopPeakOutput = WRIST_PEAK_OUTPUT;
+                }
+            };
 
         public static boolean isMotionMagic() {
             return Preferences.getBoolean("Arm Motion Magic enabled", IS_MOTION_MAGIC);
