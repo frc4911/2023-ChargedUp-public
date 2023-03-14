@@ -2,7 +2,6 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Constants.Arm;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -127,9 +126,6 @@ public final class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         armIO.updateInputs(inputs);
         Logger.getInstance().processInputs("Arm", inputs);
-        SmartDashboard.putNumber("WRIST encoder", armIO.getWristEncoderDegrees());
-        SmartDashboard.putNumber("SHOULDER encoder", armIO.getShoulderEncoderDegrees());
-
     }
 
     public double getShoulderPositionDegrees() {
@@ -143,5 +139,4 @@ public final class ArmSubsystem extends SubsystemBase {
     public static double convertCtreTicksToDegrees(double ticks) {
         return ticks / TICKS_PER_REVOLUTION * DEGREES_PER_REVOLUTION;
     }
-
 }

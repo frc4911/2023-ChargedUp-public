@@ -6,21 +6,19 @@ import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public final class MoveArmMotionMagicCommand extends CommandBase {
 
     private final ArmSubsystem armSubsystem;
     private final ArmPositions desiredPosition;
 
-    private boolean shouldTuckwrist;
+    private boolean shouldTuckWrist;
+    private boolean isWristTucked;
     private double safePosition;
-    private boolean isShoulderSafe;
 
     private MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
         this.armSubsystem = armSubsystem;
         this.desiredPosition = desiredPosition;
-
 
         addRequirements(armSubsystem);
     }
@@ -29,7 +27,8 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     public void initialize() {
         armSubsystem.reset();
 
-        shouldTuckwrist = false;
+        shouldTuckWrist = false;
+        isWristTucked = false;
         safePosition = 0;
 
         double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
@@ -41,37 +40,49 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             case COLLECT_FLOOR_FRONT_CONE:
             case COLLECT_FLOOR_FRONT_CUBE:
                 if (currentArmPosition > 180) {
-                    this.shouldTuckwrist = true;
+                    this.shouldTuckWrist = true;
                     this.safePosition = ArmPositions.INTERMEDIATE_FRONT_FROM_BACK.shoulderState.position;
                 }
                 break;
             case SCORE_L3:
             case COLLECT_SUBSTATION_BACK:
                 if (currentArmPosition < 180) {
-                    this.shouldTuckwrist = true;
+                    this.shouldTuckWrist = true;
                     this.safePosition = ArmPositions.INTERMEDIATE_BACK_FROM_FRONT.shoulderState.position;
                 }
                 break;
             case COLLECT_FLOOR_BACK_CUBE:
             case COLLECT_FLOOR_BACK_CONE:
+            // TODO: try combining these cases with those immediately above. See if violations are even possible.
+            if (currentArmPosition < 300) {
+                this.shouldTuckWrist = true;
+                this.safePosition = ArmPositions.INTERMEDIATE_BACK_BOTTOM.shoulderState.position;
+            }
                 break;
             default:
-                this.shouldTuckwrist = false;
+                this.shouldTuckWrist = false;
                 break;
         }
 
-        if (shouldTuckwrist) {
+        // If this is a tucking command, move to the tuck position first
+        if (shouldTuckWrist) {
+            // It doesn't matter which INTERMEDIATE we use, the wrist position is always the same
             armSubsystem.moveWrist(ArmPositions.INTERMEDIATE_BACK_FROM_BACK);
         } else {
             armSubsystem.moveWrist(desiredPosition);
         }
+        // Always begin moving the shoulder immediately
         armSubsystem.moveShoulder(desiredPosition);
     }
 
     @Override
     public void execute() {
-        if (shouldTuckwrist && armSubsystem.getShoulderPositionDegrees() > safePosition) {
+        double currentShoulderPosition = armSubsystem.getShoulderPositionDegrees();
+        // If this is a tucking command, we need to move the wrist AFTER the shoulder is safe
+        if (shouldTuckWrist && !isWristTucked && currentShoulderPosition > safePosition) {
             armSubsystem.moveWrist(desiredPosition);
+            // No need to keep sending the moveWrist call.
+            isWristTucked = true;
         }
     }
 
@@ -81,11 +92,11 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     }
     
     /**
-     * Creates a new command for moving the arm. Depending on current arm position, this may be a
-     * sequence of commands or a single move command. The command defers creation of the actual
-     * command or command sequence until it is actually needed.
+     * Creates a new command for moving the arm. The command defers creation of the actual
+     * command until it is actually needed.
      */
     public static Command create(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
+        // TODO: check whether the proxying is even necessary (we check position on initialization)
         ProxyCommand command = new ProxyCommand(() -> createImmediate(armSubsystem, desiredPosition));
         command.addRequirements(armSubsystem);
         return command;
