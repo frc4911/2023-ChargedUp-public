@@ -90,7 +90,7 @@ public class Constants {
         private Arm() {}
         
         // PID values
-        public static final double SHOULDER_P = 0.025;
+        public static final double SHOULDER_P = 0.03;//0.025;
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
         public static final double WRIST_P = 0.004;
@@ -109,7 +109,7 @@ public class Constants {
 
         // Constraints
         public static final double SHOULDER_NEUTRAL_DEADBAND = 0.001;
-        public static final double SHOULDER_VELOCITY = 250; // Mr. Brewer broke it @ 350 >:(
+        public static final double SHOULDER_VELOCITY = 250;
         public static final double SHOULDER_ACCELERATION = 100;
         public static final double SHOULDER_PEAK_OUTPUT = 0.40;
         public static final int SHOULDER_INTEGRAL_ZONE = 100;
@@ -136,8 +136,8 @@ public class Constants {
         public static final double WRIST_VELOCITY_MOTION_MAGIC = 600;
         public static final double WRIST_ACCELERATION_MOTION_MAGIC = 240;
 
-        public static final double SHOULDER_VELOCITY_MOTION_MAGIC = 250; //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
-        public static final double SHOULDER_ACCELERATION_MOTION_MAGIC = 100;
+        public static final double SHOULDER_VELOCITY_MOTION_MAGIC = 600; //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
+        public static final double SHOULDER_ACCELERATION_MOTION_MAGIC = 600;
         
         public static final SupplyCurrentLimitConfiguration WRIST_SUPPLY_LIMIT =
             new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);
