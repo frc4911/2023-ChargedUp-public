@@ -1,6 +1,7 @@
 package com.cyberknights4911.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -25,6 +26,10 @@ public final class ArmIOMotionMagic implements ArmIO {
     
     private final CANCoder shoulderEncoder;
     private final CANCoder wristEncoder;
+
+    private double degrees;//getShoulderEncoderDegrees() - 90;
+    private double radians;//java.lang.Math.toRadians(degrees);
+    private double cosineScalar;// = java.lang.Math.cos(Math.toRadians(degrees));
 
     public ArmIOMotionMagic() {
         // 1 is closest to robot front (battery side) and the numbering inceases rearward
@@ -163,12 +168,12 @@ public final class ArmIOMotionMagic implements ArmIO {
 
         // TODO: reject positions beyond soft stops
         //shoulderMotor1.set(ControlMode.MotionMagic, position);
-        double degrees = getShoulderEncoderDegrees() - 90;
-        double radians = java.lang.Math.toRadians(degrees);
-        double cosineScalar = java.lang.Math.cos(Math.toRadians(degrees));
+        degrees = getShoulderEncoderDegrees() - 90;
+        radians = java.lang.Math.toRadians(degrees);
+        cosineScalar = java.lang.Math.cos(Math.toRadians(degrees));
         // TODO: calculate feed forward according to:
         // https://v5.docs.ctr-electronics.com/en/stable/ch16_ClosedLoop.html?highlight=motion%20magic#gravity-offset-arm
-        // shoulderMotor1.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, feedForward);
+        shoulderMotor1.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, cosineScalar*Constants.Arm.SHOULDER_G);
     }
 
     @Override
