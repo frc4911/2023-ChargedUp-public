@@ -160,12 +160,15 @@ public final class ArmIOMotionMagic implements ArmIO {
 
     @Override
     public void setShoulderPosition(double position) {
+
         // TODO: reject positions beyond soft stops
-        shoulderMotor1.set(ControlMode.MotionMagic, position);
-        // double feedForward = 0.0;
+        //shoulderMotor1.set(ControlMode.MotionMagic, position);
+        double degrees = getShoulderEncoderDegrees() - 90;
+        double radians = java.lang.Math.toRadians(degrees);
+        double cosineScalar = java.lang.Math.cos(Math.toRadians(degrees));
         // TODO: calculate feed forward according to:
         // https://v5.docs.ctr-electronics.com/en/stable/ch16_ClosedLoop.html?highlight=motion%20magic#gravity-offset-arm
-        //shoulderMotor1.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, feedForward);
+        // shoulderMotor1.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, feedForward);
     }
 
     @Override

@@ -95,13 +95,13 @@ public class Constants {
         public static final double SHOULDER_D = 0.0;
         public static final double WRIST_P = 0.004;
         public static final double WRIST_I = 0.0;
-        public static final double WRIST_D = 0.0;//0.0015;
+        public static final double WRIST_D = 0.0;
         public static final double SHOULDER_TOLERANCE = 1000.0;
         public static final double WRIST_TOLERANCE = 1000.0;
         // Arm feed forward
         public static final double SHOULDER_S = 0;
         public static final double SHOULDER_V = 0;
-        public static final double SHOULDER_G = 0;
+        public static final double SHOULDER_G = 0.02737;
         public static final double WRIST_S = 0;
         public static final double WRIST_V = 0;
         public static final double WRIST_G = 0;
@@ -135,7 +135,7 @@ public class Constants {
         public static final double WRIST_VELOCITY_MOTION_MAGIC = 600;
         public static final double WRIST_ACCELERATION_MOTION_MAGIC = 240;
 
-        public static final double SHOULDER_VELOCITY_MOTION_MAGIC = 250;
+        public static final double SHOULDER_VELOCITY_MOTION_MAGIC = 250; //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
         public static final double SHOULDER_ACCELERATION_MOTION_MAGIC = 100;
         
         public static final SupplyCurrentLimitConfiguration WRIST_SUPPLY_LIMIT =
