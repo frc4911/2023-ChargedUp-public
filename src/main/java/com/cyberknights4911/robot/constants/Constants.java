@@ -123,9 +123,6 @@ public class Constants {
         public static final DoublePreference WRIST_F = 
             new DoublePreference("WRIST_F", 0.0399609375);
 
-        public static final double SHOULDER_TOLERANCE = 1000.0;
-        public static final double WRIST_TOLERANCE = 1000.0;
-
         // Arm feed forward
         public static final double SHOULDER_S = 0;
         public static final double SHOULDER_V = 0;
