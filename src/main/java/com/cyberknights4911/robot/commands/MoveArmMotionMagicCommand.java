@@ -1,5 +1,6 @@
 package com.cyberknights4911.robot.commands;
 
+import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
@@ -41,22 +42,25 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             case COLLECT_FLOOR_FRONT_CUBE:
                 if (currentArmPosition > 180) {
                     this.shouldTuckWrist = true;
-                    this.safePosition = ArmPositions.INTERMEDIATE_FRONT_FROM_BACK.shoulderState.position;
+                    this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_FRONT.getValue();
                 }
                 break;
             case SCORE_L3:
             case COLLECT_SUBSTATION_BACK:
                 if (currentArmPosition < 180) {
                     this.shouldTuckWrist = true;
-                    this.safePosition = ArmPositions.INTERMEDIATE_BACK_FROM_FRONT.shoulderState.position;
+                    this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_TOP.getValue();
+                } else if (currentArmPosition > 270) {
+                    this.shouldTuckWrist = true;
+                    this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_MIDDLE.getValue();
                 }
                 break;
             case COLLECT_FLOOR_BACK_CUBE:
             case COLLECT_FLOOR_BACK_CONE:
             // TODO: try combining these cases with those immediately above. See if violations are even possible.
-            if (currentArmPosition < 300) {
+            if (currentArmPosition < 270) {
                 this.shouldTuckWrist = true;
-                this.safePosition = ArmPositions.INTERMEDIATE_BACK_BOTTOM.shoulderState.position;
+                this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_BOTTOM.getValue();
             }
                 break;
             default:
@@ -67,12 +71,12 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         // If this is a tucking command, move to the tuck position first
         if (shouldTuckWrist) {
             // It doesn't matter which INTERMEDIATE we use, the wrist position is always the same
-            armSubsystem.moveWrist(ArmPositions.INTERMEDIATE_BACK_FROM_BACK);
+            armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE.getValue());
         } else {
-            armSubsystem.moveWrist(desiredPosition);
+            armSubsystem.moveWrist(desiredPosition.wristPosition);
         }
         // Always begin moving the shoulder immediately
-        armSubsystem.moveShoulder(desiredPosition);
+        armSubsystem.moveShoulder(desiredPosition.shoulderPosition);
     }
 
     @Override
@@ -80,7 +84,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         double currentShoulderPosition = armSubsystem.getShoulderPositionDegrees();
         // If this is a tucking command, we need to move the wrist AFTER the shoulder is safe
         if (shouldTuckWrist && !isWristTucked && currentShoulderPosition > safePosition) {
-            armSubsystem.moveWrist(desiredPosition);
+            armSubsystem.moveWrist(desiredPosition.wristPosition);
             // No need to keep sending the moveWrist call.
             isWristTucked = true;
         }

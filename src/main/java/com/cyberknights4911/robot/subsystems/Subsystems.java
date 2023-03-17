@@ -4,7 +4,6 @@ import com.cyberknights4911.robot.config.RobotConfiguration;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.arm.ArmIO;
 import com.cyberknights4911.robot.subsystems.arm.ArmIOMotionMagic;
-import com.cyberknights4911.robot.subsystems.arm.ArmIORevEncoders;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.bob.BobIO;
 import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
@@ -39,8 +38,7 @@ public final class Subsystems {
             // TODO swap out these with real implementations once the hardware exists
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIOReal());
-            armSubsystem = new ArmSubsystem(
-                Constants.Arm.isMotionMagic() ? new ArmIOMotionMagic() : new ArmIORevEncoders());
+            armSubsystem = new ArmSubsystem(new ArmIOMotionMagic());
             swerveSubsystem = new SwerveSubsystemCurrent(
                 configuration,
                 new GyroIOReal(),

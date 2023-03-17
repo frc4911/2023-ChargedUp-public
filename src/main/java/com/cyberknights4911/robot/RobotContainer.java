@@ -7,12 +7,10 @@ import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
-import com.cyberknights4911.robot.commands.MoveArmCommand;
 import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a

@@ -58,14 +58,14 @@ public final class ArmIOMotionMagic implements ArmIO {
         shoulderConfiguration.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
         shoulderConfiguration.remoteFilter0 = Constants.Arm.SHOULDER_FILTER_CONFIG;
         shoulderConfiguration.slot0 = Constants.Arm.SHOULDER_SLOT_CONFIG;
-        shoulderConfiguration.neutralDeadband = Constants.Arm.SHOULDER_NEUTRAL_DEADBAND;
+        shoulderConfiguration.neutralDeadband = Constants.Arm.SHOULDER_NEUTRAL_DEADBAND.getValue();
         
         shoulderMotor1.configAllSettings(shoulderConfiguration);
         shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.PRIMARY_PID_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MOTION_MAGIC_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.PRIMARY_PID0_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        shoulderMotor1.configMotionCruiseVelocity(Constants.Arm.SHOULDER_VELOCITY_MOTION_MAGIC, Constants.LONG_CAN_TIMEOUTS_MS);
-        shoulderMotor1.configMotionAcceleration(Constants.Arm.SHOULDER_ACCELERATION_MOTION_MAGIC, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.configMotionCruiseVelocity(Constants.Arm.SHOULDER_VELOCITY_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.configMotionAcceleration(Constants.Arm.SHOULDER_ACCELERATION_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor2.follow(shoulderMotor1);
         shoulderMotor3.follow(shoulderMotor1);
         shoulderMotor1.setInverted(true);
@@ -88,14 +88,14 @@ public final class ArmIOMotionMagic implements ArmIO {
         wristConfiguration.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
         wristConfiguration.remoteFilter0 = Constants.Arm.WRIST_FILTER_CONFIG;
         wristConfiguration.slot0 = Constants.Arm.WRIST_SLOT_CONFIG;
-        wristConfiguration.neutralDeadband = Constants.Arm.WRIST_NEUTRAL_DEADBAND;
+        wristConfiguration.neutralDeadband = Constants.Arm.WRIST_NEUTRAL_DEADBAND.getValue();
         
         wristMotor.configAllSettings(wristConfiguration);
         wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.PRIMARY_PID_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
         wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MOTION_MAGIC_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
         wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.PRIMARY_PID0_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        wristMotor.configMotionCruiseVelocity(Constants.Arm.WRIST_VELOCITY_MOTION_MAGIC, Constants.LONG_CAN_TIMEOUTS_MS);
-        wristMotor.configMotionAcceleration(Constants.Arm.WRIST_ACCELERATION_MOTION_MAGIC, Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.configMotionCruiseVelocity(Constants.Arm.WRIST_VELOCITY_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.configMotionAcceleration(Constants.Arm.WRIST_ACCELERATION_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
         wristMotor.setInverted(true);
         wristMotor.setNeutralMode(NeutralMode.Coast);
     }
@@ -161,16 +161,15 @@ public final class ArmIOMotionMagic implements ArmIO {
 
     @Override
     public void setShoulderPosition(double position) {
-
         // TODO: reject positions beyond soft stops
-        if (Constants.Arm.shouldUseShoulderGravityFeedForward()) {
+        if (Constants.Arm.SHOULD_USE_GRAVITY_FEED_FORWARD.getValue()) {
             double degrees = getShoulderEncoderDegrees() - 90;
             double cosineScalar = java.lang.Math.cos(Math.toRadians(degrees));
             shoulderMotor1.set(
                 ControlMode.MotionMagic,
                 position,
                 DemandType.ArbitraryFeedForward,
-                cosineScalar * Constants.Arm.SHOULDER_G);
+                cosineScalar * Constants.Arm.SHOULDER_G.getValue());
         } else {
             shoulderMotor1.set(ControlMode.MotionMagic, position);
         }
