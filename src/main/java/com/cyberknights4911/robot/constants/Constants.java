@@ -188,6 +188,10 @@ public class Constants {
         public static boolean isMotionMagic() {
             return Preferences.getBoolean("Arm Motion Magic enabled", IS_MOTION_MAGIC);
         }
+
+        public static boolean shouldUseShoulderGravityFeedForward() {
+            return Preferences.getBoolean("Should use shoulder gravity feed forward", true);
+        }
     }
 
 }

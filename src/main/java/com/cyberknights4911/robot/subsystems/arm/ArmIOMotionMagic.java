@@ -27,10 +27,6 @@ public final class ArmIOMotionMagic implements ArmIO {
     private final CANCoder shoulderEncoder;
     private final CANCoder wristEncoder;
 
-    private double degrees;//getShoulderEncoderDegrees() - 90;
-    private double radians;//java.lang.Math.toRadians(degrees);
-    private double cosineScalar;// = java.lang.Math.cos(Math.toRadians(degrees));
-
     public ArmIOMotionMagic() {
         // 1 is closest to robot front (battery side) and the numbering inceases rearward
         shoulderMotor1 =
@@ -167,13 +163,17 @@ public final class ArmIOMotionMagic implements ArmIO {
     public void setShoulderPosition(double position) {
 
         // TODO: reject positions beyond soft stops
-        //shoulderMotor1.set(ControlMode.MotionMagic, position);
-        degrees = getShoulderEncoderDegrees() - 90;
-        radians = java.lang.Math.toRadians(degrees);
-        cosineScalar = java.lang.Math.cos(Math.toRadians(degrees));
-        // TODO: calculate feed forward according to:
-        // https://v5.docs.ctr-electronics.com/en/stable/ch16_ClosedLoop.html?highlight=motion%20magic#gravity-offset-arm
-        shoulderMotor1.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, cosineScalar*Constants.Arm.SHOULDER_G);
+        if (Constants.Arm.shouldUseShoulderGravityFeedForward()) {
+            double degrees = getShoulderEncoderDegrees() - 90;
+            double cosineScalar = java.lang.Math.cos(Math.toRadians(degrees));
+            shoulderMotor1.set(
+                ControlMode.MotionMagic,
+                position,
+                DemandType.ArbitraryFeedForward,
+                cosineScalar * Constants.Arm.SHOULDER_G);
+        } else {
+            shoulderMotor1.set(ControlMode.MotionMagic, position);
+        }
     }
 
     @Override
