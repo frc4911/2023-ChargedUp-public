@@ -161,13 +161,6 @@ public class Constants {
         public static final DoublePreference WRIST_F = 
             new DoublePreference("WRIST_F", 0.0399609375);
 
-        // Arm feed forward
-        public static final double SHOULDER_S = 0;
-        public static final double SHOULDER_V = 0;
-        public static final double WRIST_S = 0;
-        public static final double WRIST_V = 0;
-        public static final double WRIST_G = 0;
-
         // Constraints
         public static final DoublePreference SHOULDER_NEUTRAL_DEADBAND =
             new DoublePreference("SHOULDER_NEUTRAL_DEADBAND", 0.001);
