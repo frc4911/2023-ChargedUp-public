@@ -17,7 +17,7 @@ import com.cyberknights4911.robot.constants.Ports.Arm;
 
 import libraries.cyberlib.drivers.TalonFXFactory;
 
-public final class ArmIOMotionMagic implements ArmIO {
+public final class ArmIOReal implements ArmIO {
 
     private final TalonFX shoulderMotor1;
     private final TalonFX shoulderMotor2;
@@ -27,7 +27,7 @@ public final class ArmIOMotionMagic implements ArmIO {
     private final CANCoder shoulderEncoder;
     private final CANCoder wristEncoder;
 
-    public ArmIOMotionMagic() {
+    public ArmIOReal() {
         // 1 is closest to robot front (battery side) and the numbering inceases rearward
         shoulderMotor1 =
             TalonFXFactory.createTalon(Arm.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
