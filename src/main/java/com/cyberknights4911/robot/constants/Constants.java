@@ -101,6 +101,44 @@ public class Constants {
             new DoublePreference("SHOULDER_SAFE_ANGLE_BACK_MIDDLE", 245);
         public static final DoublePreference SHOULDER_SAFE_ANGLE_BACK_BOTTOM = 
             new DoublePreference("SHOULDER_SAFE_ANGLE_BACK_BOTTOM", 295);
+
+        public static final DoublePreference STOWED_WRIST =
+            new DoublePreference("STOWED_WRIST", 35);
+        public static final DoublePreference STOWED_SHOULDER =
+            new DoublePreference("STOWED_SHOULDER", 325);
+        public static final DoublePreference COLLECT_SUBSTATION_BACK_WRIST =
+            new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 160);
+        public static final DoublePreference COLLECT_SUBSTATION_BACK_SHOULDER =
+            new DoublePreference("COLLECT_SUBSTATION_BACK_SHOULDER", 245);
+        public static final DoublePreference COLLECT_SUBSTATION_FRONT_WRIST =
+            new DoublePreference("COLLECT_SUBSTATION_FRONT_WRIST", 238);
+        public static final DoublePreference COLLECT_SUBSTATION_FRONT_SHOULDER =
+            new DoublePreference("COLLECT_SUBSTATION_FRONT_SHOULDER", 98);
+        public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_WRIST =
+            new DoublePreference("COLLECT_FLOOR_FRONT_CONE_WRIST", 263);
+        public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_SHOULDER =
+            new DoublePreference("COLLECT_FLOOR_FRONT_CONE_SHOULDER", 38);
+        public static final DoublePreference COLLECT_FLOOR_FRONT_CUBE_WRIST =
+            new DoublePreference("COLLECT_FLOOR_FRONT_CUBE_WRIST", 186);
+        public static final DoublePreference COLLECT_FLOOR_FRONT_CUBE_SHOULDER =
+            new DoublePreference("COLLECT_FLOOR_FRONT_CUBE_SHOULDER", 50);
+        public static final DoublePreference COLLECT_FLOOR_BACK_CUBE_WRIST =
+            new DoublePreference("COLLECT_FLOOR_BACK_CUBE_WRIST", 117);
+        public static final DoublePreference COLLECT_FLOOR_BACK_CUBE_SHOULDER =
+            new DoublePreference("COLLECT_FLOOR_BACK_CUBE_SHOULDER", 320);
+        public static final DoublePreference COLLECT_FLOOR_BACK_CONE_WRIST =
+            new DoublePreference("COLLECT_FLOOR_BACK_CONE_WRIST", 105);
+        public static final DoublePreference COLLECT_FLOOR_BACK_CONE_SHOULDER =
+            new DoublePreference("COLLECT_FLOOR_BACK_CONE_SHOULDER", 320);
+        public static final DoublePreference SCORE_L3_WRIST =
+            new DoublePreference("SCORE_L3_WRIST", 195);
+        public static final DoublePreference SCORE_L3_SHOULDER =
+            new DoublePreference("SCORE_L3_SHOULDER", 230);
+        public static final DoublePreference SCORE_L2_WRIST =
+            new DoublePreference("SCORE_L2_WRIST", 219);
+        public static final DoublePreference SCORE_L2_SHOULDER =
+            new DoublePreference("SCORE_L2_SHOULDER", 95);
+        
         
         // PID values
         public static final DoublePreference SHOULDER_P = 
