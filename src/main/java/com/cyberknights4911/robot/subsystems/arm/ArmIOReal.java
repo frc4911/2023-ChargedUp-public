@@ -2,9 +2,10 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
@@ -16,7 +17,7 @@ import com.cyberknights4911.robot.constants.Ports.Arm;
 
 import libraries.cyberlib.drivers.TalonFXFactory;
 
-public final class ArmIOMotionMagic implements ArmIO {
+public final class ArmIOReal implements ArmIO {
 
     private final TalonFX shoulderMotor1;
     private final TalonFX shoulderMotor2;
@@ -26,7 +27,7 @@ public final class ArmIOMotionMagic implements ArmIO {
     private final CANCoder shoulderEncoder;
     private final CANCoder wristEncoder;
 
-    public ArmIOMotionMagic() {
+    public ArmIOReal() {
         // 1 is closest to robot front (battery side) and the numbering inceases rearward
         shoulderMotor1 =
             TalonFXFactory.createTalon(Arm.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
@@ -46,57 +47,64 @@ public final class ArmIOMotionMagic implements ArmIO {
     private void configMotors() {
         //SHOULDER CONFIGURATION
         shoulderMotor1.configRemoteFeedbackFilter(
-            shoulderEncoder, 0, Constants.LONG_CAN_TIMEOUTS_MS);
+            shoulderEncoder, Constants.REMOTE_SENSOR_ZERO, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.configSelectedFeedbackSensor(
+            FeedbackDevice.RemoteSensor0, Constants.PRIMARY_PID, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.setSensorPhase(true);
 
         TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
-        shoulderConfiguration.supplyCurrLimit.currentLimit = 30.0;
-        shoulderConfiguration.statorCurrLimit.currentLimit = 30.0;
-        shoulderConfiguration.supplyCurrLimit.enable = true;
-        shoulderConfiguration.statorCurrLimit.enable = true;
-        shoulderConfiguration.primaryPID.selectedFeedbackSensor =
-            TalonFXFeedbackDevice.RemoteSensor0.toFeedbackDevice();
-        // TODO: tune these values
-        shoulderConfiguration.slot0.kP = 0.0;
-        shoulderConfiguration.slot0.kI = 0.0;
-        shoulderConfiguration.slot0.kD = 0.0;
+        shoulderConfiguration.supplyCurrLimit = Constants.Arm.SHOULDER_SUPPLY_LIMIT;
+        shoulderConfiguration.statorCurrLimit = Constants.Arm.SHOULDER_STATOR_LIMIT;
+        shoulderConfiguration.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        shoulderConfiguration.remoteFilter0 = Constants.Arm.SHOULDER_FILTER_CONFIG;
+        shoulderConfiguration.slot0 = Constants.Arm.SHOULDER_SLOT_CONFIG;
+        shoulderConfiguration.neutralDeadband = Constants.Arm.SHOULDER_NEUTRAL_DEADBAND.getValue();
         
         shoulderMotor1.configAllSettings(shoulderConfiguration);
+        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.PRIMARY_PID_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MOTION_MAGIC_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.PRIMARY_PID0_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.configMotionCruiseVelocity(Constants.Arm.SHOULDER_VELOCITY_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.configMotionAcceleration(Constants.Arm.SHOULDER_ACCELERATION_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor2.follow(shoulderMotor1);
         shoulderMotor3.follow(shoulderMotor1);
         shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
-        shoulderMotor1.setNeutralMode(NeutralMode.Brake);
-        shoulderMotor2.setNeutralMode(NeutralMode.Brake);
-        shoulderMotor3.setNeutralMode(NeutralMode.Brake);
+        shoulderMotor1.setNeutralMode(NeutralMode.Coast);
+        shoulderMotor2.setNeutralMode(NeutralMode.Coast);
+        shoulderMotor3.setNeutralMode(NeutralMode.Coast);
 
         //WRIST CONFIGURATION
         wristMotor.configRemoteFeedbackFilter(
-            wristEncoder, 0, Constants.LONG_CAN_TIMEOUTS_MS);
+            wristEncoder, Constants.REMOTE_SENSOR_ZERO, Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.configSelectedFeedbackSensor(
+            FeedbackDevice.RemoteSensor0, Constants.PRIMARY_PID, Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.setSensorPhase(true);
 
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
-        wristConfiguration.supplyCurrLimit.currentLimit = 30.0;
-        wristConfiguration.statorCurrLimit.currentLimit = 30.0; 
-        wristConfiguration.statorCurrLimit.enable = true;
-        wristConfiguration.statorCurrLimit.enable = true;
-        wristConfiguration.primaryPID.selectedFeedbackSensor =
-            TalonFXFeedbackDevice.RemoteSensor0.toFeedbackDevice();
-        // TODO: tune these values
-        wristConfiguration.slot0.kP = 0.0;
-        wristConfiguration.slot0.kI = 0.0;
-        wristConfiguration.slot0.kD = 0.0;
-
+        wristConfiguration.supplyCurrLimit = Constants.Arm.WRIST_SUPPLY_LIMIT;
+        wristConfiguration.statorCurrLimit = Constants.Arm.WRIST_STATOR_LIMIT;
+        wristConfiguration.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        wristConfiguration.remoteFilter0 = Constants.Arm.WRIST_FILTER_CONFIG;
+        wristConfiguration.slot0 = Constants.Arm.WRIST_SLOT_CONFIG;
+        wristConfiguration.neutralDeadband = Constants.Arm.WRIST_NEUTRAL_DEADBAND.getValue();
+        
         wristMotor.configAllSettings(wristConfiguration);
+        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.PRIMARY_PID_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MOTION_MAGIC_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.PRIMARY_PID0_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.configMotionCruiseVelocity(Constants.Arm.WRIST_VELOCITY_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.configMotionAcceleration(Constants.Arm.WRIST_ACCELERATION_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
         wristMotor.setInverted(true);
-        wristMotor.setNeutralMode(NeutralMode.Brake);
+        wristMotor.setNeutralMode(NeutralMode.Coast);
     }
     
     private void configureEncoders() {
         CANCoderConfiguration shoulderConfig = new CANCoderConfiguration();
         shoulderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         shoulderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        // TODO: determine magnet offset after installation
-        shoulderConfig.magnetOffsetDegrees = 0;
+        shoulderConfig.magnetOffsetDegrees = Constants.Arm.SHOULDER_CANCODER_OFFSET;
         shoulderConfig.sensorDirection = false;
 
         shoulderEncoder.configAllSettings(shoulderConfig, Constants.LONG_CAN_TIMEOUTS_MS);
@@ -104,8 +112,7 @@ public final class ArmIOMotionMagic implements ArmIO {
         CANCoderConfiguration wristConfig = new CANCoderConfiguration();
         wristConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         wristConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        // TODO: determine magnet offset after installation
-        wristConfig.magnetOffsetDegrees = 0;
+        wristConfig.magnetOffsetDegrees = Constants.Arm.WRIST_CANCODER_OFFSET;
         wristConfig.sensorDirection = false;
 
         wristEncoder.configAllSettings(wristConfig, Constants.LONG_CAN_TIMEOUTS_MS);
@@ -115,6 +122,9 @@ public final class ArmIOMotionMagic implements ArmIO {
     public void updateInputs(ArmIOInputs inputs) {
         // TODO: Calculate and report rotational velocity for encoders
         inputs.shoulderPositionDeg = getShoulderEncoderDegrees();
+        inputs.shoulderVelocityUnitsPerHundredMs = shoulderMotor1.getSelectedSensorVelocity();
+        inputs.shoulderSelectedSensorPosition = shoulderMotor1.getSelectedSensorPosition();
+        inputs.shoulderRemoteEncoderPosition = ArmSubsystem.convertDegreesToCtreTicks(shoulderEncoder.getAbsolutePosition());
         inputs.shoulderAppliedVolts = new double[] {
             shoulderMotor1.getMotorOutputVoltage(),
             shoulderMotor2.getMotorOutputVoltage(),
@@ -132,6 +142,8 @@ public final class ArmIOMotionMagic implements ArmIO {
         };
 
         inputs.wristPositionDeg = getWristEncoderDegrees();
+        inputs.wristVelocityDegPerSec = wristMotor.getSelectedSensorVelocity();
+        inputs.wristSelectedSensorPosition = wristMotor.getSelectedSensorPosition();
         inputs.wristAppliedVolts = wristMotor.getMotorOutputVoltage();
         inputs.wristCurrentAmps = wristMotor.getSupplyCurrent();
         inputs.wristTempCelcius = wristMotor.getTemperature();
@@ -150,11 +162,17 @@ public final class ArmIOMotionMagic implements ArmIO {
     @Override
     public void setShoulderPosition(double position) {
         // TODO: reject positions beyond soft stops
-        shoulderMotor1.set(ControlMode.MotionMagic, position);
-        // double feedForward = 0.0;
-        // TODO: calculate feed forward according to:
-        // https://v5.docs.ctr-electronics.com/en/stable/ch16_ClosedLoop.html?highlight=motion%20magic#gravity-offset-arm
-        //shoulderMotor1.set(ControlMode.MotionMagic, position, DemandType.ArbitraryFeedForward, feedForward);
+        if (Constants.Arm.SHOULD_USE_GRAVITY_FEED_FORWARD.getValue()) {
+            double degrees = getShoulderEncoderDegrees() - 90;
+            double cosineScalar = java.lang.Math.cos(Math.toRadians(degrees));
+            shoulderMotor1.set(
+                ControlMode.MotionMagic,
+                position,
+                DemandType.ArbitraryFeedForward,
+                cosineScalar * Constants.Arm.SHOULDER_G.getValue());
+        } else {
+            shoulderMotor1.set(ControlMode.MotionMagic, position);
+        }
     }
 
     @Override
@@ -162,5 +180,15 @@ public final class ArmIOMotionMagic implements ArmIO {
         // TODO: reject positions beyond soft stops
         wristMotor.set(ControlMode.MotionMagic, position);
     }
-    
+
+    // Set output should not be generally used, but are left here for testing
+    @Override
+    public void setWristOutput(double output) {
+        wristMotor.set(ControlMode.PercentOutput, output);
+    }
+
+    @Override
+    public void setShoulderOutput(double output) {
+        shoulderMotor1.set(ControlMode.PercentOutput, output);
+    }
 }
