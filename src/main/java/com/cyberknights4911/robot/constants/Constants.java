@@ -103,9 +103,9 @@ public class Constants {
             new DoublePreference("SHOULDER_SAFE_ANGLE_BACK_BOTTOM", 295);
 
         public static final DoublePreference STOWED_WRIST =
-            new DoublePreference("STOWED_WRIST", 35);
+            new DoublePreference("STOWED_WRIST", 325);
         public static final DoublePreference STOWED_SHOULDER =
-            new DoublePreference("STOWED_SHOULDER", 325);
+            new DoublePreference("STOWED_SHOULDER", 35);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_WRIST =
             new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 160);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_SHOULDER =
