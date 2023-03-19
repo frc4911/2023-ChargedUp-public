@@ -7,7 +7,7 @@ import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
-import com.cyberknights4911.robot.commands.MoveArmCommand;
+import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -33,7 +33,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     subsystems.getArmSubsystem().setDefaultCommand(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED)
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED)
     );
   }
 
@@ -91,32 +91,31 @@ public class RobotContainer {
     );
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_FRONT).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT));
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT));
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_BACK).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK));
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK));
     
     controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_BACK_CONE).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CONE));
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CONE));
     
     controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_BACK_CUBE).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CUBE));
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_BACK_CUBE));
   
     controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_FRONT_CONE).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE));
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE));
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_FLOOR_FRONT_CUBE).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CUBE));
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CUBE));
 
     controllerBinding.triggersFor(ButtonAction.STOW).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));
 
     controllerBinding.triggersFor(ButtonAction.SCORE_L2).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2));
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2));
 
     controllerBinding.triggersFor(ButtonAction.SCORE_L3).onTrue(
-     MoveArmCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));
-  
+      MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));
     
     // Move ONLY safe and tested commands above this line.
     if (true) {

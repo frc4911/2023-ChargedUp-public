@@ -5,6 +5,7 @@ import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_STEER_REDUC
 import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_WHEEL_DIAMETER;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.constants.DoublePreference;
 import com.cyberknights4911.robot.constants.Ports;
 
 import edu.wpi.first.math.util.Units;
@@ -16,22 +17,40 @@ public class Robot2023 implements RobotConfiguration {
     private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 360.0 - 194.00;
     private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 360.0 - 104.67;
 
-    private static final double STEER_MOTOR_KP = 0.25;
-    private static final double STEER_MOTOR_KI = 0.0;
-    private static final double STEER_MOTOR_KD = 0.0;
-    private static final double STEER_MOTOR_KF = 0.0;
+    private static final DoublePreference STEER_MOTOR_P =
+        new DoublePreference("STEER_MOTOR_P", 0.25);
+    private static final DoublePreference STEER_MOTOR_I = 
+        new DoublePreference("STEER_MOTOR_I", 0.0);
+    private static final DoublePreference STEER_MOTOR_D =
+        new DoublePreference("STEER_MOTOR_D", 0.0);
+    private static final DoublePreference STEER_MOTOR_F = 
+        new DoublePreference("STEER_MOTOR_F", 0.0);
+        
+    private static final DoublePreference HEADING_MOTOR_P =
+        new DoublePreference("HEADING_MOTOR_P", 0.01);
+    private static final DoublePreference HEADING_MOTOR_I = 
+        new DoublePreference("HEADING_MOTOR_I", 0.0);
+    private static final DoublePreference HEADING_MOTOR_D =
+        new DoublePreference("HEADING_MOTOR_D", 0.0);
+    private static final DoublePreference HEADING_MOTOR_F = 
+        new DoublePreference("HEADING_MOTOR_F", 0.0);
+        
+    private static final DoublePreference MAX_SPEED_METERS_PER_SECOND = 
+        new DoublePreference("MAX_SPEED_METERS_PER_SECOND", Units.feetToMeters(10));
+        private static final DoublePreference MAX_SPEED_RADIANS_PER_SECOND = 
+            new DoublePreference("MAX_SPEED_RADIANS_PER_SECOND", Math.toRadians(160));
 
     @Override
     public SwerveConfiguration getSwerveConfiguration() {
         return new SwerveConfiguration.Builder()
                 .setWheelbaseLengthInMeters(Constants.ROBOT_WHEEL_LENGTH_METERS)
                 .setWheelbaseWidthInMeters(Constants.ROBOT_WHEEL_BASE_METERS)
-                .setMaxSpeedInMetersPerSecond(Units.feetToMeters(10))
-                .setMaxSpeedInRadiansPerSecondLimit(Math.toRadians(160))
-                .setSwerveHeadingKp(0.01)
-                .setSwerveHeadingKi(0)
-                .setSwerveHeadingKd(0)
-                .setSwerveHeadingKf(0)
+                .setMaxSpeedInMetersPerSecond(MAX_SPEED_METERS_PER_SECOND.getValue())
+                .setMaxSpeedInRadiansPerSecondLimit(MAX_SPEED_RADIANS_PER_SECOND.getValue())
+                .setSwerveHeadingKp(HEADING_MOTOR_P.getValue())
+                .setSwerveHeadingKi(HEADING_MOTOR_I.getValue())
+                .setSwerveHeadingKd(HEADING_MOTOR_D.getValue())
+                .setSwerveHeadingKf(HEADING_MOTOR_F.getValue())
                 .build();
     }
 
@@ -48,10 +67,10 @@ public class Robot2023 implements RobotConfiguration {
                 .setSteerReduction(MK4_L2I_STEER_REDUCTION)
                 .setInvertDrive(true)
                 .setInvertSteerMotor(true)
-                .setSteerMotorSlot0Kp(STEER_MOTOR_KP)
-                .setSteerMotorSlot0Ki(STEER_MOTOR_KI)
-                .setSteerMotorSlot0Kd(STEER_MOTOR_KD)
-                .setSteerMotorSlot0Kf(STEER_MOTOR_KF)
+                .setSteerMotorSlot0Kp(STEER_MOTOR_P.getValue())
+                .setSteerMotorSlot0Ki(STEER_MOTOR_I.getValue())
+                .setSteerMotorSlot0Kd(STEER_MOTOR_D.getValue())
+                .setSteerMotorSlot0Kf(STEER_MOTOR_F.getValue())
                 .build();
     }
 
@@ -68,10 +87,10 @@ public class Robot2023 implements RobotConfiguration {
                 .setSteerReduction(MK4_L2I_STEER_REDUCTION)
                 .setInvertDrive(true)
                 .setInvertSteerMotor(true)
-                .setSteerMotorSlot0Kp(STEER_MOTOR_KP)
-                .setSteerMotorSlot0Ki(STEER_MOTOR_KI)
-                .setSteerMotorSlot0Kd(STEER_MOTOR_KD)
-                .setSteerMotorSlot0Kf(STEER_MOTOR_KF)
+                .setSteerMotorSlot0Kp(STEER_MOTOR_P.getValue())
+                .setSteerMotorSlot0Ki(STEER_MOTOR_I.getValue())
+                .setSteerMotorSlot0Kd(STEER_MOTOR_D.getValue())
+                .setSteerMotorSlot0Kf(STEER_MOTOR_F.getValue())
                 .build();
     }
 
@@ -88,10 +107,10 @@ public class Robot2023 implements RobotConfiguration {
                 .setSteerReduction(MK4_L2I_STEER_REDUCTION)
                 .setInvertDrive(true)
                 .setInvertSteerMotor(true)
-                .setSteerMotorSlot0Kp(STEER_MOTOR_KP)
-                .setSteerMotorSlot0Ki(STEER_MOTOR_KI)
-                .setSteerMotorSlot0Kd(STEER_MOTOR_KD)
-                .setSteerMotorSlot0Kf(STEER_MOTOR_KF)
+                .setSteerMotorSlot0Kp(STEER_MOTOR_P.getValue())
+                .setSteerMotorSlot0Ki(STEER_MOTOR_I.getValue())
+                .setSteerMotorSlot0Kd(STEER_MOTOR_D.getValue())
+                .setSteerMotorSlot0Kf(STEER_MOTOR_F.getValue())
                 .build();
     }
 
@@ -108,10 +127,10 @@ public class Robot2023 implements RobotConfiguration {
                 .setSteerReduction(MK4_L2I_STEER_REDUCTION)
                 .setInvertDrive(true)
                 .setInvertSteerMotor(true)
-                .setSteerMotorSlot0Kp(STEER_MOTOR_KP)
-                .setSteerMotorSlot0Ki(STEER_MOTOR_KI)
-                .setSteerMotorSlot0Kd(STEER_MOTOR_KD)
-                .setSteerMotorSlot0Kf(STEER_MOTOR_KF)
+                .setSteerMotorSlot0Kp(STEER_MOTOR_P.getValue())
+                .setSteerMotorSlot0Ki(STEER_MOTOR_I.getValue())
+                .setSteerMotorSlot0Kd(STEER_MOTOR_D.getValue())
+                .setSteerMotorSlot0Kf(STEER_MOTOR_F.getValue())
                 .build();
     }
 }

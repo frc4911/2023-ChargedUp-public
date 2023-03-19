@@ -1,14 +1,19 @@
 package com.cyberknights4911.robot.constants;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Preferences;
-import libraries.cyberlib.control.PidGains;
+
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.FilterConfiguration;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
+
 import edu.wpi.first.math.geometry.Pose2d;
 
 public class Constants {
     /* All distance measurements are in inches, unless otherwise noted. */
 
-    public static final String ROBOT_NAME_2023 = "Robot2023";
+    public static final String ROBOT_NAME_2023 = "WHAM!";
 
     public static final String CANIVORE_NAME = "CANivore";
 
@@ -67,51 +72,167 @@ public class Constants {
 
     public static final double MAX_SPEED = 1;
 
+    // pidIdx for BaseMotorController indicating primary closed-loop
+    public static final int PRIMARY_PID = 0;
+    
+    // remoteOrdinal for BaseMotorController indicating remote sensor 0
+    public static final int REMOTE_SENSOR_ZERO = 0;
+
+    // period frame to use for primary PID[0]
+    public static final int PRIMARY_PID_PERIOD = 10;
+    // period frame to use for motion magic
+    public static final int MOTION_MAGIC_PERIOD = 10;
+    // period frame to use for selected sensor on primary PID[0]
+    public static final int PRIMARY_PID0_PERIOD = 5;
+
     public static class Arm {
         private Arm() {}
+
+        public static BooleanPreference SHOULD_USE_GRAVITY_FEED_FORWARD =
+            new BooleanPreference("Should use shoulder gravity feed forward", true);
+            
+        public static final DoublePreference WRIST_TUCKED_ANGLE = 
+            new DoublePreference("WRIST_TUCKED_ANGLE", 300);
+        public static final DoublePreference SHOULDER_SAFE_ANGLE_FRONT = 
+            new DoublePreference("SHOULDER_SAFE_ANGLE_FRONT", 142);
+        public static final DoublePreference SHOULDER_SAFE_ANGLE_BACK_TOP = 
+            new DoublePreference("SHOULDER_SAFE_ANGLE_BACK_TOP", 218);
+        public static final DoublePreference SHOULDER_SAFE_ANGLE_BACK_MIDDLE = 
+            new DoublePreference("SHOULDER_SAFE_ANGLE_BACK_MIDDLE", 245);
+        public static final DoublePreference SHOULDER_SAFE_ANGLE_BACK_BOTTOM = 
+            new DoublePreference("SHOULDER_SAFE_ANGLE_BACK_BOTTOM", 295);
+
+        public static final DoublePreference STOWED_WRIST =
+            new DoublePreference("STOWED_WRIST", 35);
+        public static final DoublePreference STOWED_SHOULDER =
+            new DoublePreference("STOWED_SHOULDER", 325);
+        public static final DoublePreference COLLECT_SUBSTATION_BACK_WRIST =
+            new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 160);
+        public static final DoublePreference COLLECT_SUBSTATION_BACK_SHOULDER =
+            new DoublePreference("COLLECT_SUBSTATION_BACK_SHOULDER", 245);
+        public static final DoublePreference COLLECT_SUBSTATION_FRONT_WRIST =
+            new DoublePreference("COLLECT_SUBSTATION_FRONT_WRIST", 238);
+        public static final DoublePreference COLLECT_SUBSTATION_FRONT_SHOULDER =
+            new DoublePreference("COLLECT_SUBSTATION_FRONT_SHOULDER", 98);
+        public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_WRIST =
+            new DoublePreference("COLLECT_FLOOR_FRONT_CONE_WRIST", 263);
+        public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_SHOULDER =
+            new DoublePreference("COLLECT_FLOOR_FRONT_CONE_SHOULDER", 38);
+        public static final DoublePreference COLLECT_FLOOR_FRONT_CUBE_WRIST =
+            new DoublePreference("COLLECT_FLOOR_FRONT_CUBE_WRIST", 186);
+        public static final DoublePreference COLLECT_FLOOR_FRONT_CUBE_SHOULDER =
+            new DoublePreference("COLLECT_FLOOR_FRONT_CUBE_SHOULDER", 50);
+        public static final DoublePreference COLLECT_FLOOR_BACK_CUBE_WRIST =
+            new DoublePreference("COLLECT_FLOOR_BACK_CUBE_WRIST", 117);
+        public static final DoublePreference COLLECT_FLOOR_BACK_CUBE_SHOULDER =
+            new DoublePreference("COLLECT_FLOOR_BACK_CUBE_SHOULDER", 320);
+        public static final DoublePreference COLLECT_FLOOR_BACK_CONE_WRIST =
+            new DoublePreference("COLLECT_FLOOR_BACK_CONE_WRIST", 105);
+        public static final DoublePreference COLLECT_FLOOR_BACK_CONE_SHOULDER =
+            new DoublePreference("COLLECT_FLOOR_BACK_CONE_SHOULDER", 320);
+        public static final DoublePreference SCORE_L3_WRIST =
+            new DoublePreference("SCORE_L3_WRIST", 195);
+        public static final DoublePreference SCORE_L3_SHOULDER =
+            new DoublePreference("SCORE_L3_SHOULDER", 230);
+        public static final DoublePreference SCORE_L2_WRIST =
+            new DoublePreference("SCORE_L2_WRIST", 219);
+        public static final DoublePreference SCORE_L2_SHOULDER =
+            new DoublePreference("SCORE_L2_SHOULDER", 95);
+        
         
         // PID values
-        // public static final double SHOULDER_P = 0.04;
-        // public static final double SHOULDER_I = 0.0;
-        // public static final double SHOULDER_D = 0.00034;
-        // public static final double WRIST_P = 0.04;
-        // public static final double WRIST_I = 0.0;
-        // public static final double WRIST_D = 0.002;
-        public static final double SHOULDER_P = 0.025;
-        public static final double SHOULDER_I = 0.0;
-        public static final double SHOULDER_D = 0.0;
-        public static final double WRIST_P = 0.004;
-        public static final double WRIST_I = 0.0;
-        public static final double WRIST_D = 0.0;//0.0015;
-        public static final double SHOULDER_TOLERANCE = 1000.0;
-        public static final double WRIST_TOLERANCE = 1000.0;
-        // Arm feed forward
-        public static final double SHOULDER_S = 0;
-        public static final double SHOULDER_V = 0;
-        public static final double SHOULDER_G = 0;
-        public static final double WRIST_S = 0;
-        public static final double WRIST_V = 0;
-        public static final double WRIST_G = 0;
+        public static final DoublePreference SHOULDER_P = 
+            new DoublePreference("SHOULDER_P", 0.25);
+        public static final DoublePreference SHOULDER_I = 
+            new DoublePreference("SHOULDER_I", 0.0);
+        public static final DoublePreference SHOULDER_D = 
+            new DoublePreference("SHOULDER_D", 0.0);
+            public static final DoublePreference SHOULDER_F = 
+                new DoublePreference("SHOULDER_F", 0.0);
+        public static final DoublePreference SHOULDER_G = 
+            new DoublePreference("SHOULDER_G", 0.02737);
+
+        public static final DoublePreference WRIST_P = 
+            new DoublePreference("WRIST_P", 0.25);
+        public static final DoublePreference WRIST_I = 
+            new DoublePreference("SHOULDER_I", 0.0);
+        public static final DoublePreference WRIST_D = 
+            new DoublePreference("WRIST_D", 0.0);
+        public static final DoublePreference WRIST_F = 
+            new DoublePreference("WRIST_F", 0.0399609375);
+
         // Constraints
-        public static final double SHOULDER_VELOCITY = 200;
-        public static final double SHOULDER_ACCELERATION = 200;
-        public static final double WRIST_VELOCITY = 250;
-    
-        public static final double WRIST_ACCELERATION = 350;
-        // public static final double SHOULDER_VELOCITY_FLIP = 200;
-        // public static final double SHOULDER_ACCELERATION_FLIP = 200;
-        // public static final double WRIST_VELOCITY_FLIP = 250;
-        // public static final double WRIST_ACCELERATION_FLIP = 350;
+        public static final DoublePreference SHOULDER_NEUTRAL_DEADBAND =
+            new DoublePreference("SHOULDER_NEUTRAL_DEADBAND", 0.001);
+        public static final DoublePreference SHOULDER_PEAK_OUTPUT =
+            new DoublePreference("SHOULDER_PEAK_OUTPUT", 0.40);
+        public static final IntPreference SHOULDER_INTEGRAL_ZONE =
+            new IntPreference("SHOULDER_INTEGRAL_ZONE", 100);
+
+        public static final DoublePreference WRIST_NEUTRAL_DEADBAND =
+            new DoublePreference("WRIST_NEUTRAL_DEADBAND", 0.001);
+        public static final DoublePreference WRIST_PEAK_OUTPUT =
+            new DoublePreference("WRIST_PEAK_OUTPUT", 0.75);
+        public static final IntPreference WRIST_INTEGRAL_ZONE =
+            new IntPreference("WRIST_INTEGRAL_ZONE", 100);
         
-        public static final double PROFILE_ARM_SPEED_STOPPED = 0.0;
-        public static final double PROFILE_ARM_SPEED_FORWARD = -50.0;
-        public static final double PROFILE_ARM_SPEED_BACKWARD = 50.0;
+        public static final double SHOULDER_CANCODER_OFFSET = 360 - 233.9;
+        public static final double WRIST_CANCODER_OFFSET = 360 - 237.0;
 
-        private static final boolean IS_MOTION_MAGIC = false;
+        public static final DoublePreference WRIST_VELOCITY_MOTION_MAGIC = 
+            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600);
+        public static final DoublePreference WRIST_ACCELERATION_MOTION_MAGIC = 
+            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 240);
 
-        public static boolean isMotionMagic() {
-            return Preferences.getBoolean("Arm Motion Magic enabled", IS_MOTION_MAGIC);
-        }
+        public static final DoublePreference SHOULDER_VELOCITY_MOTION_MAGIC = 
+            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600); //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
+        public static final DoublePreference SHOULDER_ACCELERATION_MOTION_MAGIC = 
+            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600);
+        
+        public static final SupplyCurrentLimitConfiguration WRIST_SUPPLY_LIMIT =
+            new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);
+        public static final StatorCurrentLimitConfiguration WRIST_STATOR_LIMIT =
+            new StatorCurrentLimitConfiguration(true, 30.0, 0, 0);
+        public static final SupplyCurrentLimitConfiguration SHOULDER_SUPPLY_LIMIT =
+            new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);
+        public static final StatorCurrentLimitConfiguration SHOULDER_STATOR_LIMIT =
+            new StatorCurrentLimitConfiguration(true, 30.0, 0, 0);
+
+        public static final FilterConfiguration SHOULDER_FILTER_CONFIG =
+            new FilterConfiguration() {
+                {
+                    remoteSensorDeviceID = Ports.Arm.SHOULDER_CANCODER;
+                    remoteSensorSource = RemoteSensorSource.CANCoder;
+                }
+            };
+        public static final FilterConfiguration WRIST_FILTER_CONFIG =
+            new FilterConfiguration() {
+                {
+                    remoteSensorDeviceID = Ports.Arm.WRIST_CANCODER;
+                    remoteSensorSource = RemoteSensorSource.CANCoder;
+                }
+            };
+        public static final SlotConfiguration SHOULDER_SLOT_CONFIG =
+            new SlotConfiguration() {
+                {
+                    kP = SHOULDER_P.getValue();
+                    kI = SHOULDER_I.getValue();
+                    kD = SHOULDER_D.getValue();
+                    kF = SHOULDER_F.getValue();
+                    integralZone = SHOULDER_INTEGRAL_ZONE.getValue();
+                    closedLoopPeakOutput = SHOULDER_PEAK_OUTPUT.getValue();
+                }
+            };
+        public static final SlotConfiguration WRIST_SLOT_CONFIG =
+            new SlotConfiguration() {
+                {
+                    kP = WRIST_P.getValue();
+                    kI = WRIST_I.getValue();
+                    kD = WRIST_D.getValue();
+                    kF = WRIST_F.getValue();
+                    integralZone = WRIST_INTEGRAL_ZONE.getValue();
+                    closedLoopPeakOutput = WRIST_PEAK_OUTPUT.getValue();
+                }
+            };
     }
-
 }
