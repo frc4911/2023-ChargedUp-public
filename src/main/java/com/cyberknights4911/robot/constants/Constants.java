@@ -155,7 +155,7 @@ public class Constants {
         public static final DoublePreference WRIST_P = 
             new DoublePreference("WRIST_P", 0.25);
         public static final DoublePreference WRIST_I = 
-            new DoublePreference("SHOULDER_I", 0.0);
+            new DoublePreference("WRIST_I", 0.0);
         public static final DoublePreference WRIST_D = 
             new DoublePreference("WRIST_D", 0.0);
         public static final DoublePreference WRIST_F = 
@@ -182,12 +182,12 @@ public class Constants {
         public static final DoublePreference WRIST_VELOCITY_MOTION_MAGIC = 
             new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600);
         public static final DoublePreference WRIST_ACCELERATION_MOTION_MAGIC = 
-            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 240);
+            new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 240);
 
         public static final DoublePreference SHOULDER_VELOCITY_MOTION_MAGIC = 
-            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600); //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
+            new DoublePreference("SHOULDER_VELOCITY_MOTION_MAGIC", 600); //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
         public static final DoublePreference SHOULDER_ACCELERATION_MOTION_MAGIC = 
-            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600);
+            new DoublePreference("SHOULDER_ACCELERATION_MOTION_MAGIC", 600);
         
         public static final SupplyCurrentLimitConfiguration WRIST_SUPPLY_LIMIT =
             new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);
