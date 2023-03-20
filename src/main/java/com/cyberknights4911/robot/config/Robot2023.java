@@ -36,9 +36,9 @@ public class Robot2023 implements RobotConfiguration {
         new DoublePreference("HEADING_MOTOR_F", 0.0);
         
     private static final DoublePreference MAX_SPEED_METERS_PER_SECOND = 
-        new DoublePreference("MAX_SPEED_METERS_PER_SECOND", Units.feetToMeters(10));
+        new DoublePreference("MAX_SPEED_METERS_PER_SECOND", Units.feetToMeters(5));
         private static final DoublePreference MAX_SPEED_RADIANS_PER_SECOND = 
-            new DoublePreference("MAX_SPEED_RADIANS_PER_SECOND", Math.toRadians(160));
+            new DoublePreference("MAX_SPEED_RADIANS_PER_SECOND", Math.toRadians(100));
 
     @Override
     public SwerveConfiguration getSwerveConfiguration() {
