@@ -8,8 +8,10 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.cyberknights4911.robot.commands.AutoBalanceCommand;
+import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
 import com.cyberknights4911.robot.commands.MoveHoodCommand;
 import com.cyberknights4911.robot.subsystems.Subsystems;
+import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
 import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem.HoodPositions;
 import com.pathplanner.lib.PathConstraints;
@@ -53,22 +55,21 @@ public final class AutoCommandChooser {
         kinematics = subsystems.getSwerveSubsystem().getKinematics();
         outputModuleStates = subsystems.getSwerveSubsystem()::setSwerveModuleStates;
 
+        //loggedDashboardChooser.addDefaultOption("Score", getScoreCommand());
+
         loggedDashboardChooser.addDefaultOption("AutoBalance", getAutoBalanceCommand());
+        loggedDashboardChooser.addOption("Balance and Leave", getBalanceLeaveCommand());
+
         loggedDashboardChooser.addOption("Score And Leave", getScoreAndLeaveCommand());
+        loggedDashboardChooser.addOption("2 Substation", getScore2SubstationCommand());
+        loggedDashboardChooser.addOption("2 Guardrail", getScore2GuardrailCommand());
+        loggedDashboardChooser.addOption("3 Substation", getScore3SubstationCommand());
+        loggedDashboardChooser.addOption("3 Guardrail", getScore3GuardrailCommand());
 
-        loggedDashboardChooser.addOption("PS Score Leave Collect", getPSScoreLeaveCollectCommand());
-        loggedDashboardChooser.addOption("NS Score Leave Collect", getNSScoreLeaveCollectCommand());
-
-
-        loggedDashboardChooser.addOption("Test", getTestCommand());
-        loggedDashboardChooser.addOption("Angery", getAngeryCommand());
-        loggedDashboardChooser.addOption("PadCenter", getPadCenterCommand());
-        loggedDashboardChooser.addOption("PadLeft", getPadLeftCommand());
-        loggedDashboardChooser.addOption("PadRight", getPadRightCommand());
-        loggedDashboardChooser.addOption("ScoreLeft", getScoreLeftCommand());
-        loggedDashboardChooser.addOption("ScoreRight", getScoreRightCommand());
         loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
-        loggedDashboardChooser.addOption("Translation", getTranslationTestCommand());
+        loggedDashboardChooser.addOption("TranslationTest", getTranslationTestCommand());
+        loggedDashboardChooser.addOption("Test", getTestCommand());
+
     }
 
     private SwerveAutoBuilder createSwerveAutoBuilder(
@@ -108,6 +109,7 @@ public final class AutoCommandChooser {
 
     private Command getScoreAndLeaveCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap.put("moveL3", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));//Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
         eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurrp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
 
@@ -124,14 +126,33 @@ public final class AutoCommandChooser {
         ).andThen(autoCommand);
     }
 
-    private Command getPSScoreLeaveCollectCommand() {
+    // private Command getScoreCommand() {
+    //     HashMap<String, Command> eventMap = new HashMap<>();
+
+    //     Command autoCommand = createSwerveAutoBuilder(
+    //         eventMap,
+    //         subsystems.getSwerveSubsystem()
+    //     ).fullAuto(
+    //         PathPlanner.loadPathGroup("score", new PathConstraints(1, 3))
+    //     );
+
+    //     return new InstantCommand(
+    //         () -> subsystems.getSwerveSubsystem().initForPathFollowing()
+    //     ).andThen(autoCommand);
+    // }
+
+    private Command getBalanceLeaveCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap.put("moveL3", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));//Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
+        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
+        eventMap.put("stopSlurrp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
+        eventMap.put("stowArm", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));//Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Left", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("ScoreBalanceLeave", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -139,14 +160,15 @@ public final class AutoCommandChooser {
         ).andThen(autoCommand);
     }
 
-    private Command getNSScoreLeaveCollectCommand() {
+
+    private Command getScore2SubstationCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Right", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("Score2Substation", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -154,14 +176,14 @@ public final class AutoCommandChooser {
         ).andThen(autoCommand);
     }
 
-    private Command getAngeryCommand() {
+    private Command getScore2GuardrailCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Angery", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("Score2Guardrail", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -169,14 +191,14 @@ public final class AutoCommandChooser {
         ).andThen(autoCommand);
     }
 
-    private Command getPadCenterCommand() {
+    private Command getScore3SubstationCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("PadCenter", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("Score3Substation", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -184,59 +206,14 @@ public final class AutoCommandChooser {
         ).andThen(autoCommand);
     }
 
-    private Command getPadLeftCommand() {
+    private Command getScore3GuardrailCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("PadLeft", new PathConstraints(1, 3))
-        );
-
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
-    }
-
-    private Command getPadRightCommand() {
-        HashMap<String, Command> eventMap = new HashMap<>();
-
-        Command autoCommand = createSwerveAutoBuilder(
-            eventMap,
-            subsystems.getSwerveSubsystem()
-        ).fullAuto(
-            PathPlanner.loadPathGroup("PadRight", new PathConstraints(1, 3))
-        );
-
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
-    }
-
-    private Command getScoreLeftCommand() {
-        HashMap<String, Command> eventMap = new HashMap<>();
-
-        Command autoCommand = createSwerveAutoBuilder(
-            eventMap,
-            subsystems.getSwerveSubsystem()
-        ).fullAuto(
-            PathPlanner.loadPathGroup("ScoreLeft", new PathConstraints(1, 3))
-        );
-
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
-    }
-
-    private Command getScoreRightCommand() {
-        HashMap<String, Command> eventMap = new HashMap<>();
-
-        Command autoCommand = createSwerveAutoBuilder(
-            eventMap,
-            subsystems.getSwerveSubsystem()
-        ).fullAuto(
-            PathPlanner.loadPathGroup("ScoreRight", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("Score3Guardrail", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(

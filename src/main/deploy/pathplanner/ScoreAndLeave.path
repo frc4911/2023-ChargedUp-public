@@ -17,6 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "moveL3",
           "coneScoreSlow"
         ],
         "executionBehavior": "sequential",
