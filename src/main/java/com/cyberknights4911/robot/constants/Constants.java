@@ -92,7 +92,7 @@ public class Constants {
             new BooleanPreference("Should use shoulder gravity feed forward", true);
             
         public static final DoublePreference WRIST_TUCKED_ANGLE = 
-            new DoublePreference("WRIST_TUCKED_ANGLE", 325);
+            new DoublePreference("WRIST_TUCKED_ANGLE", 315);
         public static final DoublePreference SHOULDER_SAFE_ANGLE_FRONT = 
             new DoublePreference("SHOULDER_SAFE_ANGLE_FRONT", 142);
         public static final DoublePreference SHOULDER_SAFE_ANGLE_BACK_TOP = 
@@ -182,7 +182,7 @@ public class Constants {
         public static final DoublePreference WRIST_VELOCITY_MOTION_MAGIC = 
             new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 8000);
         public static final DoublePreference WRIST_ACCELERATION_MOTION_MAGIC = 
-            new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 8000);
+            new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 12000);
 
         public static final DoublePreference SHOULDER_VELOCITY_MOTION_MAGIC = 
             new DoublePreference("SHOULDER_VELOCITY_MOTION_MAGIC", 10500); 
