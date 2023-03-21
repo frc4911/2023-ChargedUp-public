@@ -185,14 +185,14 @@ public class Constants {
             new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 8000);
 
         public static final DoublePreference SHOULDER_VELOCITY_MOTION_MAGIC = 
-            new DoublePreference("SHOULDER_VELOCITY_MOTION_MAGIC", 10500); //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
+            new DoublePreference("SHOULDER_VELOCITY_MOTION_MAGIC", 10500); 
         public static final DoublePreference SHOULDER_ACCELERATION_MOTION_MAGIC = 
             new DoublePreference("SHOULDER_ACCELERATION_MOTION_MAGIC", 10500);
         
         public static final SupplyCurrentLimitConfiguration WRIST_SUPPLY_LIMIT =
-            new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);
+            new SupplyCurrentLimitConfiguration(true, 40.0, 0, 0);
         public static final StatorCurrentLimitConfiguration WRIST_STATOR_LIMIT =
-            new StatorCurrentLimitConfiguration(true, 30.0, 0, 0);
+            new StatorCurrentLimitConfiguration(true, 40.0, 0, 0);
         public static final SupplyCurrentLimitConfiguration SHOULDER_SUPPLY_LIMIT =
             new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);
         public static final StatorCurrentLimitConfiguration SHOULDER_STATOR_LIMIT =
