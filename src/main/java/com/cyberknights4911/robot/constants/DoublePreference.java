@@ -10,6 +10,7 @@ public final class DoublePreference {
     public DoublePreference(String key, double defaultValue) {
         this.key = key;
         this.defaultValue = defaultValue;
+        Preferences.initDouble(key, defaultValue);
     }
 
     public double getValue() {

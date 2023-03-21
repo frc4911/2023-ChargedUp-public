@@ -92,7 +92,7 @@ public class Constants {
             new BooleanPreference("Should use shoulder gravity feed forward", true);
             
         public static final DoublePreference WRIST_TUCKED_ANGLE = 
-            new DoublePreference("WRIST_TUCKED_ANGLE", 300);
+            new DoublePreference("WRIST_TUCKED_ANGLE", 325);
         public static final DoublePreference SHOULDER_SAFE_ANGLE_FRONT = 
             new DoublePreference("SHOULDER_SAFE_ANGLE_FRONT", 142);
         public static final DoublePreference SHOULDER_SAFE_ANGLE_BACK_TOP = 
@@ -107,21 +107,21 @@ public class Constants {
         public static final DoublePreference STOWED_SHOULDER =
             new DoublePreference("STOWED_SHOULDER", 35);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_WRIST =
-            new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 160);
+            new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 151);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_SHOULDER =
-            new DoublePreference("COLLECT_SUBSTATION_BACK_SHOULDER", 245);
+            new DoublePreference("COLLECT_SUBSTATION_BACK_SHOULDER", 223);
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_WRIST =
-            new DoublePreference("COLLECT_SUBSTATION_FRONT_WRIST", 238);
+            new DoublePreference("COLLECT_SUBSTATION_FRONT_WRIST", 223);
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_SHOULDER =
-            new DoublePreference("COLLECT_SUBSTATION_FRONT_SHOULDER", 98);
+            new DoublePreference("COLLECT_SUBSTATION_FRONT_SHOULDER", 102);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_WRIST =
-            new DoublePreference("COLLECT_FLOOR_FRONT_CONE_WRIST", 263);
+            new DoublePreference("COLLECT_FLOOR_FRONT_CONE_WRIST", 256);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_SHOULDER =
             new DoublePreference("COLLECT_FLOOR_FRONT_CONE_SHOULDER", 38);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CUBE_WRIST =
-            new DoublePreference("COLLECT_FLOOR_FRONT_CUBE_WRIST", 186);
+            new DoublePreference("COLLECT_FLOOR_FRONT_CUBE_WRIST", 247);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CUBE_SHOULDER =
-            new DoublePreference("COLLECT_FLOOR_FRONT_CUBE_SHOULDER", 50);
+            new DoublePreference("COLLECT_FLOOR_FRONT_CUBE_SHOULDER", 38);
         public static final DoublePreference COLLECT_FLOOR_BACK_CUBE_WRIST =
             new DoublePreference("COLLECT_FLOOR_BACK_CUBE_WRIST", 117);
         public static final DoublePreference COLLECT_FLOOR_BACK_CUBE_SHOULDER =
@@ -133,16 +133,16 @@ public class Constants {
         public static final DoublePreference SCORE_L3_WRIST =
             new DoublePreference("SCORE_L3_WRIST", 195);
         public static final DoublePreference SCORE_L3_SHOULDER =
-            new DoublePreference("SCORE_L3_SHOULDER", 230);
+            new DoublePreference("SCORE_L3_SHOULDER", 235);
         public static final DoublePreference SCORE_L2_WRIST =
-            new DoublePreference("SCORE_L2_WRIST", 219);
+            new DoublePreference("SCORE_L2_WRIST", 225);
         public static final DoublePreference SCORE_L2_SHOULDER =
             new DoublePreference("SCORE_L2_SHOULDER", 95);
         
         
         // PID values
         public static final DoublePreference SHOULDER_P = 
-            new DoublePreference("SHOULDER_P", 0.25);
+            new DoublePreference("SHOULDER_P", 0.7);
         public static final DoublePreference SHOULDER_I = 
             new DoublePreference("SHOULDER_I", 0.0);
         public static final DoublePreference SHOULDER_D = 
@@ -153,26 +153,26 @@ public class Constants {
             new DoublePreference("SHOULDER_G", 0.02737);
 
         public static final DoublePreference WRIST_P = 
-            new DoublePreference("WRIST_P", 0.25);
+            new DoublePreference("WRIST_P", 0.5);
         public static final DoublePreference WRIST_I = 
-            new DoublePreference("SHOULDER_I", 0.0);
+            new DoublePreference("WRIST_I", 0.0);
         public static final DoublePreference WRIST_D = 
             new DoublePreference("WRIST_D", 0.0);
         public static final DoublePreference WRIST_F = 
-            new DoublePreference("WRIST_F", 0.0399609375);
+            new DoublePreference("WRIST_F", 0.0299);
 
         // Constraints
         public static final DoublePreference SHOULDER_NEUTRAL_DEADBAND =
             new DoublePreference("SHOULDER_NEUTRAL_DEADBAND", 0.001);
         public static final DoublePreference SHOULDER_PEAK_OUTPUT =
-            new DoublePreference("SHOULDER_PEAK_OUTPUT", 0.40);
+            new DoublePreference("SHOULDER_PEAK_OUTPUT", 0.5);
         public static final IntPreference SHOULDER_INTEGRAL_ZONE =
             new IntPreference("SHOULDER_INTEGRAL_ZONE", 100);
 
         public static final DoublePreference WRIST_NEUTRAL_DEADBAND =
             new DoublePreference("WRIST_NEUTRAL_DEADBAND", 0.001);
         public static final DoublePreference WRIST_PEAK_OUTPUT =
-            new DoublePreference("WRIST_PEAK_OUTPUT", 0.75);
+            new DoublePreference("WRIST_PEAK_OUTPUT", 1);
         public static final IntPreference WRIST_INTEGRAL_ZONE =
             new IntPreference("WRIST_INTEGRAL_ZONE", 100);
         
@@ -180,14 +180,14 @@ public class Constants {
         public static final double WRIST_CANCODER_OFFSET = 360 - 237.0;
 
         public static final DoublePreference WRIST_VELOCITY_MOTION_MAGIC = 
-            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600);
+            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 8000);
         public static final DoublePreference WRIST_ACCELERATION_MOTION_MAGIC = 
-            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 240);
+            new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 8000);
 
         public static final DoublePreference SHOULDER_VELOCITY_MOTION_MAGIC = 
-            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600); //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
+            new DoublePreference("SHOULDER_VELOCITY_MOTION_MAGIC", 10500); //We should increase this a lot currently stow-L3 is 4 seconds needs to be closer to 2
         public static final DoublePreference SHOULDER_ACCELERATION_MOTION_MAGIC = 
-            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 600);
+            new DoublePreference("SHOULDER_ACCELERATION_MOTION_MAGIC", 10500);
         
         public static final SupplyCurrentLimitConfiguration WRIST_SUPPLY_LIMIT =
             new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0);

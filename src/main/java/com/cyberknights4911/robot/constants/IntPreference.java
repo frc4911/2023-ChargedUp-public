@@ -10,6 +10,7 @@ public final class IntPreference {
     public IntPreference(String key, int defaultValue) {
         this.key = key;
         this.defaultValue = defaultValue;
+        Preferences.initInt(key, defaultValue);
     }
 
     public int getValue() {
