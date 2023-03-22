@@ -70,9 +70,17 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
         // If this is a tucking command, move to the tuck position first
         if (shouldTuckWrist) {
-            // It doesn't matter which INTERMEDIATE we use, the wrist position is always the same
-            armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE.getValue());
+
+            if(desiredPosition == ArmPositions.SCORE_L3 || desiredPosition == ArmPositions.COLLECT_SUBSTATION_BACK || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CUBE || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CONE) {
+                
+                armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue());
+
+            } else {
+
+                armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue());
+            }
         } else {
+            
             armSubsystem.moveWrist(desiredPosition.wristPosition);
         }
         // Always begin moving the shoulder immediately
