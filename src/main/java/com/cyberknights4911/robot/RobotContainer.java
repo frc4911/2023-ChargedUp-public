@@ -62,7 +62,7 @@ public class RobotContainer {
 
     controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_SLOW).onTrue(
       Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().slurpp(-0.2), subsystems.getSlurppSubsystem()
+        () -> subsystems.getSlurppSubsystem().slurpp(-0.4), subsystems.getSlurppSubsystem()
       )
     ).onFalse(
       Commands.runOnce(
@@ -82,7 +82,7 @@ public class RobotContainer {
 
     controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_SLOW).onTrue(
       Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().slurpp(0.2), subsystems.getSlurppSubsystem()
+        () -> subsystems.getSlurppSubsystem().slurpp(0.4), subsystems.getSlurppSubsystem()
       )
     ).onFalse(
       Commands.runOnce(
