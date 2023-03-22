@@ -8,6 +8,7 @@ import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
+import com.cyberknights4911.robot.commands.SlurppCommand;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -51,44 +52,19 @@ public class RobotContainer {
     );
 
     controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_FAST).onTrue(
-      Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().slurpp(-0.85), subsystems.getSlurppSubsystem()
-      )
-    ).onFalse(
-      Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
-      )
-    );
+      new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem()));
+
 
     controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_SLOW).onTrue(
-      Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().slurpp(-0.4), subsystems.getSlurppSubsystem()
-      )
-    ).onFalse(
-      Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
-      )
-    );
+      new SlurppCommand(subsystems.getSlurppSubsystem(), -0.4, subsystems.getArmSubsystem()));
+
 
     controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_FAST).onTrue(
-      Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().slurpp(0.85), subsystems.getSlurppSubsystem()
-      )
-    ).onFalse(
-      Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
-      )
-    );
+        new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem()));
 
     controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_SLOW).onTrue(
-      Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().slurpp(0.4), subsystems.getSlurppSubsystem()
-      )
-    ).onFalse(
-      Commands.runOnce(
-        () -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()
-      )
-    );
+      new SlurppCommand(subsystems.getSlurppSubsystem(), 0.4, subsystems.getArmSubsystem()));
+
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_FRONT).onTrue(
       MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT));
