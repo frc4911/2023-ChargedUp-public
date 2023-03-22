@@ -94,7 +94,7 @@ public class Constants {
         public static final DoublePreference WRIST_TUCKED_ANGLE_BACK_TO_FRONT = 
             new DoublePreference("WRIST_TUCKED_ANGLE_BACK_TO_FRONT", 315);
         public static final DoublePreference WRIST_TUCKED_ANGLE_FRONT_TO_BACK = 
-            new DoublePreference("WRIST_TUCKED_ANGLE_FRONT_TO_BACK", 35);
+            new DoublePreference("WRIST_TUCKED_ANGLE_FRONT_TO_BACK", 70);
         public static final DoublePreference SHOULDER_SAFE_ANGLE_FRONT = 
             new DoublePreference("SHOULDER_SAFE_ANGLE_FRONT", 142);
         public static final DoublePreference SHOULDER_SAFE_ANGLE_BACK_TOP = 
@@ -179,12 +179,12 @@ public class Constants {
             new IntPreference("WRIST_INTEGRAL_ZONE", 100);
         
         public static final double SHOULDER_CANCODER_OFFSET = 360 - 233.9;
-        public static final double WRIST_CANCODER_OFFSET = 360 - 237.0;
+        public static final double WRIST_CANCODER_OFFSET = 360 - 69 - 172;
 
         public static final DoublePreference WRIST_VELOCITY_MOTION_MAGIC = 
             new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 8000);
         public static final DoublePreference WRIST_ACCELERATION_MOTION_MAGIC = 
-            new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 12000);
+            new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 8000);
 
         public static final DoublePreference SHOULDER_VELOCITY_MOTION_MAGIC = 
             new DoublePreference("SHOULDER_VELOCITY_MOTION_MAGIC", 10500); 
