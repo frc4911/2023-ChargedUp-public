@@ -107,7 +107,7 @@ public class Constants {
         public static final DoublePreference STOWED_WRIST =
             new DoublePreference("STOWED_WRIST", 325);
         public static final DoublePreference STOWED_SHOULDER =
-            new DoublePreference("STOWED_SHOULDER", 35);
+            new DoublePreference("STOWED_SHOULDER", 38);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_WRIST =
             new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 151);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_SHOULDER =
@@ -144,24 +144,24 @@ public class Constants {
         
         // PID values
         public static final DoublePreference SHOULDER_P = 
-            new DoublePreference("SHOULDER_P", 0.7);
+            new DoublePreference("SHOULDER_P", 1);
         public static final DoublePreference SHOULDER_I = 
             new DoublePreference("SHOULDER_I", 0.0);
         public static final DoublePreference SHOULDER_D = 
             new DoublePreference("SHOULDER_D", 0.0);
             public static final DoublePreference SHOULDER_F = 
-                new DoublePreference("SHOULDER_F", 0.0);
+                new DoublePreference("SHOULDER_F", 1);
         public static final DoublePreference SHOULDER_G = 
             new DoublePreference("SHOULDER_G", 0.02737);
 
         public static final DoublePreference WRIST_P = 
-            new DoublePreference("WRIST_P", 0.5);
+            new DoublePreference("WRIST_P", 0.25);
         public static final DoublePreference WRIST_I = 
             new DoublePreference("WRIST_I", 0.0);
         public static final DoublePreference WRIST_D = 
             new DoublePreference("WRIST_D", 0.0);
         public static final DoublePreference WRIST_F = 
-            new DoublePreference("WRIST_F", 0.0299);
+            new DoublePreference("WRIST_F", 0.5);
 
         // Constraints
         public static final DoublePreference SHOULDER_NEUTRAL_DEADBAND =
@@ -179,7 +179,7 @@ public class Constants {
             new IntPreference("WRIST_INTEGRAL_ZONE", 100);
         
         public static final double SHOULDER_CANCODER_OFFSET = 360 - 233.9;
-        public static final double WRIST_CANCODER_OFFSET = 360 - 69 - 172;
+        public static final double WRIST_CANCODER_OFFSET = 360 - 243;
 
         public static final DoublePreference WRIST_VELOCITY_MOTION_MAGIC = 
             new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 8000);
