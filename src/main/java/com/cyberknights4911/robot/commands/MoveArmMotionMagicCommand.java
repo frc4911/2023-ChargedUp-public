@@ -37,6 +37,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         switch (desiredPosition) {
             case STOWED:
             case SCORE_L2:
+            case COLLECT_SINGLE_SUBSTATION_FRONT:
             case COLLECT_SUBSTATION_FRONT:
             case COLLECT_FLOOR_FRONT_CONE:
             case COLLECT_FLOOR_FRONT_CUBE:

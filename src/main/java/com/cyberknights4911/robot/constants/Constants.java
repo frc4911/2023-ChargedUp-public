@@ -108,6 +108,10 @@ public class Constants {
             new DoublePreference("STOWED_WRIST", 325);
         public static final DoublePreference STOWED_SHOULDER =
             new DoublePreference("STOWED_SHOULDER", 38);
+        public static final DoublePreference COLLECT_SINGLE_SUBSTATION_FRONT_WRIST =
+            new DoublePreference("COLLECT_SINGLE_SUBSTATION_FRONT_WRIST", 99);
+        public static final DoublePreference COLLECT_SINGLE_SUBSTATION_FRONT_SHOULDER =
+            new DoublePreference("COLLECT_SINGLE_SUBSTATION_FRONT_SHOULDER", 103);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_WRIST =
             new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 151);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_SHOULDER =
