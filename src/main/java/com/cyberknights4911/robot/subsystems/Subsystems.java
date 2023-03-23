@@ -8,6 +8,7 @@ import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.bob.BobIO;
 import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
 import com.cyberknights4911.robot.subsystems.climber.ClimberIO;
+import com.cyberknights4911.robot.subsystems.climber.ClimberIOReal;
 import com.cyberknights4911.robot.subsystems.climber.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
 import com.cyberknights4911.robot.subsystems.drive.GyroIO;
@@ -36,7 +37,7 @@ public final class Subsystems {
         RobotConfiguration configuration =  RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2023);
         if (RobotBase.isReal()) {
             // TODO swap out these with real implementations once the hardware exists
-            climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
+            climberSubsystem = new ClimberSubsystem(new ClimberIOReal());
             slurppSubsystem = new SlurppSubsystem(new SlurppIOReal());
             armSubsystem = new ArmSubsystem(new ArmIOReal());
             swerveSubsystem = new SwerveSubsystemCurrent(
