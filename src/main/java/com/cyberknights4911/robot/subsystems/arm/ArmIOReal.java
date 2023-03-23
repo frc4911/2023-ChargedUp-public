@@ -66,6 +66,9 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.PRIMARY_PID0_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.configMotionCruiseVelocity(Constants.Arm.SHOULDER_VELOCITY_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.configMotionAcceleration(Constants.Arm.SHOULDER_ACCELERATION_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
+
+        shoulderMotor2.configFactoryDefault();
+        shoulderMotor3.configFactoryDefault();
         shoulderMotor2.follow(shoulderMotor1);
         shoulderMotor3.follow(shoulderMotor1);
         shoulderMotor1.setInverted(true);
