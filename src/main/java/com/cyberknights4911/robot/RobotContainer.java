@@ -51,20 +51,17 @@ public class RobotContainer {
       )
     );
 
-    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_FAST).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_FAST).whileTrue(
       new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem()));
 
-
-    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_SLOW).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_BACKWARD_SLOW).whileTrue(
       new SlurppCommand(subsystems.getSlurppSubsystem(), -0.4, subsystems.getArmSubsystem()));
 
-
-    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_FAST).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_FAST).whileTrue(
         new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem()));
 
-    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_SLOW).onTrue(
+    controllerBinding.triggersFor(ButtonAction.SLURPP_FORWARD_SLOW).whileTrue(
       new SlurppCommand(subsystems.getSlurppSubsystem(), 0.4, subsystems.getArmSubsystem()));
-
 
     controllerBinding.triggersFor(ButtonAction.COLLECT_SUBSTATION_FRONT).onTrue(
       MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_FRONT));
