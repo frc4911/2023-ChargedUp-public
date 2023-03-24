@@ -59,7 +59,7 @@ public final class XboxControllerBinding implements ControllerBinding {
             case BOB_DEPLOY: return new Triggers();//Triggers(operatorController.leftTrigger());
             case COLLECT_SUBSTATION_FRONT: return new Triggers(operatorController.povRight(), driverController.povLeft());
             case COLLECT_SUBSTATION_BACK: return new Triggers(operatorController.povLeft(), driverController.povRight());
-            case COLLECT_SINGLE_SUBSTATION_FRONT: return new Triggers(operatorController.x());
+            case COLLECT_SINGLE_SUBSTATION_FRONT: return new Triggers();
             case COLLECT_FLOOR_FRONT_CONE: return new Triggers(operatorController.a());
             case COLLECT_FLOOR_FRONT_CUBE: return new Triggers(operatorController.b());
             case COLLECT_FLOOR_BACK_CONE: return new Triggers();
