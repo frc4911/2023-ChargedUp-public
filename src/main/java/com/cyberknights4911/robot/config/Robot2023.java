@@ -27,7 +27,7 @@ public class Robot2023 implements RobotConfiguration {
         new DoublePreference("STEER_MOTOR_F", 0.0);
         
     private static final DoublePreference HEADING_MOTOR_P =
-        new DoublePreference("HEADING_MOTOR_P", 0.01);
+        new DoublePreference("HEADING_MOTOR_P", 0.1);
     private static final DoublePreference HEADING_MOTOR_I = 
         new DoublePreference("HEADING_MOTOR_I", 0.0);
     private static final DoublePreference HEADING_MOTOR_D =
