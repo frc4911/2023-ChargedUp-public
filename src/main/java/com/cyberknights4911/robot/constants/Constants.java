@@ -141,9 +141,9 @@ public class Constants {
         public static final DoublePreference SCORE_L3_SHOULDER =
             new DoublePreference("SCORE_L3_SHOULDER", 235);
         public static final DoublePreference SCORE_L2_WRIST =
-            new DoublePreference("SCORE_L2_WRIST", 225);
+            new DoublePreference("SCORE_L2_WRIST", 209);
         public static final DoublePreference SCORE_L2_SHOULDER =
-            new DoublePreference("SCORE_L2_SHOULDER", 95);
+            new DoublePreference("SCORE_L2_SHOULDER", 91);
         
         
         // PID values
