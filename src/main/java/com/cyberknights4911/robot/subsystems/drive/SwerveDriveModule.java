@@ -345,6 +345,8 @@ public class SwerveDriveModule {
                 if (Util.epsilonEquals(periodicIO.driveDemand, 0.0, config.driveDeadband)) {
                     stop();
                 } else {
+                    // TODO: rbrewer check this drive demand value. It seems to be being interpreted as percent output
+                    // rather than meters per second
                     swerveIO.setDrive(periodicIO.driveControlMode, periodicIO.driveDemand);
                     swerveIO.setTurn(periodicIO.steerControlMode, periodicIO.steerDemand);
                 }
