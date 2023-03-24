@@ -45,7 +45,7 @@ public final class AutoCommandChooser {
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
 
-        translationConstants = new PIDConstants(0.4, 0, 0.01);
+        translationConstants = new PIDConstants(0.8, 0, 0.009);
         // translationConstants = new PIDConstants(1.5, 0.2, 0.5);
 
         // PID constants to correct for rotation error (used to create the rotation controller)
