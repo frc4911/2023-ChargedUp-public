@@ -45,9 +45,9 @@ public final class AutoCommandChooser {
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
 
-        translationConstants = new PIDConstants(2.0, 1.0, 0.0);
+        translationConstants = new PIDConstants(1.5, 0.0, 0.3);
         // PID constants to correct for rotation error (used to create the rotation controller)
-        rotationConstants = new PIDConstants(7.0, 0.0, 0.0);
+        rotationConstants = new PIDConstants(3.0, 0.0, 0.0);
 
 
         poseSupplier = subsystems.getSwerveSubsystem()::getPose;
@@ -152,7 +152,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("ScoreBalanceLeave", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -168,7 +168,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Score2Substation", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -183,7 +183,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Score2Guardrail", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -198,7 +198,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Score3Substation", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -213,7 +213,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Score3Guardrail", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
