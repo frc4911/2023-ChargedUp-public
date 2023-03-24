@@ -45,9 +45,13 @@ public final class AutoCommandChooser {
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
 
-        translationConstants = new PIDConstants(1.5, 0.0, 0.3);
+        translationConstants = new PIDConstants(0.4, 0, 0.01);
+        // translationConstants = new PIDConstants(1.5, 0.2, 0.5);
+
         // PID constants to correct for rotation error (used to create the rotation controller)
-        rotationConstants = new PIDConstants(3.0, 0.0, 0.0);
+        //rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
+        rotationConstants = new PIDConstants(0.0, 0.0, 0.0);
+
 
 
         poseSupplier = subsystems.getSwerveSubsystem()::getPose;
