@@ -2,42 +2,42 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8549646229107004,
-        "y": 3.304847351492134
+        "x": 1.8919374377210312,
+        "y": 3.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8549646229107006,
-        "y": 3.304847351492134
+        "x": 2.891937437721029,
+        "y": 3.0
       },
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "moveL3"
+          "coneScoreSlow"
         ],
         "executionBehavior": "parallel",
-        "waitBehavior": "deadline",
-        "waitTime": 2.0
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 5.594359377021179,
-        "y": 3.3
+        "x": 5.562843144917061,
+        "y": 2.9964610890760253
       },
       "prevControl": {
-        "x": 7.0355281987613045,
-        "y": 3.3
+        "x": 4.562843144917061,
+        "y": 2.9964610890760253
       },
       "nextControl": {
-        "x": 7.0355281987613045,
-        "y": 3.3
+        "x": 4.562843144917061,
+        "y": 2.9964610890760253
       },
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -51,12 +51,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.959088888220572,
-        "y": 3.3
+        "x": 3.7996522146890466,
+        "y": 3.0
       },
       "prevControl": {
-        "x": 4.67952273992993,
-        "y": 3.3
+        "x": 4.571408954849512,
+        "y": 3.0
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -74,15 +74,12 @@
       }
     }
   ],
-  "maxVelocity": 2.0,
-  "maxAcceleration": 1.0,
-  "isReversed": null,
   "markers": [
     {
-      "position": 0.0,
+      "position": 0.11636363636362976,
       "names": [
-        "coneScoreSlow",
-        "stowArm"
+        "event",
+        "stopSlurpp"
       ]
     }
   ]
