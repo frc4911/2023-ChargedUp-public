@@ -147,19 +147,15 @@ public final class AutoCommandChooser {
 
     private Command getBalanceLeaveCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("moveL3", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));
         eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.4), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurrp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
-        eventMap.put("stowArm", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));
         eventMap.put("autoBalance", new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
-        eventMap.put("keepGamePiece", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(0.1), subsystems.getSlurppSubsystem()));
-        //eventMap.put("deadline", new Paral);
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("BalanceScoreLeave", new PathConstraints(0.5, 0.5))
+            PathPlanner.loadPathGroup("Balance and Leave", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
