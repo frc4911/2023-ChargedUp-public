@@ -33,7 +33,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-    Logger.getInstance().recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+    // Logger.getInstance().recordMetadata("ProjectName", "MyProject"); // Set a metadata value
 
     if (isReal()) {
         Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
@@ -79,6 +79,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
+    System.out.println("Auto Name: " + autonomousCommand);
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {

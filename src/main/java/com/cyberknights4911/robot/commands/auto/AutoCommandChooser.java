@@ -45,12 +45,12 @@ public final class AutoCommandChooser {
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
 
-        translationConstants = new PIDConstants(0.8, 0, 0.009);
-        // translationConstants = new PIDConstants(1.5, 0.2, 0.5);
+        //translationConstants = new PIDConstants(0.8, 0, 0.009);
+        translationConstants = new PIDConstants(1, 0, 0);
 
         // PID constants to correct for rotation error (used to create the rotation controller)
-        //rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
-        rotationConstants = new PIDConstants(0.0, 0.0, 0.0);
+        rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
+        //rotationConstants = new PIDConstants(0.0, 0.0, 0.0);
 
 
 
@@ -148,12 +148,13 @@ public final class AutoCommandChooser {
     private Command getBalanceLeaveCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
         eventMap.put("moveL3", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));
-        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.2), subsystems.getSlurppSubsystem()));
+        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.4), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurrp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
         eventMap.put("stowArm", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));
         eventMap.put("autoBalance", new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
         eventMap.put("keepGamePiece", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(0.1), subsystems.getSlurppSubsystem()));
-        
+        //eventMap.put("deadline", new Paral);
+
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()

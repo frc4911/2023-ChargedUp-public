@@ -23,7 +23,7 @@
           "stopSlurrp"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "none",
+        "waitBehavior": "deadline",
         "waitTime": 0
       }
     },

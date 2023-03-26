@@ -3,12 +3,12 @@
     {
       "anchorPoint": {
         "x": 1.9007064547652628,
-        "y": 0.491724692436545
+        "y": 0.5
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.900706454765264,
-        "y": 0.491724692436545
+        "y": 0.5
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,7 +17,6 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "moveL3",
           "coneScoreSlow"
         ],
         "executionBehavior": "sequential",
@@ -27,12 +26,12 @@
     },
     {
       "anchorPoint": {
-        "x": 7.206758949894505,
-        "y": 0.5145956083638271
+        "x": 5.697278498693945,
+        "y": 0.503160150400186
       },
       "prevControl": {
-        "x": 6.206758949894505,
-        "y": 0.5145956083638271
+        "x": 4.697278498693945,
+        "y": 0.503160150400186
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
