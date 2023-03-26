@@ -85,6 +85,11 @@ public class Constants {
     // period frame to use for selected sensor on primary PID[0]
     public static final int PRIMARY_PID0_PERIOD = 5;
 
+    public static final SupplyCurrentLimitConfiguration SLURPP_SUPPLY_LIMIT =
+        new SupplyCurrentLimitConfiguration(true, 35.0, 0, 0);
+    public static final StatorCurrentLimitConfiguration SLURPP_STATOR_LIMIT =
+        new StatorCurrentLimitConfiguration(true, 35.0, 0, 0);
+
     public static class Arm {
         private Arm() {}
 
@@ -141,9 +146,9 @@ public class Constants {
         public static final DoublePreference SCORE_L3_SHOULDER =
             new DoublePreference("SCORE_L3_SHOULDER", 235);
         public static final DoublePreference SCORE_L2_WRIST =
-            new DoublePreference("SCORE_L2_WRIST", 209);
+            new DoublePreference("SCORE_L2_WRIST", 211);
         public static final DoublePreference SCORE_L2_SHOULDER =
-            new DoublePreference("SCORE_L2_SHOULDER", 91);
+            new DoublePreference("SCORE_L2_SHOULDER", 93);
         
         
         // PID values
