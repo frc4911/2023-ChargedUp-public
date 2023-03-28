@@ -1,10 +1,13 @@
 package com.cyberknights4911.robot.commands;
 
+import java.util.function.Consumer;
+
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
@@ -12,14 +15,17 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
     private final ArmSubsystem armSubsystem;
     private final ArmPositions desiredPosition;
+    private final boolean shouldEnd;
 
     private boolean shouldTuckWrist;
     private boolean isWristTucked;
+    private boolean isInFinalPosition;
     private double safePosition;
 
-    private MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
+    private MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition, boolean shouldEnd) {
         this.armSubsystem = armSubsystem;
         this.desiredPosition = desiredPosition;
+        this.shouldEnd = shouldEnd;
 
         addRequirements(armSubsystem);
     }
@@ -30,6 +36,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
         shouldTuckWrist = false;
         isWristTucked = false;
+        isInFinalPosition = false;
         safePosition = 0;
 
         double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
@@ -73,10 +80,10 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             // It doesn't matter which INTERMEDIATE we use, the wrist position is always the same
             armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE.getValue());
         } else {
-            armSubsystem.moveWrist(desiredPosition.wristPosition);
+            armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
         }
         // Always begin moving the shoulder immediately
-        armSubsystem.moveShoulder(desiredPosition.shoulderPosition);
+        armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
     }
 
     @Override
@@ -84,10 +91,13 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         double currentShoulderPosition = armSubsystem.getShoulderPositionDegrees();
         // If this is a tucking command, we need to move the wrist AFTER the shoulder is safe
         if (shouldTuckWrist && !isWristTucked && currentShoulderPosition > safePosition) {
-            armSubsystem.moveWrist(desiredPosition.wristPosition);
+            armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
             // No need to keep sending the moveWrist call.
             isWristTucked = true;
         }
+
+        // TODO check arm position 
+        // isInFinalPosition = ???
     }
 
     @Override
@@ -95,18 +105,55 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         armSubsystem.setBrakeMode();
     }
     
-    /**
-     * Creates a new command for moving the arm. The command defers creation of the actual
-     * command until it is actually needed.
-     */
-    public static Command create(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        // TODO: check whether the proxying is even necessary (we check position on initialization)
-        ProxyCommand command = new ProxyCommand(() -> createImmediate(armSubsystem, desiredPosition));
-        command.addRequirements(armSubsystem);
-        return command;
+    @Override
+    public boolean isFinished() {
+        return shouldEnd && isInFinalPosition;
     }
 
-    private static Command createImmediate(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition);
+    /**
+     * Creates a new command for moving the arm.
+     */
+    public static MoveArmMotionMagicCommand create(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
+        return create(armSubsystem, desiredPosition, false);
+    }
+
+    /**
+     * Creates a new command for moving the arm.
+     */
+    public static MoveArmMotionMagicCommand create(ArmSubsystem armSubsystem, ArmPositions desiredPosition, boolean shouldEnd) {
+        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, shouldEnd);
+    }
+
+    public static void setupTestMode(ArmSubsystem armSubsystem) {
+        ShuffleboardTab tab = Shuffleboard.getTab("ARM POSITIONS");
+
+        tab.add("STOWED", create(armSubsystem, ArmPositions.STOWED));
+        tab.add("SCORE_L2", create(armSubsystem, ArmPositions.SCORE_L2));
+        tab.add("COLLECT_SUBSTATION_FRONT", create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_FRONT));
+        tab.add("COLLECT_FLOOR_FRONT_CONE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CONE));
+        tab.add("COLLECT_FLOOR_FRONT_CUBE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CUBE));
+        tab.add("SCORE_L3", create(armSubsystem, ArmPositions.SCORE_L3));
+        tab.add("COLLECT_SUBSTATION_BACK", create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_BACK));
+        tab.add("COLLECT_FLOOR_BACK_CUBE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CUBE));
+        tab.add("COLLECT_FLOOR_BACK_CONE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+
+        tab.add("SHOULDER +", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+        tab.add("SHOULDER -", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+        tab.add("WRIST +", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+        tab.add("WRIST -", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+
+        tab.add("RE-RUN", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+    }
+
+    private static class TestMode {
+        private MoveArmMotionMagicCommand currentCommand = null;
+
+        CommandBase cb;
+        ProxyCommand pc;
+
+        CommandBase stowAndRerun(ArmSubsystem armSubsystem) {
+            return create(armSubsystem, ArmPositions.STOWED)
+        }
+
     }
 }
