@@ -1,26 +1,31 @@
 package com.cyberknights4911.robot.commands;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.constants.DoublePreference;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
 public final class MoveArmMotionMagicCommand extends CommandBase {
 
     private final ArmSubsystem armSubsystem;
     private final ArmPositions desiredPosition;
+    private final InitializedListener listener;
 
     private boolean shouldTuckWrist;
     private boolean isWristTucked;
     private double safePosition;
 
-    private MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
+    private MoveArmMotionMagicCommand(
+            ArmSubsystem armSubsystem, ArmPositions desiredPosition, InitializedListener listener) {
         this.armSubsystem = armSubsystem;
         this.desiredPosition = desiredPosition;
+        this.listener = listener;
 
         addRequirements(armSubsystem);
     }
@@ -78,6 +83,8 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         }
         // Always begin moving the shoulder immediately
         armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
+
+        listener.onInitialize(this);
     }
 
     @Override
@@ -95,7 +102,11 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     public void end(boolean interrupted) {
         armSubsystem.setBrakeMode();
     }
-    
+
+    public ArmPositions getDesiredPosition() {
+        return desiredPosition;
+    }
+
     /**
      * Creates a command that terminates when the arm movement is complete. This is useful for
      * building command sequences that need to wait for the arm to reach a requested postion since
@@ -119,40 +130,89 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     /**
      * Creates a new command for moving the arm.
      */
-    public static MoveArmMotionMagicCommand create(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition);
+    public static MoveArmMotionMagicCommand create(
+            ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
+        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, (command) -> {});
+    }
+    /**
+     * Creates a new command for moving the arm.
+     */
+    private static MoveArmMotionMagicCommand create(
+            ArmSubsystem armSubsystem, ArmPositions desiredPosition, InitializedListener listener) {
+        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, listener);
     }
 
     public static void setupTestMode(ArmSubsystem armSubsystem) {
+        TestMode testMode = new TestMode();
         ShuffleboardTab tab = Shuffleboard.getTab("ARM POSITIONS");
 
-        tab.add("STOWED", create(armSubsystem, ArmPositions.STOWED));
-        tab.add("SCORE_L2", create(armSubsystem, ArmPositions.SCORE_L2));
-        tab.add("COLLECT_SUBSTATION_FRONT", create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_FRONT));
-        tab.add("COLLECT_FLOOR_FRONT_CONE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CONE));
-        tab.add("COLLECT_FLOOR_FRONT_CUBE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CUBE));
-        tab.add("SCORE_L3", create(armSubsystem, ArmPositions.SCORE_L3));
-        tab.add("COLLECT_SUBSTATION_BACK", create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_BACK));
-        tab.add("COLLECT_FLOOR_BACK_CUBE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CUBE));
-        tab.add("COLLECT_FLOOR_BACK_CONE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+        tab.add("STOWED", create(armSubsystem, ArmPositions.STOWED, testMode));
+        tab.add("SCORE_L2", create(armSubsystem, ArmPositions.SCORE_L2, testMode));
+        tab.add("COLLECT_SUBSTATION_FRONT", create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_FRONT, testMode));
+        tab.add("COLLECT_FLOOR_FRONT_CONE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CONE, testMode));
+        tab.add("COLLECT_FLOOR_FRONT_CUBE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CUBE, testMode));
+        tab.add("SCORE_L3", create(armSubsystem, ArmPositions.SCORE_L3, testMode));
+        tab.add("COLLECT_SUBSTATION_BACK", create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_BACK, testMode));
+        tab.add("COLLECT_FLOOR_BACK_CUBE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CUBE, testMode));
+        tab.add("COLLECT_FLOOR_BACK_CONE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE, testMode));
 
-        tab.add("SHOULDER +", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
-        tab.add("SHOULDER -", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
-        tab.add("WRIST +", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
-        tab.add("WRIST -", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+        tab.add("SHOULDER+", testMode.increaseShoulder());
+        tab.add("SHOULDER-", testMode.decreaseShoulder());
+        tab.add("WRIST+", testMode.increaseWrist());
+        tab.add("WRIST-", testMode.decreaseWrist());
 
-        tab.add("RE-RUN", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
+        tab.add("RE-RUN", testMode.stowAndRerun(armSubsystem));
     }
 
-    private static class TestMode {
+    private interface InitializedListener {
+        void onInitialize(MoveArmMotionMagicCommand armCommand);
+    }
+
+    private static class TestMode implements InitializedListener {
         private MoveArmMotionMagicCommand currentCommand = null;
 
-        CommandBase cb;
-        ProxyCommand pc;
-
-        CommandBase stowAndRerun(ArmSubsystem armSubsystem) {
-            return create(armSubsystem, ArmPositions.STOWED);
+        CommandBase increaseShoulder() {
+            return new ProxyCommand(
+                () -> increase(currentCommand.desiredPosition.shoulderPosition));
         }
 
+        CommandBase decreaseShoulder() {
+            return new ProxyCommand(
+                () -> decrease(currentCommand.desiredPosition.shoulderPosition));
+        }
+
+        CommandBase increaseWrist() {
+            return new ProxyCommand(
+                () -> increase(currentCommand.desiredPosition.wristPosition));
+        }
+
+        CommandBase decreaseWrist() {
+            return new ProxyCommand(
+                () -> decrease(currentCommand.desiredPosition.wristPosition));
+        }
+
+        private CommandBase increase(DoublePreference doublePreference) {
+            return Commands.runOnce(() -> {
+                doublePreference.setValue(doublePreference.getValue() + 1);
+            });
+        }
+
+        private CommandBase decrease(DoublePreference doublePreference) {
+            return Commands.runOnce(() -> {
+                doublePreference.setValue(doublePreference.getValue() - 1);
+            });
+        }
+
+        CommandBase stowAndRerun(ArmSubsystem armSubsystem) {
+            return create(armSubsystem, ArmPositions.STOWED)
+                .getMovementFinishedCommand()
+                .andThen(currentCommand);
+        }
+
+        @Override
+        public void onInitialize(MoveArmMotionMagicCommand armCommand) {
+            currentCommand = armCommand;
+            
+        }
     }
 }
