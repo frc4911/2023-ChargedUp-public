@@ -4,8 +4,6 @@
 
 package com.cyberknights4911.robot;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -15,6 +13,8 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import com.cyberknights4911.robot.constants.Constants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -56,7 +56,9 @@ public class Robot extends LoggedRobot {
     // Set up data receivers & replay source
     if (isReal()) {
       logger.addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
-      logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      if (Constants.ENABLE_NT_LOGGING) {
+        logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      }
     } else {
       setUseTiming(false); // Run as fast as possible
       String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)

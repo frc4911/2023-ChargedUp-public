@@ -17,6 +17,12 @@ public class Constants {
 
     public static final String CANIVORE_NAME = "CANivore";
 
+    /**
+     * Used to control whether to log to NetworkTables. This can be resource intensive so it should
+     * be disabled for competitions.
+     */
+    public static final boolean ENABLE_NT_LOGGING = true;
+
     //2023 Physical Robot Dimensions
     public static final double ROBOT_WHEEL_BASE = 22.75;
     public static final double ROBOT_WHEEL_LENGTH = 22.75;
