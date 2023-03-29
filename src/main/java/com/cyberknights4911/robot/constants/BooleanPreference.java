@@ -10,6 +10,7 @@ public final class BooleanPreference {
     public BooleanPreference(String key, boolean defaultValue) {
         this.key = key;
         this.defaultValue = defaultValue;
+        Preferences.initBoolean(key, defaultValue);
     }
 
     public boolean getValue() {

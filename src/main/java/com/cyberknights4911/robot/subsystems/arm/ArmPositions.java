@@ -4,8 +4,11 @@ import com.cyberknights4911.robot.constants.Constants;
 
 public enum ArmPositions {
     STOWED(
-        Constants.Arm.STOWED_WRIST.getValue(), 
-        Constants.Arm.STOWED_SHOULDER.getValue()),
+        Constants.Arm.STOWED_SHOULDER.getValue(),
+        Constants.Arm.STOWED_WRIST.getValue()),
+    COLLECT_SINGLE_SUBSTATION_FRONT(
+        Constants.Arm.COLLECT_SINGLE_SUBSTATION_FRONT_SHOULDER.getValue(), 
+        Constants.Arm.COLLECT_SINGLE_SUBSTATION_FRONT_WRIST.getValue()),
     COLLECT_SUBSTATION_BACK(
         Constants.Arm.COLLECT_SUBSTATION_BACK_SHOULDER.getValue(),
         Constants.Arm.COLLECT_SUBSTATION_BACK_WRIST.getValue()),

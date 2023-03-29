@@ -334,8 +334,8 @@ public class SwerveDriveModule {
         periodicIO.steerVelocity = swerveIO.getTurnVelocity();
         // mPeriodicIO.steerError = mSteerMotor.getClosedLoopError(0);
 
-        swerveIO.updateInputs(inputs);
-        Logger.getInstance().processInputs(moduleName, inputs);
+        // swerveIO.updateInputs(inputs);
+        // Logger.getInstance().processInputs(moduleName, inputs);
     }
 
     public synchronized void writePeriodicOutputs() {
@@ -345,6 +345,8 @@ public class SwerveDriveModule {
                 if (Util.epsilonEquals(periodicIO.driveDemand, 0.0, config.driveDeadband)) {
                     stop();
                 } else {
+                    // TODO: rbrewer check this drive demand value. It seems to be being interpreted as percent output
+                    // rather than meters per second
                     swerveIO.setDrive(periodicIO.driveControlMode, periodicIO.driveDemand);
                     swerveIO.setTurn(periodicIO.steerControlMode, periodicIO.steerDemand);
                 }
@@ -355,8 +357,8 @@ public class SwerveDriveModule {
                 swerveIO.setTurn(periodicIO.steerControlMode, periodicIO.steerDemand);
                 break;
         }
-        SmartDashboard.putNumber(moduleName + " Steering", periodicIO.steerDemand);
-        SmartDashboard.putNumber(moduleName + " Drive", periodicIO.driveDemand);
+        // SmartDashboard.putNumber(moduleName + " Steering", periodicIO.steerDemand);
+        // SmartDashboard.putNumber(moduleName + " Drive", periodicIO.driveDemand);
 
     }
 
