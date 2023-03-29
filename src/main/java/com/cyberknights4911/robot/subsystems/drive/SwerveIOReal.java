@@ -71,7 +71,7 @@ public final class SwerveIOReal implements SwerveIO {
 
         FramePeriodSwitch.configStatorCurrentLimitPermanent(
             driveMotor,
-            new StatorCurrentLimitConfiguration(true, 90, 90, 0));
+            new StatorCurrentLimitConfiguration(true, 40, 0, 0));
     }
 
     private static void commonMotorConfig(TalonFX motor, String motorName) {

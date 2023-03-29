@@ -2,21 +2,23 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.0,
+        "x": 1.8919374377210312,
         "y": 3.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9397510795021589,
-        "y": 2.8878841757683498
+        "x": 2.891937437721029,
+        "y": 3.0
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": -180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "coneScoreSlow"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -24,22 +26,22 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9698247396494797,
-        "y": 2.9179578359156713
+        "x": 5.562843144917061,
+        "y": 2.9964610890760253
       },
       "prevControl": {
-        "x": 1.9247142494284992,
-        "y": 2.9179578359156713
+        "x": 4.562843144917061,
+        "y": 2.9964610890760253
       },
       "nextControl": {
-        "x": 1.9247142494284992,
-        "y": 2.9179578359156713
+        "x": 4.562843144917061,
+        "y": 2.9964610890760253
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": -180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -49,26 +51,36 @@
     },
     {
       "anchorPoint": {
-        "x": 4.061474586053498,
-        "y": 2.015971224478497
+        "x": 3.7996522146890466,
+        "y": 3.0
       },
       "prevControl": {
-        "x": 2.2096105260912817,
-        "y": 2.261483505155309
+        "x": 4.571408954849512,
+        "y": 3.0
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": -180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "autoBalance"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.11636363636362976,
+      "names": [
+        "event",
+        "stopSlurpp"
+      ]
+    }
+  ]
 }
