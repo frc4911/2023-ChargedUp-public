@@ -169,7 +169,9 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         tab.add("WRIST+", testMode.increaseWrist());
         tab.add("WRIST-", testMode.decreaseWrist());
 
-        tab.add("RE-RUN", testMode.stowAndRerun(armSubsystem));
+        tab.add("RE-RUN", testMode.rerun());
+
+        tab.add("STOW & RE-RUN", testMode.stowAndRerun(armSubsystem));
     }
 
     private interface InitializedListener {
@@ -209,6 +211,10 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() - 1);
             });
+        }
+
+        CommandBase rerun() {
+            return new ProxyCommand(() -> currentCommand);
         }
 
         CommandBase stowAndRerun(ArmSubsystem armSubsystem) {
