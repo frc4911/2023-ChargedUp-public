@@ -43,6 +43,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         switch (desiredPosition) {
             case STOWED:
             case SCORE_L2:
+            case COLLECT_SINGLE_SUBSTATION_FRONT:
             case COLLECT_SUBSTATION_FRONT:
             case COLLECT_FLOOR_FRONT_CONE:
             case COLLECT_FLOOR_FRONT_CUBE:
@@ -76,8 +77,15 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
         // If this is a tucking command, move to the tuck position first
         if (shouldTuckWrist) {
-            // It doesn't matter which INTERMEDIATE we use, the wrist position is always the same
-            armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE.getValue());
+
+            if(desiredPosition == ArmPositions.SCORE_L3 || desiredPosition == ArmPositions.COLLECT_SUBSTATION_BACK || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CUBE || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CONE) {
+                
+                armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue());
+
+            } else {
+
+                armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue());
+            }
         } else {
             armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
         }

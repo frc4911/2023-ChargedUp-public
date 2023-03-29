@@ -4,8 +4,6 @@
 
 package com.cyberknights4911.robot;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -15,6 +13,8 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import com.cyberknights4911.robot.constants.Constants;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -33,20 +33,39 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-    Logger.getInstance().recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+    Logger logger = Logger.getInstance();
 
-    if (isReal()) {
-        Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
-        Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-        new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-    } else {
-        setUseTiming(false); // Run as fast as possible
-        String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-        Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
-        Logger.getInstance().addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+    // Record metadata
+    logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        logger.recordMetadata("GitDirty", "Unknown");
+        break;
     }
 
-    Logger.getInstance().start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    // Set up data receivers & replay source
+    if (isReal()) {
+      logger.addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
+      if (Constants.ENABLE_NT_LOGGING) {
+        logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      }
+    } else {
+      setUseTiming(false); // Run as fast as possible
+      String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+      logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+    }
+    logger.start();
 
     // Instantiate  RobotContainer
     robotContainer = new RobotContainer();
@@ -79,6 +98,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
+    System.out.println("Auto Name: " + autonomousCommand);
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
