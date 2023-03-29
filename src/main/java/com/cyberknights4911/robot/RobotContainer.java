@@ -133,4 +133,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoCommandChooser.getCurrentCommand();
   }
+
+  public void testInit() {
+    MoveArmMotionMagicCommand.setupTestMode(subsystems.getArmSubsystem());
+  }
 }
