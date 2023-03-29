@@ -334,8 +334,8 @@ public class SwerveDriveModule {
         periodicIO.steerVelocity = swerveIO.getTurnVelocity();
         // mPeriodicIO.steerError = mSteerMotor.getClosedLoopError(0);
 
-        swerveIO.updateInputs(inputs);
-        Logger.getInstance().processInputs(moduleName, inputs);
+        // swerveIO.updateInputs(inputs);
+        // Logger.getInstance().processInputs(moduleName, inputs);
     }
 
     public synchronized void writePeriodicOutputs() {
@@ -357,8 +357,8 @@ public class SwerveDriveModule {
                 swerveIO.setTurn(periodicIO.steerControlMode, periodicIO.steerDemand);
                 break;
         }
-        SmartDashboard.putNumber(moduleName + " Steering", periodicIO.steerDemand);
-        SmartDashboard.putNumber(moduleName + " Drive", periodicIO.driveDemand);
+        // SmartDashboard.putNumber(moduleName + " Steering", periodicIO.steerDemand);
+        // SmartDashboard.putNumber(moduleName + " Drive", periodicIO.driveDemand);
 
     }
 

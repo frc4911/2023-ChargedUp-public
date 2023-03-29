@@ -45,12 +45,12 @@ public final class AutoCommandChooser {
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
 
-        translationConstants = new PIDConstants(0.8, 0, 0.009);
-        // translationConstants = new PIDConstants(1.5, 0.2, 0.5);
+        //translationConstants = new PIDConstants(0.8, 0, 0.009);
+        translationConstants = new PIDConstants(1, 0, 0);
 
         // PID constants to correct for rotation error (used to create the rotation controller)
-        //rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
-        rotationConstants = new PIDConstants(0.0, 0.0, 0.0);
+        rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
+        //rotationConstants = new PIDConstants(0.0, 0.0, 0.0);
 
 
 
@@ -62,7 +62,7 @@ public final class AutoCommandChooser {
         //loggedDashboardChooser.addDefaultOption("Score", getScoreCommand());
 
         loggedDashboardChooser.addDefaultOption("AutoBalance", getAutoBalanceCommand());
-        loggedDashboardChooser.addOption("Balance and Leave", getBalanceLeaveCommand());
+        loggedDashboardChooser.addOption("Balance Score Leave", getBalanceLeaveCommand());
 
         loggedDashboardChooser.addOption("Score And Leave", getScoreAndLeaveCommand());
         loggedDashboardChooser.addOption("2 Substation", getScore2SubstationCommand());
@@ -147,16 +147,15 @@ public final class AutoCommandChooser {
 
     private Command getBalanceLeaveCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("moveL3", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));//Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
-        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
+        eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.4), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurrp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
-        eventMap.put("stowArm", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));//Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
+        eventMap.put("autoBalance", new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("Balance and Leave", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(

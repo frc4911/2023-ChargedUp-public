@@ -52,15 +52,17 @@ public final class ArmIOReal implements ArmIO {
             FeedbackDevice.RemoteSensor0, Constants.PRIMARY_PID, Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.setSensorPhase(true);
 
-        TalonFXConfiguration shoulderConfiguration = new TalonFXConfiguration();
-        shoulderConfiguration.supplyCurrLimit = Constants.Arm.SHOULDER_SUPPLY_LIMIT;
-        shoulderConfiguration.statorCurrLimit = Constants.Arm.SHOULDER_STATOR_LIMIT;
-        shoulderConfiguration.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
-        shoulderConfiguration.remoteFilter0 = Constants.Arm.SHOULDER_FILTER_CONFIG;
-        shoulderConfiguration.slot0 = Constants.Arm.SHOULDER_SLOT_CONFIG;
-        shoulderConfiguration.neutralDeadband = Constants.Arm.SHOULDER_NEUTRAL_DEADBAND.getValue();
+        TalonFXConfiguration shoulderConfiguration1 = new TalonFXConfiguration();
+        TalonFXConfiguration shoulderConfigurationFollowers = new TalonFXConfiguration();
+
+        shoulderConfiguration1.supplyCurrLimit = Constants.Arm.SHOULDER_SUPPLY_LIMIT;
+        shoulderConfiguration1.statorCurrLimit = Constants.Arm.SHOULDER_STATOR_LIMIT;
+        shoulderConfiguration1.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        shoulderConfiguration1.remoteFilter0 = Constants.Arm.SHOULDER_FILTER_CONFIG;
+        shoulderConfiguration1.slot0 = Constants.Arm.SHOULDER_SLOT_CONFIG;
+        shoulderConfiguration1.neutralDeadband = Constants.Arm.SHOULDER_NEUTRAL_DEADBAND.getValue();
         
-        shoulderMotor1.configAllSettings(shoulderConfiguration);
+        shoulderMotor1.configAllSettings(shoulderConfiguration1);
         shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.PRIMARY_PID_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MOTION_MAGIC_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.PRIMARY_PID0_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
@@ -74,9 +76,16 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
+        shoulderMotor2.configStatorCurrentLimit(Constants.Arm.SHOULDER_STATOR_LIMIT);
+        shoulderMotor3.configStatorCurrentLimit(Constants.Arm.SHOULDER_STATOR_LIMIT);
+        shoulderMotor2.configSupplyCurrentLimit(Constants.Arm.SHOULDER_SUPPLY_LIMIT);
+        shoulderMotor3.configSupplyCurrentLimit(Constants.Arm.SHOULDER_SUPPLY_LIMIT);
+
         shoulderMotor1.setNeutralMode(NeutralMode.Coast);
         shoulderMotor2.setNeutralMode(NeutralMode.Coast);
         shoulderMotor3.setNeutralMode(NeutralMode.Coast);
+
+        
 
         //WRIST CONFIGURATION
         wristMotor.configRemoteFeedbackFilter(
