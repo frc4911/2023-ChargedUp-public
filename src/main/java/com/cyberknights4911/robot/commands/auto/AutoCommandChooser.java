@@ -45,7 +45,7 @@ public final class AutoCommandChooser {
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
 
-        translationConstants = new PIDConstants(5, 0, 0.0);
+        translationConstants = new PIDConstants(4.3, 0, 0.0);
 
         // PID constants to correct for rotation error (used to create the rotation controller)
         rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
@@ -164,12 +164,16 @@ public final class AutoCommandChooser {
 
     private Command getScore2SubstationCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap.put("coneCollect", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(0.4), subsystems.getSlurppSubsystem()));
+        eventMap.put("stopSlurpp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
+        eventMap.put("floorCollect", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE));//Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
+
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("Score2Substation", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -244,7 +248,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("TranslationTest", new PathConstraints(0.5, 0.25))
+            PathPlanner.loadPathGroup("TranslationTest", new PathConstraints(3, 1))
         );
 
         return new InstantCommand(
