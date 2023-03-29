@@ -1,8 +1,8 @@
 package com.cyberknights4911.robot.config;
 
-import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_DRIVE_REDUCTION;
-import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_STEER_REDUCTION;
-import static com.cyberknights4911.robot.constants.Constants.MK4_L2I_WHEEL_DIAMETER;
+import static com.cyberknights4911.robot.constants.Constants.MK4_L1I_DRIVE_REDUCTION;
+import static com.cyberknights4911.robot.constants.Constants.MK4_L1I_STEER_REDUCTION;
+import static com.cyberknights4911.robot.constants.Constants.MK4_L1I_WHEEL_DIAMETER;
 
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.DoublePreference;
@@ -62,9 +62,9 @@ public class Robot2023 implements RobotConfiguration {
                 .setSteerMotorTalonId(Ports.Drive.FRONT_RIGHT_STEER)
                 .setCANCoderId(Ports.Drive.FRONT_RIGHT_CANCODER)
                 .setCANCoderOffsetDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES)
-                .setWheelDiameter(MK4_L2I_WHEEL_DIAMETER)
-                .setDriveReduction(MK4_L2I_DRIVE_REDUCTION)
-                .setSteerReduction(MK4_L2I_STEER_REDUCTION)
+                .setWheelDiameter(MK4_L1I_WHEEL_DIAMETER)
+                .setDriveReduction(MK4_L1I_DRIVE_REDUCTION)
+                .setSteerReduction(MK4_L1I_STEER_REDUCTION)
                 .setInvertDrive(true)
                 .setInvertSteerMotor(true)
                 .setSteerMotorSlot0Kp(STEER_MOTOR_P.getValue())
@@ -82,9 +82,9 @@ public class Robot2023 implements RobotConfiguration {
                 .setSteerMotorTalonId(Ports.Drive.FRONT_LEFT_STEER)
                 .setCANCoderId(Ports.Drive.FRONT_LEFT_CANCODER)
                 .setCANCoderOffsetDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES)
-                .setWheelDiameter(MK4_L2I_WHEEL_DIAMETER)
-                .setDriveReduction(MK4_L2I_DRIVE_REDUCTION)
-                .setSteerReduction(MK4_L2I_STEER_REDUCTION)
+                .setWheelDiameter(MK4_L1I_WHEEL_DIAMETER)
+                .setDriveReduction(MK4_L1I_DRIVE_REDUCTION)
+                .setSteerReduction(MK4_L1I_STEER_REDUCTION)
                 .setInvertDrive(true)
                 .setInvertSteerMotor(true)
                 .setSteerMotorSlot0Kp(STEER_MOTOR_P.getValue())
@@ -102,9 +102,9 @@ public class Robot2023 implements RobotConfiguration {
                 .setSteerMotorTalonId(Ports.Drive.BACK_LEFT_STEER)
                 .setCANCoderId(Ports.Drive.BACK_LEFT_CANCODER)
                 .setCANCoderOffsetDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES)
-                .setWheelDiameter(MK4_L2I_WHEEL_DIAMETER)
-                .setDriveReduction(MK4_L2I_DRIVE_REDUCTION)
-                .setSteerReduction(MK4_L2I_STEER_REDUCTION)
+                .setWheelDiameter(MK4_L1I_WHEEL_DIAMETER)
+                .setDriveReduction(MK4_L1I_DRIVE_REDUCTION)
+                .setSteerReduction(MK4_L1I_STEER_REDUCTION)
                 .setInvertDrive(true)
                 .setInvertSteerMotor(true)
                 .setSteerMotorSlot0Kp(STEER_MOTOR_P.getValue())
@@ -122,9 +122,9 @@ public class Robot2023 implements RobotConfiguration {
                 .setSteerMotorTalonId(Ports.Drive.BACK_RIGHT_STEER)
                 .setCANCoderId(Ports.Drive.BACK_RIGHT_CANCODER)
                 .setCANCoderOffsetDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES)
-                .setWheelDiameter(MK4_L2I_WHEEL_DIAMETER)
-                .setDriveReduction(MK4_L2I_DRIVE_REDUCTION)
-                .setSteerReduction(MK4_L2I_STEER_REDUCTION)
+                .setWheelDiameter(MK4_L1I_WHEEL_DIAMETER)
+                .setDriveReduction(MK4_L1I_DRIVE_REDUCTION)
+                .setSteerReduction(MK4_L1I_STEER_REDUCTION)
                 .setInvertDrive(true)
                 .setInvertSteerMotor(true)
                 .setSteerMotorSlot0Kp(STEER_MOTOR_P.getValue())
