@@ -14,6 +14,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
 import com.cyberknights4911.robot.constants.Constants;
 
 /**
@@ -129,6 +130,7 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    robotContainer.testInit();
   }
 
   /** This function is called periodically during test mode. */
