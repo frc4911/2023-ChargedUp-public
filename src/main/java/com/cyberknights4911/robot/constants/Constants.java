@@ -124,7 +124,7 @@ public class Constants {
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_WRIST =
             new DoublePreference("COLLECT_SUBSTATION_FRONT_WRIST", 223);
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_SHOULDER =
-            new DoublePreference("COLLECT_SUBSTATION_FRONT_SHOULDER", 102);
+            new DoublePreference("COLLECT_SUBSTATION_FRONT_SHOULDER", 101);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_WRIST =
             new DoublePreference("COLLECT_FLOOR_FRONT_CONE_WRIST", 256);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_SHOULDER =
