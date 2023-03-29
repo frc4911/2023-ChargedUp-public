@@ -1,7 +1,5 @@
 package com.cyberknights4911.robot.commands;
 
-import java.util.function.Consumer;
-
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
@@ -15,17 +13,14 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
     private final ArmSubsystem armSubsystem;
     private final ArmPositions desiredPosition;
-    private final boolean shouldEnd;
 
     private boolean shouldTuckWrist;
     private boolean isWristTucked;
-    private boolean isInFinalPosition;
     private double safePosition;
 
-    private MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition, boolean shouldEnd) {
+    private MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
         this.armSubsystem = armSubsystem;
         this.desiredPosition = desiredPosition;
-        this.shouldEnd = shouldEnd;
 
         addRequirements(armSubsystem);
     }
@@ -36,7 +31,6 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
         shouldTuckWrist = false;
         isWristTucked = false;
-        isInFinalPosition = false;
         safePosition = 0;
 
         double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
@@ -95,9 +89,6 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             // No need to keep sending the moveWrist call.
             isWristTucked = true;
         }
-
-        // TODO check arm position 
-        // isInFinalPosition = ???
     }
 
     @Override
@@ -105,23 +96,31 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         armSubsystem.setBrakeMode();
     }
     
-    @Override
-    public boolean isFinished() {
-        return shouldEnd && isInFinalPosition;
+    /**
+     * Creates a command that terminates when the arm movement is complete. This is useful for
+     * building command sequences that need to wait for the arm to reach a requested postion since
+     * arm commands never actually finish themselves.
+     */
+    public CommandBase getMovementFinishedCommand() {
+        // Use proxy to defer 
+        return new ProxyCommand(() -> {
+            return new CommandBase() {
+
+                @Override
+                public boolean isFinished() {
+                    return MoveArmMotionMagicCommand.this.isFinished()
+                        || MoveArmMotionMagicCommand.this.isScheduled()
+                        && armSubsystem.isCurrentMotionFinished();
+                }
+            };
+        });
     }
 
     /**
      * Creates a new command for moving the arm.
      */
     public static MoveArmMotionMagicCommand create(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        return create(armSubsystem, desiredPosition, false);
-    }
-
-    /**
-     * Creates a new command for moving the arm.
-     */
-    public static MoveArmMotionMagicCommand create(ArmSubsystem armSubsystem, ArmPositions desiredPosition, boolean shouldEnd) {
-        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, shouldEnd);
+        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition);
     }
 
     public static void setupTestMode(ArmSubsystem armSubsystem) {
@@ -152,7 +151,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         ProxyCommand pc;
 
         CommandBase stowAndRerun(ArmSubsystem armSubsystem) {
-            return create(armSubsystem, ArmPositions.STOWED)
+            return create(armSubsystem, ArmPositions.STOWED);
         }
 
     }

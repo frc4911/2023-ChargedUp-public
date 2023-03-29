@@ -191,4 +191,10 @@ public final class ArmIOReal implements ArmIO {
     public void setShoulderOutput(double output) {
         shoulderMotor1.set(ControlMode.PercentOutput, output);
     }
+
+    @Override
+    public boolean isCurrentMotionFinished() {
+        return shoulderMotor1.isMotionProfileFinished() && wristMotor.isMotionProfileFinished();
+    }
+    
 }
