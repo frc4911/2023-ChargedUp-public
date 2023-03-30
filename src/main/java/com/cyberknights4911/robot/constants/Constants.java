@@ -42,11 +42,11 @@ public class Constants {
     // These settings are for an inverted Mk4 L2. The steering reduction is
     // different:
     // (14.0/50.0) verses (15.0 / 32.0) on a standard Mk4_L2.
-    public static final double MK4_L1_IWHEEL_DIAMETER = 0.10033;
-    public static final double MK4_L1_IDRIVE_REDUCTION = (14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0);
-    public static final boolean MK4_L1_IDRIVE_INVERTED = true;
-    public static final double MK4_L1_ISTEER_REDUCTION = (14.0 / 50.0) * (10.0 / 60.0);
-    public static final boolean MK4_L1_ISTEER_INVERTED = true;
+    public static final double MK4_L1I_WHEEL_DIAMETER = 0.10033;
+    public static final double MK4_L1I_DRIVE_REDUCTION = (14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0);
+    public static final boolean MK4_L1I_DRIVE_INVERTED = true;
+    public static final double MK4_L1I_STEER_REDUCTION = (14.0 / 50.0) * (10.0 / 60.0);
+    public static final boolean MK4_L1I_STEER_INVERTED = true;
 
     public static final double MK4_L2I_WHEEL_DIAMETER = 0.10033;
     public static final double MK4_L2I_DRIVE_REDUCTION = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
@@ -132,7 +132,7 @@ public class Constants {
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_SHOULDER =
             new DoublePreference("COLLECT_SUBSTATION_FRONT_SHOULDER", 101);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_WRIST =
-            new DoublePreference("COLLECT_FLOOR_FRONT_CONE_WRIST", 256);
+            new DoublePreference("COLLECT_FLOOR_FRONT_CONE_WRIST", 265);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CONE_SHOULDER =
             new DoublePreference("COLLECT_FLOOR_FRONT_CONE_SHOULDER", 38);
         public static final DoublePreference COLLECT_FLOOR_FRONT_CUBE_WRIST =
