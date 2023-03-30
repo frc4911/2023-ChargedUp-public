@@ -39,6 +39,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         safePosition = 0;
 
         double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
+        double desiredWristPosition = desiredPosition.wristPosition.getValue();
         
         switch (desiredPosition) {
             case STOWED:
@@ -50,6 +51,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
                 if (currentArmPosition > 180) {
                     this.shouldTuckWrist = true;
                     this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_FRONT.getValue();
+                    desiredWristPosition = Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue();
                 }
                 break;
             case SCORE_L3:
@@ -57,6 +59,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
                 if (currentArmPosition < 180) {
                     this.shouldTuckWrist = true;
                     this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_TOP.getValue();
+                    desiredWristPosition = Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue();
                 } else if (currentArmPosition > 270) {
                     this.shouldTuckWrist = true;
                     this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_MIDDLE.getValue();
@@ -75,19 +78,8 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
                 break;
         }
 
-        // If this is a tucking command, move to the tuck position first
-        if (shouldTuckWrist) {
-            if (desiredPosition == ArmPositions.SCORE_L3 || desiredPosition == ArmPositions.COLLECT_SUBSTATION_BACK || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CUBE || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CONE) {
-                
-                armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue());
-            } else {
-                armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue());
-            }
-        } else {
-            armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
-        }
-        // Always begin moving the shoulder immediately
         armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
+        armSubsystem.moveWrist(desiredWristPosition);
 
         listener.onInitialize(this);
     }
