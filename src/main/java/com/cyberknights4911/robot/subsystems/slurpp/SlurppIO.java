@@ -20,4 +20,7 @@ public interface SlurppIO {
 
     /** Stop the motor. */
     public default void stop() {}
+
+    /** Hold current position. */
+    public default void holdCurrentPosition() {};
 }
