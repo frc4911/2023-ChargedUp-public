@@ -1,6 +1,7 @@
 package com.cyberknights4911.robot.subsystems.slurpp;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.cyberknights4911.robot.constants.Constants;
@@ -15,12 +16,16 @@ public final class SlurppIOReal implements SlurppIO {
     
     private final TalonFX motor;
 
+    private double lastStoppedPosition = 0;
+
     public SlurppIOReal() {
         motor = TalonFXFactory.createTalon(Ports.Slurpp.MOTOR, Constants.CANIVORE_NAME);
         motor.setInverted(false);
-        motor.configStatorCurrentLimit(Constants.SLURPP_STATOR_LIMIT);
-        motor.configSupplyCurrentLimit(Constants.SLURPP_SUPPLY_LIMIT);
-
+        motor.configStatorCurrentLimit(Constants.SLURPP_STATOR_LIMIT, Constants.LONG_CAN_TIMEOUTS_MS);
+        motor.configSupplyCurrentLimit(Constants.SLURPP_SUPPLY_LIMIT, Constants.LONG_CAN_TIMEOUTS_MS);
+        motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0 , Constants.LONG_CAN_TIMEOUTS_MS);
+        
+        lastStoppedPosition = motor.getSelectedSensorPosition();
     }
 
     @Override
@@ -43,5 +48,11 @@ public final class SlurppIOReal implements SlurppIO {
     public void stop() {
         motor.set(ControlMode.PercentOutput, 0.0);
         motor.setNeutralMode(NeutralMode.Brake);
+        lastStoppedPosition = motor.getSelectedSensorPosition();
+    }
+
+    @Override
+    public void holdCurrentPosition() {
+        motor.set(ControlMode.Position, lastStoppedPosition);
     }
 }

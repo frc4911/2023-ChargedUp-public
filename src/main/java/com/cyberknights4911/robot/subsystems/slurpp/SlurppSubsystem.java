@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public final class SlurppSubsystem extends SubsystemBase {
 
-    private final SlurppIO splurppIO;
+    private final SlurppIO slurppIO;
     private final SlurppIOInputsAutoLogged inputs = new SlurppIOInputsAutoLogged();
 
     public SlurppSubsystem(SlurppIO splurppIO) {
         super();
-        this.splurppIO = splurppIO;
+        this.slurppIO = splurppIO;
     }
 
     @Override
@@ -26,10 +26,14 @@ public final class SlurppSubsystem extends SubsystemBase {
 
     /** "Slurpp" up a game piece. */
     public void slurpp(double percentOutput) {
-        splurppIO.setPercentOutput(percentOutput);
+        slurppIO.setPercentOutput(percentOutput);
     }
     
     public void stop() {
-        splurppIO.stop();
+        slurppIO.stop();
+    }
+
+    public void holdCurrentPosition() {
+        slurppIO.holdCurrentPosition();
     }
 }
