@@ -77,13 +77,10 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
         // If this is a tucking command, move to the tuck position first
         if (shouldTuckWrist) {
-
-            if(desiredPosition == ArmPositions.SCORE_L3 || desiredPosition == ArmPositions.COLLECT_SUBSTATION_BACK || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CUBE || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CONE) {
+            if (desiredPosition == ArmPositions.SCORE_L3 || desiredPosition == ArmPositions.COLLECT_SUBSTATION_BACK || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CUBE || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CONE) {
                 
                 armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue());
-
             } else {
-
                 armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue());
             }
         } else {
@@ -124,15 +121,18 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         // Use proxy to defer 
         return new ProxyCommand(() -> {
             return new CommandBase() {
-
                 @Override
                 public boolean isFinished() {
-                    return MoveArmMotionMagicCommand.this.isFinished()
-                        || MoveArmMotionMagicCommand.this.isScheduled()
-                        && armSubsystem.isCurrentMotionFinished();
+                    return armSubsystem.isCurrentMotionFinished();
                 }
             };
         });
+    }
+
+    /** Used in tuning mode to move to the desired positions after modifying them. */
+    private void tuningModeAdjust() {
+        armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
+        armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
     }
 
     /**
@@ -140,39 +140,11 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
      */
     public static MoveArmMotionMagicCommand create(
             ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, (command) -> {});
-    }
-    /**
-     * Creates a new command for moving the arm.
-     */
-    private static MoveArmMotionMagicCommand create(
-            ArmSubsystem armSubsystem, ArmPositions desiredPosition, InitializedListener listener) {
-        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, listener);
+        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, LISTENER);
     }
 
-    public static void setupTestMode(ArmSubsystem armSubsystem) {
-        TestMode testMode = new TestMode();
-        ShuffleboardTab tab = Shuffleboard.getTab("ARM POSITIONS");
-
-        tab.add("STOWED", create(armSubsystem, ArmPositions.STOWED, testMode));
-        tab.add("SCORE_L2", create(armSubsystem, ArmPositions.SCORE_L2, testMode));
-        tab.add("COLLECT_SUBSTATION_FRONT", create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_FRONT, testMode));
-        tab.add("COLLECT_FLOOR_FRONT_CONE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CONE, testMode));
-        tab.add("COLLECT_FLOOR_FRONT_CUBE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CUBE, testMode));
-        tab.add("SCORE_L3", create(armSubsystem, ArmPositions.SCORE_L3, testMode));
-        tab.add("COLLECT_SUBSTATION_BACK", create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_BACK, testMode));
-        tab.add("COLLECT_FLOOR_BACK_CUBE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CUBE, testMode));
-        tab.add("COLLECT_FLOOR_BACK_CONE", create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE, testMode));
-
-        tab.add("SHOULDER+", testMode.increaseShoulder());
-        tab.add("SHOULDER-", testMode.decreaseShoulder());
-        tab.add("WRIST+", testMode.increaseWrist());
-        tab.add("WRIST-", testMode.decreaseWrist());
-
-        tab.add("RE-RUN", testMode.rerun());
-
-        tab.add("STOW & RE-RUN", testMode.stowAndRerun(armSubsystem));
-    }
+    private static final InitializedListener LISTENER = Constants.Arm.IS_TUNING_ENABLED ?
+       new TestMode() : (command) -> {};
 
     private interface InitializedListener {
         void onInitialize(MoveArmMotionMagicCommand armCommand);
@@ -181,52 +153,51 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     private static class TestMode implements InitializedListener {
         private MoveArmMotionMagicCommand currentCommand = null;
 
+        private TestMode() {
+            ShuffleboardTab tab = Shuffleboard.getTab("ARM TUNING");
+            tab.add("SHOULDER+", increaseShoulder());
+            tab.add("SHOULDER-", decreaseShoulder());
+            tab.add("WRIST+", increaseWrist());
+            tab.add("WRIST-", decreaseWrist());
+        }
+
         CommandBase increaseShoulder() {
             return new ProxyCommand(
-                () -> increase(currentCommand.desiredPosition.shoulderPosition));
+                () -> increase(currentCommand, currentCommand.desiredPosition.shoulderPosition));
         }
 
         CommandBase decreaseShoulder() {
             return new ProxyCommand(
-                () -> decrease(currentCommand.desiredPosition.shoulderPosition));
+                () -> decrease(currentCommand, currentCommand.desiredPosition.shoulderPosition));
         }
 
         CommandBase increaseWrist() {
             return new ProxyCommand(
-                () -> increase(currentCommand.desiredPosition.wristPosition));
+                () -> increase(currentCommand, currentCommand.desiredPosition.wristPosition));
         }
 
         CommandBase decreaseWrist() {
             return new ProxyCommand(
-                () -> decrease(currentCommand.desiredPosition.wristPosition));
+                () -> decrease(currentCommand, currentCommand.desiredPosition.wristPosition));
         }
 
-        private CommandBase increase(DoublePreference doublePreference) {
+        private CommandBase increase(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() + 1);
+                currentCommand.tuningModeAdjust();
             });
         }
 
-        private CommandBase decrease(DoublePreference doublePreference) {
+        private CommandBase decrease(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() - 1);
+                currentCommand.tuningModeAdjust();
             });
-        }
-
-        CommandBase rerun() {
-            return new ProxyCommand(() -> currentCommand);
-        }
-
-        CommandBase stowAndRerun(ArmSubsystem armSubsystem) {
-            return create(armSubsystem, ArmPositions.STOWED)
-                .getMovementFinishedCommand()
-                .andThen(currentCommand);
         }
 
         @Override
         public void onInitialize(MoveArmMotionMagicCommand armCommand) {
             currentCommand = armCommand;
-            
         }
     }
 }

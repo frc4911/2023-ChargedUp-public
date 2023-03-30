@@ -99,6 +99,8 @@ public class Constants {
     public static class Arm {
         private Arm() {}
 
+        public static final boolean IS_TUNING_ENABLED = true;
+
         public static BooleanPreference SHOULD_USE_GRAVITY_FEED_FORWARD =
             new BooleanPreference("Should use shoulder gravity feed forward", true);
             
