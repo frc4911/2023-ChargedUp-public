@@ -60,4 +60,6 @@ public interface ArmIO {
     public default void setWristPosition(double position) {}
 
     public default void adjustError() {}
+
+    public default boolean isCurrentMotionFinished() { return false; }
 }

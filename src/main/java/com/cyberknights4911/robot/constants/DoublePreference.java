@@ -16,4 +16,8 @@ public final class DoublePreference {
     public double getValue() {
         return Preferences.getDouble(key, defaultValue);
     }
+
+    public void setValue(double value) {
+        Preferences.setDouble(key, value);
+    }
 }

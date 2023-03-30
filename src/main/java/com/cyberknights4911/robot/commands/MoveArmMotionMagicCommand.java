@@ -1,25 +1,31 @@
 package com.cyberknights4911.robot.commands;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.constants.DoublePreference;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
 public final class MoveArmMotionMagicCommand extends CommandBase {
 
     private final ArmSubsystem armSubsystem;
     private final ArmPositions desiredPosition;
+    private final InitializedListener listener;
 
     private boolean shouldTuckWrist;
     private boolean isWristTucked;
     private double safePosition;
 
-    private MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
+    private MoveArmMotionMagicCommand(
+            ArmSubsystem armSubsystem, ArmPositions desiredPosition, InitializedListener listener) {
         this.armSubsystem = armSubsystem;
         this.desiredPosition = desiredPosition;
+        this.listener = listener;
 
         addRequirements(armSubsystem);
     }
@@ -33,6 +39,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         safePosition = 0;
 
         double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
+        double desiredWristPosition = desiredPosition.wristPosition.getValue();
         
         switch (desiredPosition) {
             case STOWED:
@@ -44,6 +51,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
                 if (currentArmPosition > 180) {
                     this.shouldTuckWrist = true;
                     this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_FRONT.getValue();
+                    desiredWristPosition = Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue();
                 }
                 break;
             case SCORE_L3:
@@ -51,6 +59,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
                 if (currentArmPosition < 180) {
                     this.shouldTuckWrist = true;
                     this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_TOP.getValue();
+                    desiredWristPosition = Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue();
                 } else if (currentArmPosition > 270) {
                     this.shouldTuckWrist = true;
                     this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_MIDDLE.getValue();
@@ -69,23 +78,10 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
                 break;
         }
 
-        // If this is a tucking command, move to the tuck position first
-        if (shouldTuckWrist) {
+        armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
+        armSubsystem.moveWrist(desiredWristPosition);
 
-            if(desiredPosition == ArmPositions.SCORE_L3 || desiredPosition == ArmPositions.COLLECT_SUBSTATION_BACK || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CUBE || desiredPosition == ArmPositions.COLLECT_FLOOR_BACK_CONE) {
-                
-                armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue());
-
-            } else {
-
-                armSubsystem.moveWrist(Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue());
-            }
-        } else {
-            
-            armSubsystem.moveWrist(desiredPosition.wristPosition);
-        }
-        // Always begin moving the shoulder immediately
-        armSubsystem.moveShoulder(desiredPosition.shoulderPosition);
+        listener.onInitialize(this);
     }
 
     @Override
@@ -93,7 +89,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         double currentShoulderPosition = armSubsystem.getShoulderPositionDegrees();
         // If this is a tucking command, we need to move the wrist AFTER the shoulder is safe
         if (shouldTuckWrist && !isWristTucked && currentShoulderPosition > safePosition) {
-            armSubsystem.moveWrist(desiredPosition.wristPosition);
+            armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
             // No need to keep sending the moveWrist call.
             isWristTucked = true;
         }
@@ -103,19 +99,97 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     public void end(boolean interrupted) {
         armSubsystem.setBrakeMode();
     }
-    
-    /**
-     * Creates a new command for moving the arm. The command defers creation of the actual
-     * command until it is actually needed.
-     */
-    public static Command create(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        // TODO: check whether the proxying is even necessary (we check position on initialization)
-        ProxyCommand command = new ProxyCommand(() -> createImmediate(armSubsystem, desiredPosition));
-        command.addRequirements(armSubsystem);
-        return command;
+
+    public ArmPositions getDesiredPosition() {
+        return desiredPosition;
     }
 
-    private static Command createImmediate(ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition);
+    /**
+     * Creates a command that terminates when the arm movement is complete. This is useful for
+     * building command sequences that need to wait for the arm to reach a requested postion since
+     * arm commands never actually finish themselves.
+     */
+    public CommandBase getMovementFinishedCommand() {
+        // Use proxy to defer 
+        return new ProxyCommand(() -> {
+            return new CommandBase() {
+                @Override
+                public boolean isFinished() {
+                    return armSubsystem.isCurrentMotionFinished();
+                }
+            };
+        });
+    }
+
+    /** Used in tuning mode to move to the desired positions after modifying them. */
+    private void tuningModeAdjust() {
+        armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
+        armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
+    }
+
+    /**
+     * Creates a new command for moving the arm.
+     */
+    public static MoveArmMotionMagicCommand create(
+            ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
+        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, LISTENER);
+    }
+
+    private static final InitializedListener LISTENER = Constants.Arm.IS_TUNING_ENABLED ?
+       new TestMode() : (command) -> {};
+
+    private interface InitializedListener {
+        void onInitialize(MoveArmMotionMagicCommand armCommand);
+    }
+
+    private static class TestMode implements InitializedListener {
+        private MoveArmMotionMagicCommand currentCommand = null;
+
+        private TestMode() {
+            ShuffleboardTab tab = Shuffleboard.getTab("ARM TUNING");
+            tab.add("SHOULDER+", increaseShoulder());
+            tab.add("SHOULDER-", decreaseShoulder());
+            tab.add("WRIST+", increaseWrist());
+            tab.add("WRIST-", decreaseWrist());
+        }
+
+        CommandBase increaseShoulder() {
+            return new ProxyCommand(
+                () -> increase(currentCommand, currentCommand.desiredPosition.shoulderPosition));
+        }
+
+        CommandBase decreaseShoulder() {
+            return new ProxyCommand(
+                () -> decrease(currentCommand, currentCommand.desiredPosition.shoulderPosition));
+        }
+
+        CommandBase increaseWrist() {
+            return new ProxyCommand(
+                () -> increase(currentCommand, currentCommand.desiredPosition.wristPosition));
+        }
+
+        CommandBase decreaseWrist() {
+            return new ProxyCommand(
+                () -> decrease(currentCommand, currentCommand.desiredPosition.wristPosition));
+        }
+
+        private CommandBase increase(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
+            return Commands.runOnce(() -> {
+                doublePreference.setValue(doublePreference.getValue() + 1);
+                currentCommand.tuningModeAdjust();
+            });
+        }
+
+        private CommandBase decrease(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
+            return Commands.runOnce(() -> {
+                doublePreference.setValue(doublePreference.getValue() - 1);
+                currentCommand.tuningModeAdjust();
+            });
+        }
+
+        @Override
+        public void onInitialize(MoveArmMotionMagicCommand armCommand) {
+            currentCommand = armCommand;
+        }
     }
 }

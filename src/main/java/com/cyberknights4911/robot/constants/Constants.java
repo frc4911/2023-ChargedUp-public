@@ -99,6 +99,8 @@ public class Constants {
     public static class Arm {
         private Arm() {}
 
+        public static final boolean IS_TUNING_ENABLED = false;
+
         public static BooleanPreference SHOULD_USE_GRAVITY_FEED_FORWARD =
             new BooleanPreference("Should use shoulder gravity feed forward", true);
             
@@ -124,9 +126,9 @@ public class Constants {
         public static final DoublePreference COLLECT_SINGLE_SUBSTATION_FRONT_SHOULDER =
             new DoublePreference("COLLECT_SINGLE_SUBSTATION_FRONT_SHOULDER", 103);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_WRIST =
-            new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 151);
+            new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 155);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_SHOULDER =
-            new DoublePreference("COLLECT_SUBSTATION_BACK_SHOULDER", 223);
+            new DoublePreference("COLLECT_SUBSTATION_BACK_SHOULDER", 258);
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_WRIST =
             new DoublePreference("COLLECT_SUBSTATION_FRONT_WRIST", 223);
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_SHOULDER =
