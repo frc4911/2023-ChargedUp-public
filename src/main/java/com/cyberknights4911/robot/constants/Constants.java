@@ -99,6 +99,8 @@ public class Constants {
     public static class Arm {
         private Arm() {}
 
+        public static final boolean IS_TUNING_ENABLED = false;
+
         public static BooleanPreference SHOULD_USE_GRAVITY_FEED_FORWARD =
             new BooleanPreference("Should use shoulder gravity feed forward", true);
             
@@ -124,9 +126,9 @@ public class Constants {
         public static final DoublePreference COLLECT_SINGLE_SUBSTATION_FRONT_SHOULDER =
             new DoublePreference("COLLECT_SINGLE_SUBSTATION_FRONT_SHOULDER", 103);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_WRIST =
-            new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 151);
+            new DoublePreference("COLLECT_SUBSTATION_BACK_WRIST", 155);
         public static final DoublePreference COLLECT_SUBSTATION_BACK_SHOULDER =
-            new DoublePreference("COLLECT_SUBSTATION_BACK_SHOULDER", 223);
+            new DoublePreference("COLLECT_SUBSTATION_BACK_SHOULDER", 258);
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_WRIST =
             new DoublePreference("COLLECT_SUBSTATION_FRONT_WRIST", 223);
         public static final DoublePreference COLLECT_SUBSTATION_FRONT_SHOULDER =
@@ -159,7 +161,7 @@ public class Constants {
         
         // PID values
         public static final DoublePreference SHOULDER_P = 
-            new DoublePreference("SHOULDER_P", 1);
+            new DoublePreference("SHOULDER_P", .7);
         public static final DoublePreference SHOULDER_I = 
             new DoublePreference("SHOULDER_I", 0.0);
         public static final DoublePreference SHOULDER_D = 
@@ -170,7 +172,7 @@ public class Constants {
             new DoublePreference("SHOULDER_G", 0.02737);
 
         public static final DoublePreference WRIST_P = 
-            new DoublePreference("WRIST_P", 0.25);
+            new DoublePreference("WRIST_P", 0.4);
         public static final DoublePreference WRIST_I = 
             new DoublePreference("WRIST_I", 0.0);
         public static final DoublePreference WRIST_D = 
@@ -197,14 +199,14 @@ public class Constants {
         public static final double WRIST_CANCODER_OFFSET = 360 - 116.3;
 
         public static final DoublePreference WRIST_VELOCITY_MOTION_MAGIC = 
-            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 8000);
+            new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 10000);
         public static final DoublePreference WRIST_ACCELERATION_MOTION_MAGIC = 
-            new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 8000);
+            new DoublePreference("WRIST_ACCELERATION_MOTION_MAGIC", 10000);
 
         public static final DoublePreference SHOULDER_VELOCITY_MOTION_MAGIC = 
-            new DoublePreference("SHOULDER_VELOCITY_MOTION_MAGIC", 10500); 
+            new DoublePreference("SHOULDER_VELOCITY_MOTION_MAGIC", 18000);
         public static final DoublePreference SHOULDER_ACCELERATION_MOTION_MAGIC = 
-            new DoublePreference("SHOULDER_ACCELERATION_MOTION_MAGIC", 10500);
+            new DoublePreference("SHOULDER_ACCELERATION_MOTION_MAGIC", 18000);
         
         public static final SupplyCurrentLimitConfiguration WRIST_SUPPLY_LIMIT =
             new SupplyCurrentLimitConfiguration(true, 40.0, 0, 0);
