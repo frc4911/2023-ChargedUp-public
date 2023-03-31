@@ -61,5 +61,7 @@ public interface ArmIO {
 
     public default void adjustError() {}
 
-    public default boolean isCurrentMotionFinished() { return false; }
+    public default double getShoulderTrajectoryPosition() { return 0.0; }
+
+    public default double getWristTrajectoryPosition() { return 0.0; }
 }

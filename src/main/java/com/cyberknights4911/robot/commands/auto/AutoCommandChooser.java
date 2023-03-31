@@ -9,11 +9,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
-import com.cyberknights4911.robot.commands.MoveHoodCommand;
+import com.cyberknights4911.robot.commands.SlurppCommand;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
-import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem.HoodPositions;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
@@ -23,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -44,13 +44,10 @@ public final class AutoCommandChooser {
         loggedDashboardChooser = new LoggedDashboardChooser<Command>("Auto Routine");
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
-
         translationConstants = new PIDConstants(4.3, 0, 0.0);
 
         // PID constants to correct for rotation error (used to create the rotation controller)
         rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
-
-
 
         poseSupplier = subsystems.getSwerveSubsystem()::getPose;
         resetPose = subsystems.getSwerveSubsystem()::setPose;
@@ -65,7 +62,7 @@ public final class AutoCommandChooser {
         loggedDashboardChooser.addOption("Score And Leave", getScoreAndLeaveCommand());
         loggedDashboardChooser.addOption("2 Substation", getScore2SubstationCommand());
         loggedDashboardChooser.addOption("2 Guardrail", getScore2GuardrailCommand());
-        loggedDashboardChooser.addOption("3 Substation", getScore3SubstationCommand());
+        loggedDashboardChooser.addOption("3 Substation", getScore3SubstationCollect());
         loggedDashboardChooser.addOption("3 Guardrail", getScore3GuardrailCommand());
 
         loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
@@ -196,14 +193,38 @@ public final class AutoCommandChooser {
         ).andThen(autoCommand);
     }
 
-    private Command getScore3SubstationCommand() {
+    private Command getScore3SubstationCollect() {
         HashMap<String, Command> eventMap = new HashMap<>();
+
+        Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3)
+            .andThen(Commands.waitSeconds(.5))
+            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
+            .withTimeout(.5));
+        Command stowOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
+        Command collectCone = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
+            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), true))
+            .withTimeout(.5);
+        Command stowTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
+        Command moveArmL2 = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2);
+        Command scoreConeTwo = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
+            .withTimeout(.5);
+        Command stowThree = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
+        Command autoBalance = new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem());
+
+        eventMap.put("scoreConeOne", scoreConeOne);
+        eventMap.put("stowOne", stowOne);
+        eventMap.put("collectCone", collectCone);
+        eventMap.put("stowTwo", stowTwo);
+        eventMap.put("moveArmL2", moveArmL2);
+        eventMap.put("scoreConeTwo", scoreConeTwo);
+        eventMap.put("stowThree", stowThree);
+        eventMap.put("autoBalance", autoBalance);
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("Score3SubstationCollect", new PathConstraints(3, 1))
         );
 
         return new InstantCommand(

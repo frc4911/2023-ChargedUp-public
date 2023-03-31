@@ -60,8 +60,12 @@ public final class ArmSubsystem extends SubsystemBase {
         return armIO.getShoulderEncoderDegrees();
     }
 
-    public boolean isCurrentMotionFinished() {
-        return armIO.isCurrentMotionFinished();
+    public double getShoulderTrajectoryPosition() {
+        return armIO.getShoulderTrajectoryPosition();
+    }
+
+    public double getWristTrajectoryPosition() {
+        return armIO.getWristTrajectoryPosition();
     }
 
     public static double convertDegreesToCtreTicks(double degrees) {

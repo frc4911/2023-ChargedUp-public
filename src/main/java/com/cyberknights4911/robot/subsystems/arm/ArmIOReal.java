@@ -204,8 +204,13 @@ public final class ArmIOReal implements ArmIO {
     }
 
     @Override
-    public boolean isCurrentMotionFinished() {
-        return shoulderMotor1.isMotionProfileFinished() && wristMotor.isMotionProfileFinished();
+    public double getShoulderTrajectoryPosition() {
+        return shoulderMotor1.getActiveTrajectoryPosition();
+    }
+
+    @Override
+    public double getWristTrajectoryPosition() {
+        return wristMotor.getActiveTrajectoryPosition();
     }
     
 }
