@@ -44,7 +44,7 @@ public final class AutoCommandChooser {
         loggedDashboardChooser = new LoggedDashboardChooser<Command>("Auto Routine");
         
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        translationConstants = new PIDConstants(4.3, 0, 0.0);
+        translationConstants = new PIDConstants(4.3, 0, 0);
 
         // PID constants to correct for rotation error (used to create the rotation controller)
         rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
@@ -78,7 +78,7 @@ public final class AutoCommandChooser {
         loggedDashboardChooser.addOption("Score High and Leave Substation Side", getScoreLeaveSubstationCommand());
         loggedDashboardChooser.addOption("Score 2 Substation Side", getScore2SubstationCommand());
         loggedDashboardChooser.addOption("Score 2 Guard Side", getScore2GuardrailCommand());
-        loggedDashboardChooser.addOption("Score 3 Substation Side", getScore3SubstationCommand());
+        loggedDashboardChooser.addOption("Score 3 Substation Side", getScore3SubstationCollect());
         loggedDashboardChooser.addOption("Score 3 Guard Side", getScore3GuardrailCommand());
 
         loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
@@ -129,7 +129,12 @@ public final class AutoCommandChooser {
         HashMap<String, Command> eventMap = new HashMap<>();
         
 
-        Command autoCommand = null;
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            subsystems.getSwerveSubsystem()
+        ).fullAuto(
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(1, 3)) //TODO: Make do nothing work
+        );
 
         return new InstantCommand(
             () -> subsystems.getSwerveSubsystem().initForPathFollowing()
@@ -148,7 +153,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Score High", new PathConstraints(4, 2))
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(4, 2))
         );
 
         return new InstantCommand(
@@ -166,7 +171,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Score Low", new PathConstraints(4, 2))
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(4, 2))
         );
 
         return new InstantCommand(
@@ -228,8 +233,8 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("ScoreLeaveGuard", new PathConstraints(1, 3))
-        );
+            PathPlanner.loadPathGroup("ScoreAndLeave", new PathConstraints(1, 3))
+        );//TODO: make the score and leaves on each side different to minimize interference
 
         return new InstantCommand(
             () -> subsystems.getSwerveSubsystem().initForPathFollowing()
@@ -248,7 +253,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("ScoreLeaveSubstation", new PathConstraints(1, 3))
+            PathPlanner.loadPathGroup("ScoreAndLeave", new PathConstraints(1, 3))
         );
 
         return new InstantCommand(
@@ -307,8 +312,8 @@ public final class AutoCommandChooser {
 
         Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3)
             .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
-            .withTimeout(.5));
-        Command stowOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
+            .withTimeout(3));
+        Command stowOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE);
         Command collectCone = new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), true)
             .withTimeout(.5);
         Command stowTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);

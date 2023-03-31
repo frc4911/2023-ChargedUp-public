@@ -12,6 +12,7 @@ public class SlurppCommand extends CommandBase {
     private final double mPercentOutput;
     private boolean mCounterRelease; //This will keep the motor fighting the natural tendency for the object to fall out
     private double mPercentOutput2;
+    
     public SlurppCommand(SlurppSubsystem slurppSubsystem, double percentOutput, ArmSubsystem armSubsystem, boolean counterRelease) {
 
         mCounterRelease = counterRelease;
