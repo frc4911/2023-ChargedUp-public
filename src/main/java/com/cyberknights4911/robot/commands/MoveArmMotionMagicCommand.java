@@ -96,29 +96,12 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        armSubsystem.setBrakeMode();
+    public boolean isFinished() {
+        return armSubsystem.isCurrentMotionFinished();
     }
 
     public ArmPositions getDesiredPosition() {
         return desiredPosition;
-    }
-
-    /**
-     * Creates a command that terminates when the arm movement is complete. This is useful for
-     * building command sequences that need to wait for the arm to reach a requested postion since
-     * arm commands never actually finish themselves.
-     */
-    public CommandBase getMovementFinishedCommand() {
-        // Use proxy to defer 
-        return new ProxyCommand(() -> {
-            return new CommandBase() {
-                @Override
-                public boolean isFinished() {
-                    return armSubsystem.isCurrentMotionFinished();
-                }
-            };
-        });
     }
 
     /** Used in tuning mode to move to the desired positions after modifying them. */
