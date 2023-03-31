@@ -61,6 +61,9 @@ public final class ArmIOReal implements ArmIO {
         shoulderConfiguration1.remoteFilter0 = Constants.Arm.SHOULDER_FILTER_CONFIG;
         shoulderConfiguration1.slot0 = Constants.Arm.SHOULDER_SLOT_CONFIG;
         shoulderConfiguration1.neutralDeadband = Constants.Arm.SHOULDER_NEUTRAL_DEADBAND.getValue();
+
+        shoulderConfigurationFollowers.supplyCurrLimit = Constants.Arm.SHOULDER_SUPPLY_LIMIT;
+        shoulderConfigurationFollowers.statorCurrLimit = Constants.Arm.SHOULDER_STATOR_LIMIT;
         
         shoulderMotor1.configAllSettings(shoulderConfiguration1);
         shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.PRIMARY_PID_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
@@ -69,23 +72,19 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor1.configMotionCruiseVelocity(Constants.Arm.SHOULDER_VELOCITY_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.configMotionAcceleration(Constants.Arm.SHOULDER_ACCELERATION_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
 
-        shoulderMotor2.configFactoryDefault();
-        shoulderMotor3.configFactoryDefault();
+        shoulderMotor2.configAllSettings(shoulderConfigurationFollowers);
+        shoulderMotor3.configAllSettings(shoulderConfigurationFollowers);
         shoulderMotor2.follow(shoulderMotor1);
         shoulderMotor3.follow(shoulderMotor1);
         shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
-        shoulderMotor2.configStatorCurrentLimit(Constants.Arm.SHOULDER_STATOR_LIMIT);
-        shoulderMotor3.configStatorCurrentLimit(Constants.Arm.SHOULDER_STATOR_LIMIT);
-        shoulderMotor2.configSupplyCurrentLimit(Constants.Arm.SHOULDER_SUPPLY_LIMIT);
-        shoulderMotor3.configSupplyCurrentLimit(Constants.Arm.SHOULDER_SUPPLY_LIMIT);
+        shoulderMotor2.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor3.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100, Constants.LONG_CAN_TIMEOUTS_MS);
 
         shoulderMotor1.setNeutralMode(NeutralMode.Coast);
         shoulderMotor2.setNeutralMode(NeutralMode.Coast);
         shoulderMotor3.setNeutralMode(NeutralMode.Coast);
-
-        
 
         //WRIST CONFIGURATION
         wristMotor.configRemoteFeedbackFilter(
