@@ -37,11 +37,11 @@ public class RobotContainer {
       MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED)
     );
 
-    subsystems.getSlurppSubsystem().setDefaultCommand(
-      Commands.runOnce(() -> {
-        subsystems.getSlurppSubsystem().holdCurrentPosition();
-      }, subsystems.getSlurppSubsystem())
-    );
+    // subsystems.getSlurppSubsystem().setDefaultCommand(
+    //   Commands.runOnce(() -> {
+    //     subsystems.getSlurppSubsystem().holdCurrentPosition();
+    //   }, subsystems.getSlurppSubsystem())
+    // );
   }
 
   private void configureStickBindinges() {
