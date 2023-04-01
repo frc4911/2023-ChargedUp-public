@@ -322,7 +322,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Score3SubstationCollec", new PathConstraints(3, 1))
+            PathPlanner.loadPathGroup("Score3SubstationCollect", new PathConstraints(3, 1))
         );
 
         return new InstantCommand(
