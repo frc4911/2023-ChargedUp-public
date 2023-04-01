@@ -59,7 +59,9 @@ public interface ArmIO {
     /** Set wrist motor position. */
     public default void setWristPosition(double position) {}
 
-    public default void adjustError() {}
+    public default double offsetWrist() { return 0;}
+
+    public default double offsetShoulder() {return 0;}
 
     public default double getShoulderTrajectoryPosition() { return 0.0; }
 
