@@ -20,8 +20,8 @@
           "scoreConeOne"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "deadline",
-        "waitTime": 3.0
+        "waitBehavior": "after",
+        "waitTime": 0.0
       }
     },
     {
@@ -72,7 +72,7 @@
           "scoreCone2"
         ],
         "executionBehavior": "parallel",
-        "waitBehavior": "deadline",
+        "waitBehavior": "after",
         "waitTime": 0
       }
     },
@@ -103,7 +103,7 @@
   ],
   "markers": [
     {
-      "position": 0.75,
+      "position": 0.65,
       "names": [
         "collectCone"
       ]

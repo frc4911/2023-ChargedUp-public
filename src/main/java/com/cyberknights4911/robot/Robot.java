@@ -4,6 +4,7 @@
 
 package com.cyberknights4911.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -33,6 +34,9 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
+    
+    SmartDashboard.setDefaultBoolean("Reset CANCoder Offset", false);
+
     Logger logger = Logger.getInstance();
 
     // Record metadata
