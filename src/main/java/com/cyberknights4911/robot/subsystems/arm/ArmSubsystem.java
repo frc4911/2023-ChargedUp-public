@@ -51,14 +51,14 @@ public final class ArmSubsystem extends SubsystemBase {
         return true;
     }
 
+    public void resetCANCoders() {
+        armIO.offsetShoulder();
+        armIO.offsetWrist();
+    }
     @Override
     public void periodic() {
         armIO.updateInputs(inputs);
         Logger.getInstance().processInputs("Arm", inputs);
-        if (SmartDashboard.getBoolean("Reset CANCoder Offset", false)) {
-            armIO.offsetShoulder();
-            armIO.offsetWrist();
-        }
     }
 
     public double getShoulderPositionDegrees() {

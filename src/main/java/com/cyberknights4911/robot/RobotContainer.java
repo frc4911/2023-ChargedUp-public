@@ -7,9 +7,11 @@ import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
+import com.cyberknights4911.robot.commands.CANCoderResetCommand;
 import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
 import com.cyberknights4911.robot.commands.SlurppCommand;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -98,6 +100,8 @@ public class RobotContainer {
 
     controllerBinding.triggersFor(ButtonAction.SCORE_L3).onTrue(
       MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3));
+    
+    SmartDashboard.putData("Arm CANCoder Reset", new CANCoderResetCommand(subsystems.getArmSubsystem()));
     
     // Move ONLY safe and tested commands above this line.
     if (true) {
