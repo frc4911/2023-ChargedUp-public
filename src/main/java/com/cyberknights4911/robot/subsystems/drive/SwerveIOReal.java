@@ -3,6 +3,7 @@ package com.cyberknights4911.robot.subsystems.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -55,23 +56,33 @@ public final class SwerveIOReal implements SwerveIO {
         turnMotor.setInverted(swerveConfig.invertSteerMotor);
         turnMotor.configMotionAcceleration(0.9 * swerveConfig.steerTicksPerUnitVelocity * 0.25, Constants.LONG_CAN_TIMEOUTS_MS);
         turnMotor.configMotionCruiseVelocity(0.9 * swerveConfig.steerTicksPerUnitVelocity,Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.configVelocityMeasurementPeriod(swerveConfig.STEER_MOTOR_VELOCITY_MEASUREMENT_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.configVelocityMeasurementWindow(swerveConfig.STEER_MOTOR_VELOCITY_MEASUREMENT_WINDOW, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.configVelocityMeasurementPeriod(SwerveModuleConfiguration.STEER_MOTOR_VELOCITY_MEASUREMENT_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.configVelocityMeasurementWindow(SwerveModuleConfiguration.STEER_MOTOR_VELOCITY_MEASUREMENT_WINDOW, Constants.LONG_CAN_TIMEOUTS_MS);
         turnMotor.selectProfileSlot(0, 0);
+        
+        turnMotor.configStatorCurrentLimit(
+            new StatorCurrentLimitConfiguration(true, 30.0, 0, 0),
+            Constants.LONG_CAN_TIMEOUTS_MS);
+            turnMotor.configSupplyCurrentLimit(
+            new SupplyCurrentLimitConfiguration(true, 30.0, 0, 0),
+            Constants.LONG_CAN_TIMEOUTS_MS);
 
         // Slot 0 is for normal use (tuned for fx integrated encoder)
         turnMotor.config_kP(0, swerveConfig.steerMotorSlot0Kp, Constants.LONG_CAN_TIMEOUTS_MS);
         turnMotor.config_kI(0, swerveConfig.steerMotorSlot0Ki, Constants.LONG_CAN_TIMEOUTS_MS);
         turnMotor.config_kD(0, swerveConfig.steerMotorSlot0Kd, Constants.LONG_CAN_TIMEOUTS_MS);
         turnMotor.config_kF(0, swerveConfig.steerMotorSlot0Kf, Constants.LONG_CAN_TIMEOUTS_MS);
-        turnMotor.config_IntegralZone(0, swerveConfig.STEER_MOTOR_SLOT_0_I_ZONE, Constants.LONG_CAN_TIMEOUTS_MS);
+        turnMotor.config_IntegralZone(0, SwerveModuleConfiguration.STEER_MOTOR_SLOT_0_I_ZONE, Constants.LONG_CAN_TIMEOUTS_MS);
         
         driveMotor.setInverted(swerveConfig.invertDrive);
         driveMotor.configOpenloopRamp(0.3, Constants.LONG_CAN_TIMEOUTS_MS); // Increase if swerve acceleration is too fast
 
-        FramePeriodSwitch.configStatorCurrentLimitPermanent(
-            driveMotor,
-            new StatorCurrentLimitConfiguration(true, 40, 0, 0));
+        driveMotor.configStatorCurrentLimit(
+            new StatorCurrentLimitConfiguration(true, 40.0, 0, 0),
+            Constants.LONG_CAN_TIMEOUTS_MS);
+        driveMotor.configSupplyCurrentLimit(
+            new SupplyCurrentLimitConfiguration(true, 40.0, 0, 0),
+            Constants.LONG_CAN_TIMEOUTS_MS);
     }
 
     private static void commonMotorConfig(TalonFX motor, String motorName) {

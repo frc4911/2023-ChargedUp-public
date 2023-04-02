@@ -115,7 +115,7 @@ public final class ArmIOReal implements ArmIO {
         CANCoderConfiguration shoulderConfig = new CANCoderConfiguration();
         shoulderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         shoulderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        shoulderConfig.magnetOffsetDegrees = Constants.Arm.SHOULDER_CANCODER_OFFSET;
+        shoulderConfig.magnetOffsetDegrees = Constants.Arm.SHOULDER_CANCODER_OFFSET.getValue();
         shoulderConfig.sensorDirection = false;
 
         shoulderEncoder.configAllSettings(shoulderConfig, Constants.LONG_CAN_TIMEOUTS_MS);
@@ -123,7 +123,7 @@ public final class ArmIOReal implements ArmIO {
         CANCoderConfiguration wristConfig = new CANCoderConfiguration();
         wristConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         wristConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        wristConfig.magnetOffsetDegrees = Constants.Arm.WRIST_CANCODER_OFFSET;
+        wristConfig.magnetOffsetDegrees = Constants.Arm.WRIST_CANCODER_OFFSET.getValue();
         wristConfig.sensorDirection = false;
 
         wristEncoder.configAllSettings(wristConfig, Constants.LONG_CAN_TIMEOUTS_MS);
