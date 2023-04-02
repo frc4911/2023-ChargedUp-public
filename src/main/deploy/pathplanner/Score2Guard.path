@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.0,
-        "y": 3.0
+        "x": 1.9007064547652628,
+        "y": 0.491724692436545
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 3.0
+        "x": 2.900706454765263,
+        "y": 0.491724692436545
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -16,7 +16,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreConeOne"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -24,19 +26,19 @@
     },
     {
       "anchorPoint": {
-        "x": 3.0,
-        "y": 5.0
+        "x": 6.623550593748834,
+        "y": 0.9262720950548883
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 5.571488461093898,
+        "y": 0.5489019822547491
       },
       "nextControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 7.564828659213361,
+        "y": 1.2639044446236851
       },
       "holonomicAngle": 0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -49,26 +51,48 @@
     },
     {
       "anchorPoint": {
-        "x": 5.0,
-        "y": 3.0
+        "x": 1.9007064547652628,
+        "y": 0.491724692436545
       },
       "prevControl": {
-        "x": 4.0,
-        "y": 3.0
+        "x": 2.7590516552844777,
+        "y": 0.4917246924365449
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreConeTwo"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.014545454545478743,
+      "names": [
+        "event",
+        "stowOne"
+      ]
+    },
+    {
+      "position": 0.8145454545454524,
+      "names": [
+        "collectCone"
+      ]
+    },
+    {
+      "position": 1.2799999999999565,
+      "names": [
+        "stowTwo"
+      ]
+    }
+  ]
 }
