@@ -2,13 +2,40 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8892709968016221,
-        "y": 4.860069634547257
+        "x": 1.95749724832783,
+        "y": 4.8547963762594195
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.004830720075135,
-        "y": 4.860069634547257
+        "x": 1.9395463710350662,
+        "y": 4.859831360035919
+      },
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "scoreConeOne"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.536279739226146,
+        "y": 4.570315807298282
+      },
+      "prevControl": {
+        "x": 6.384014901363137,
+        "y": 4.581965963931929
+      },
+      "nextControl": {
+        "x": 6.6885445770891545,
+        "y": 4.5586656506646355
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -17,43 +44,59 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
-        "executionBehavior": "sequential",
-        "waitBehavior": "after",
-        "waitTime": 1.0
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.520631472076068,
-        "y": 4.597054101383524
+        "x": 1.8558970451274235,
+        "y": 3.845567691135383
       },
       "prevControl": {
-        "x": 5.297037469966522,
-        "y": 4.597054101383524
+        "x": 1.8829904326475317,
+        "y": 4.773516213699095
       },
       "nextControl": null,
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "sequential",
-        "waitBehavior": "none",
+        "names": [
+          "scoreCone2"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "after",
         "waitTime": 0
       }
     }
   ],
-  "maxVelocity": 4.0,
-  "maxAcceleration": 3.0,
-  "isReversed": null,
   "markers": [
     {
-      "position": 0.632727272727266,
+      "position": 0.65,
       "names": [
-        "floorCollect",
-        "coneCollect"
+        "collectCone"
+      ]
+    },
+    {
+      "position": 0.2618181818181731,
+      "names": [
+        "stowOne"
+      ]
+    },
+    {
+      "position": 1.3745454545454068,
+      "names": [
+        "stowTwo"
+      ]
+    },
+    {
+      "position": 1.6581818181818289,
+      "names": [
+        "moveArmL2"
       ]
     }
   ]
