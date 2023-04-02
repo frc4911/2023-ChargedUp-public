@@ -101,6 +101,7 @@ public final class AutoCommandChooser {
             rotationConstants,
             outputModuleStates,
             eventMap,
+            true,
             driveRequirements
         );
     }
@@ -430,7 +431,7 @@ public final class AutoCommandChooser {
         ).fullAuto(
             PathPlanner.loadPathGroup("Score2SubstationBalance", new PathConstraints(4, 2))
         );
-
+        
         return new InstantCommand(
             () -> subsystems.getSwerveSubsystem().initForPathFollowing()
         ).andThen(autoCommand);
