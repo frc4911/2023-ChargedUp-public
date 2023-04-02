@@ -70,23 +70,23 @@ public final class AutoCommandChooser {
         //Score 2 AutoBalance
         //Score Leave and AutoBalance
         //Score and AutoBalance
-        loggedDashboardChooser.addDefaultOption("Do Nothing", getNothingCommand());
+        //loggedDashboardChooser.addDefaultOption("Do Nothing", getNothingCommand()); Crashes the code?????
         loggedDashboardChooser.addDefaultOption("Score and AutoBalance", getAutoBalanceCommand());
-        loggedDashboardChooser.addOption("Score Leave and AutoBalance", getBalanceScoreLeaveCommand());
-        loggedDashboardChooser.addOption("Score 2 and AutoBalance", getScore2BalanceCommand());
-        loggedDashboardChooser.addOption("Score High", getScoreHighCommand());
-        loggedDashboardChooser.addOption("Score Low", getScoreLowCommand());
-        loggedDashboardChooser.addOption("Score And Leave", getScoreHighCommand());
-        loggedDashboardChooser.addOption("Score High and Leave Guard Side", getScoreLeaveGuardCommand());
-        loggedDashboardChooser.addOption("Score High and Leave Substation Side", getScoreLeaveSubstationCommand());
-        loggedDashboardChooser.addOption("Score 2 Substation Side", getScore2SubstationCommand());
-        loggedDashboardChooser.addOption("Score 2 Guard Side", getScore2GuardrailCommand());
-        loggedDashboardChooser.addOption("Score 3 Substation Side", getScore3SubstationCommand());
-        loggedDashboardChooser.addOption("Score 3 Guard Side", getScore3GuardrailCommand());
+        // loggedDashboardChooser.addOption("Score Leave and AutoBalance", getBalanceScoreLeaveCommand());
+        // loggedDashboardChooser.addOption("Score 2 and AutoBalance", getScore2BalanceCommand());
+        // loggedDashboardChooser.addOption("Score High", getScoreHighCommand());
+        // loggedDashboardChooser.addOption("Score Low", getScoreLowCommand());
+        // loggedDashboardChooser.addOption("Score And Leave", getScoreHighCommand());
+        // loggedDashboardChooser.addOption("Score High and Leave Guard Side", getScoreLeaveGuardCommand());
+        // loggedDashboardChooser.addOption("Score High and Leave Substation Side", getScoreLeaveSubstationCommand());
+        // loggedDashboardChooser.addOption("Score 2 Substation Side", getScore2SubstationCommand());
+        // loggedDashboardChooser.addOption("Score 2 Guard Side", getScore2GuardrailCommand());
+        // loggedDashboardChooser.addOption("Score 3 Substation Side", getScore3SubstationCommand());
+        // loggedDashboardChooser.addOption("Score 3 Guard Side", getScore3GuardrailCommand());
 
-        loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
-        loggedDashboardChooser.addOption("TranslationTest", getTranslationTestCommand());
-        loggedDashboardChooser.addOption("Test", getTestCommand());
+        // loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
+        // loggedDashboardChooser.addOption("TranslationTest", getTranslationTestCommand());
+        // loggedDashboardChooser.addOption("Test", getTestCommand());
 
     }
 
