@@ -215,29 +215,25 @@ public final class AutoCommandChooser {
     //Tested by rileyTest
     private Command getScore2BalanceCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
-
-        Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3)
-            .andThen(Commands.waitSeconds(.5))
-            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
-            .withTimeout(.5));
-        Command stowOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
-        Command collectCone = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
-            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), true))
-            .withTimeout(.5);
-        Command stowTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
+        Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK)
+            // .andThen(Commands.waitSeconds(.1))
+            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), false))
+            .andThen(Commands.waitSeconds(.1));
+        Command collectConeTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
+            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), false))
+            .andThen(Commands.waitSeconds(1))
+            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.4, subsystems.getArmSubsystem(), false));
         Command moveArmL2 = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2);
-        Command scoreConeTwo = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
-            .withTimeout(.5);
-        Command stowThree = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
+        Command scoreConeTwo = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), false)
+            .andThen(Commands.waitSeconds(.1));
+        Command stow = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
         Command autoBalance = new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem());
-
+        
         eventMap.put("scoreConeOne", scoreConeOne);
-        eventMap.put("stowOne", stowOne);
-        eventMap.put("collectCone", collectCone);
-        eventMap.put("stowTwo", stowTwo);
+        eventMap.put("collectConeTwo", collectConeTwo);
         eventMap.put("moveArmL2", moveArmL2);
         eventMap.put("scoreConeTwo", scoreConeTwo);
-        eventMap.put("stowThree", stowThree);
+        eventMap.put("stow", stow);
         eventMap.put("autoBalance", autoBalance);
 
         Command autoCommand = createSwerveAutoBuilder(
@@ -301,25 +297,21 @@ public final class AutoCommandChooser {
     private Command getScore2SubstationCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
         Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK)
-            .andThen(Commands.waitSeconds(.3))
+            // .andThen(Commands.waitSeconds(.1))
             .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), false))
-            .andThen(Commands.waitSeconds(.2));
-        // Command stowOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
-        Command collectCone = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
+            .andThen(Commands.waitSeconds(.1));
+        Command collectConeTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
             .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), false))
-            .withTimeout(1)
+            .andThen(Commands.waitSeconds(1))
             .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.4, subsystems.getArmSubsystem(), false));
-        // Command stowTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
         Command moveArmL2 = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2);
         Command scoreConeTwo = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), false)
-            .withTimeout(.5);
+            .andThen(Commands.waitSeconds(.1));
         Command end = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED)
             .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0, subsystems.getArmSubsystem(), false));
         
         eventMap.put("scoreConeOne", scoreConeOne);
-        // eventMap.put("stowOne", stowOne);
-        eventMap.put("collectCone", collectCone);
-        // eventMap.put("stowTwo", stowTwo);
+        eventMap.put("collectConeTwo", collectConeTwo);
         eventMap.put("moveArmL2", moveArmL2);
         eventMap.put("scoreConeTwo", scoreConeTwo);
         eventMap.put("end", end);
@@ -374,33 +366,31 @@ public final class AutoCommandChooser {
 
     private Command getScore3Substation() {
         HashMap<String, Command> eventMap = new HashMap<>();
-        Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3)
-            .andThen(Commands.waitSeconds(.5))
-            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
-            .withTimeout(.5));
-        Command stowOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
-        Command collectCone = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
-            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), true))
-            .withTimeout(2);
-        Command stowTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
-        Command scoreConeTwo = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
-            .withTimeout(.5);
-
+        Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK)
+            // .andThen(Commands.waitSeconds(.1))
+            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), false))
+            .andThen(Commands.waitSeconds(.1));
         Command collectConeTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
+            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), false))
+            .andThen(Commands.waitSeconds(1))
+            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.4, subsystems.getArmSubsystem(), false));
+        Command moveArmL2 = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2);
+        Command scoreConeTwo = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), false)
+            .andThen(Commands.waitSeconds(.1));
+        Command collectConeThree = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
             .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), true))
-            .withTimeout(2);
-        Command stowThree = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED);
+            .andThen(Commands.waitSeconds(2))
+            .andThen( MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));
         Command scoreConeThree = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
-            .withTimeout(.5);
+            .andThen(Commands.waitSeconds(.5));
         
         eventMap.put("scoreConeOne", scoreConeOne);
-        eventMap.put("stowOne", stowOne);
-        eventMap.put("collectCone", collectCone);
-        eventMap.put("stowTwo", stowTwo);
-        eventMap.put("scoreConeTwo", scoreConeTwo);
         eventMap.put("collectConeTwo", collectConeTwo);
-        eventMap.put("stowThree", stowThree);
+        eventMap.put("moveArmL2", moveArmL2);
+        eventMap.put("scoreConeTwo", scoreConeTwo);
+        eventMap.put("collectConeThree", collectConeThree);
         eventMap.put("scoreConeThree", scoreConeThree);
+
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
             subsystems.getSwerveSubsystem()
