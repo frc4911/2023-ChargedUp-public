@@ -15,6 +15,8 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Ports.Arm;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
 public final class ArmIOReal implements ArmIO {
@@ -40,8 +42,13 @@ public final class ArmIOReal implements ArmIO {
         shoulderEncoder = new CANCoder(Arm.SHOULDER_CANCODER, Constants.CANIVORE_NAME);
         wristEncoder = new CANCoder(Arm.WRIST_CANCODER, Constants.CANIVORE_NAME);
 
-        configMotors();
         configureEncoders();
+        configMotors();
+
+        SmartDashboard.putData("Reconfigure", Commands.runOnce(() -> {
+            configureEncoders();
+            configMotors();  
+        }));
     }
 
     private void configMotors() {
