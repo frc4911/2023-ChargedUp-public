@@ -10,12 +10,11 @@ public class SlurppCommand extends CommandBase {
     private final SlurppSubsystem mSlurppSubsystem;
     private final ArmSubsystem mArmSubsystem;
     private final double mPercentOutput;
-    private boolean mCounterRelease; //This will keep the motor fighting the natural tendency for the object to fall out
-    private double mPercentOutput2;
-    
-    public SlurppCommand(SlurppSubsystem slurppSubsystem, double percentOutput, ArmSubsystem armSubsystem, boolean counterRelease) {
+    private boolean mStopOnEnd;
 
-        mCounterRelease = counterRelease;
+    public SlurppCommand(SlurppSubsystem slurppSubsystem, double percentOutput, ArmSubsystem armSubsystem, boolean stopOnEnd) {
+
+        mStopOnEnd = stopOnEnd;
         mArmSubsystem = armSubsystem;
         mSlurppSubsystem = slurppSubsystem;
         mPercentOutput = percentOutput;
@@ -36,17 +35,15 @@ public class SlurppCommand extends CommandBase {
     }
 
     @Override
-    public void execute() {
-        
+    public void end(boolean interrupted) {
+        if (mStopOnEnd)  {
+            mSlurppSubsystem.stop();
+        }
     }
 
     @Override
-    public void end(boolean interrupted) {
-        if (false) {//Temporarily remove this because wheels are being changed
-           mSlurppSubsystem.slurpp(0.03*mPercentOutput);
-        } else {
-            mSlurppSubsystem.stop();
-        }
+    public boolean isFinished() {
+        return !mStopOnEnd;
     }
     
 }

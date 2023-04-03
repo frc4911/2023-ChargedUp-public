@@ -6,6 +6,7 @@ import com.cyberknights4911.robot.subsystems.arm.ArmIO;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -18,16 +19,18 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     private final ArmPositions desiredPosition;
     private final InitializedListener listener;
     
+    private final int shoulderErrorThreshold = 2;
+    private final int wristErrorThreshold = 2;
+    private final double retryAfter = .5;
 
-    private final int shoulderErrorThreshold = 10;
-    private final int wristErrorThreshold = 10;
-    private final int loopsToSettle = 20; // how many loops sensor must be close-enough
+    private final int loopsToSettle = 50; // how many loops sensor must be close-enough
     private int thresholdLoops = 0;
 
     private boolean shouldTuckWrist;
     private boolean isWristTucked;
     private boolean isMovingFinal;
     private double safePosition;
+    private double retryStartTime;
 
     private MoveArmMotionMagicCommand(
             ArmSubsystem armSubsystem, ArmPositions desiredPosition, InitializedListener listener) {
@@ -47,6 +50,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         isMovingFinal = true;
         safePosition = 0;
         thresholdLoops = 0;
+        retryStartTime = Timer.getFPGATimestamp();
 
         double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
         double desiredWristPosition = desiredPosition.wristPosition.getValue();
@@ -107,18 +111,25 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             // No need to keep sending the moveWrist call.
             isWristTucked = true;
             isMovingFinal = true;
+            // restart the retry start time
+            retryStartTime = Timer.getFPGATimestamp();
         }
 
         if (isMovingFinal) {
             checkCurrentMotionFinished();
+            if (Timer.getFPGATimestamp() - retryStartTime > retryAfter) {
+                rerunMoveToPosition();
+                retryStartTime = Timer.getFPGATimestamp();
+            }
         }
     }
 
     private void checkCurrentMotionFinished() {
-        System.out.println("shoulder error: " + Math.abs(armSubsystem.getShoulderTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.shoulderPosition.getValue())));
-        System.out.println("wrist error: " + Math.abs(armSubsystem.getWristTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.wristPosition.getValue())));
-        if (Math.abs(armSubsystem.getShoulderTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.shoulderPosition.getValue())) < shoulderErrorThreshold &&
-                Math.abs(armSubsystem.getWristTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.wristPosition.getValue())) < wristErrorThreshold) {
+        double shoulderError = Math.abs(armSubsystem.getShoulderTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.shoulderPosition.getValue()));
+        double wristError = Math.abs(armSubsystem.getWristTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.wristPosition.getValue()));
+        System.out.println("shoulder error: " + shoulderError);
+        System.out.println("wrist error: " + wristError);
+        if (shoulderError < shoulderErrorThreshold && wristError < wristErrorThreshold) {
             thresholdLoops++;
         } else {
             thresholdLoops = 0;
@@ -135,7 +146,8 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     }
 
     /** Used in tuning mode to move to the desired positions after modifying them. */
-    private void tuningModeAdjust() {
+    private void rerunMoveToPosition() {
+        System.out.println("rerunMoveToPosition");
         armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
         armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
     }
@@ -189,14 +201,14 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         private CommandBase increase(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() + 1);
-                currentCommand.tuningModeAdjust();
+                currentCommand.rerunMoveToPosition();
             });
         }
 
         private CommandBase decrease(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() - 1);
-                currentCommand.tuningModeAdjust();
+                currentCommand.rerunMoveToPosition();
             });
         }
 
