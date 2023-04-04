@@ -15,6 +15,9 @@ import com.cyberknights4911.robot.subsystems.drive.GyroIO;
 import com.cyberknights4911.robot.subsystems.drive.GyroIOInputsAutoLogged;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -24,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem {
-    private final SwerveDriveOdometry swerveOdometry;
+    private final SwerveDrivePoseEstimator poseEstimator;
     private final SwerveModule[] swerveModules;
     private final GyroIO gyro;
     private final SwerveDriveKinematics kinematics;
@@ -73,7 +76,15 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
         Timer.delay(1.0);
         resetModulesToAbsolute();
 
-        swerveOdometry = new SwerveDriveOdometry(kinematics, getYaw(), getModulePositions());
+        poseEstimator =  new SwerveDrivePoseEstimator(
+            kinematics,
+            getYaw(),
+            getModulePositions(),
+            new Pose2d(),
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // State measurement standard deviations. X, Y, theta.
+            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01)); // Global measurement standard deviations. X, Y, and theta.
+        
+        new SwerveDriveOdometry(kinematics, getYaw(), getModulePositions());
     }
 
     public void drive(
@@ -119,12 +130,12 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
 
     @Override
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     @Override
     public void setPose(Pose2d pose) {
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -160,43 +171,14 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
 
     @Override
     public void periodic(){
-        swerveOdometry.update(getYaw(), getModulePositions());  
+        poseEstimator.update(getYaw(), getModulePositions());  
 
         gyro.updateInputs(inputs);
         Logger.getInstance().processInputs("Gyro", inputs);
 
         for (SwerveModule mod : swerveModules) {
             mod.handlePeriodic();
-        } 
-        // for (int i = 0; i < swerveModules.length; i++) {
-        //     SwerveModule swerveModule = swerveModules[i];
-
-        //     SmartDashboard.putNumber(
-        //         new StringBuilder()
-        //             .append("Mod ")
-        //             .append(swerveModule.moduleNumber)
-        //             .append( " Cancoder")
-        //             .toString(),
-                
-        //         swerveModule.getAngleEncoderDegrees()
-        //     );
-        //     SmartDashboard.putNumber(
-        //         new StringBuilder()
-        //             .append("Mod ")
-        //             .append(swerveModule.moduleNumber)
-        //             .append( " Integrated")
-        //             .toString(),
-        //         swerveModule.getPosition().angle.getDegrees()
-        //     );
-        //     SmartDashboard.putNumber(
-        //         new StringBuilder()
-        //             .append("Mod ")
-        //             .append(swerveModule.moduleNumber)
-        //             .append( " Velocity")
-        //             .toString(),
-        //         swerveModule.getState().speedMetersPerSecond
-        //     );
-        // }
+        }
     }
 
     @Override
