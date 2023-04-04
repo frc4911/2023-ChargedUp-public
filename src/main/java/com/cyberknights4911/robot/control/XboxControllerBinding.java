@@ -1,7 +1,5 @@
 package com.cyberknights4911.robot.control;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -42,28 +40,33 @@ public final class XboxControllerBinding implements ControllerBinding {
     }
 
     @Override
-    public List<Trigger> triggerFor(ButtonAction action) {
+    public Triggers triggersFor(ButtonAction action) {
         switch(action) {
-            case ALIGN_COLLECT: return Arrays.asList(driverController.a());
-            case RESET_IMU: return Arrays.asList(driverController.y());
-            case COLLECTOR_BACKWARD: return Arrays.asList(driverController.rightBumper(), driverController.leftBumper());
-            case COLLECTOR_FORWARD: return Arrays.asList(driverController.rightTrigger(), driverController.leftTrigger());
-            case CLIMB_WHEEL_LOCK: return Arrays.asList(driverController.povDown());
-            case RESET_WHEELS: return Arrays.asList(driverController.start());
-            case STOW: return Arrays.asList(operatorController.a());
-            case ARM_L3: return Arrays.asList(operatorController.b());
-            case ARM_L2: return Arrays.asList(operatorController.x());
-            case CLIMB_DEPLOY: return Arrays.asList(operatorController.y());
-            case CLIMB_LOCKOUT: return Arrays.asList(operatorController.rightBumper());
-            case BOB_STOW: return Arrays.asList(operatorController.rightTrigger());
-            case BOB_DEPLOY: return Arrays.asList(operatorController.leftTrigger());
-            case REAR_COLLECT: return Arrays.asList(operatorController.povUp());
-            case FRONT_COLLECT_CUBE: return Arrays.asList(operatorController.povRight());
-            case FRONT_COLLECT_CONE: return Arrays.asList(operatorController.povLeft());
-            case FLOOR_COLLECT: return Arrays.asList(operatorController.povDown());
-            case HOME: return Arrays.asList(ALWAYS_FALSE); // TODO: figure out how to bind to home button
-            case HOME_CLAW: return Arrays.asList(ALWAYS_FALSE); // TODO: figure out how to bind to share button
-            default: return Arrays.asList(ALWAYS_FALSE);
+            case ALIGN_COLLECT: return new Triggers();
+            case RESET_IMU: return new Triggers(driverController.y());
+            case SLURPP_BACKWARD_FAST: return new Triggers(driverController.rightTrigger());
+            case SLURPP_FORWARD_FAST: return new Triggers( driverController.leftTrigger());
+            case SLURPP_BACKWARD_SLOW: return new Triggers(driverController.rightBumper());
+            case SLURPP_FORWARD_SLOW: return new Triggers(driverController.leftBumper());
+            case CLIMB_WHEEL_LOCK: return new Triggers();
+            case RESET_WHEELS: return new Triggers(driverController.start());
+            case STOW: return new Triggers(operatorController.povDown(), driverController.povDown());
+            case SCORE_L3: return new Triggers(operatorController.leftBumper(), driverController.x());
+            case SCORE_L2: return new Triggers(operatorController.rightBumper(), driverController.a());
+            case CLIMB_DEPLOY: return new Triggers();
+            case CLIMB_LOCKOUT: return new Triggers();
+            case BOB_STOW: return new Triggers();//Triggers(operatorController.rightTrigger());
+            case BOB_DEPLOY: return new Triggers();//Triggers(operatorController.leftTrigger());
+            case COLLECT_SUBSTATION_FRONT: return new Triggers(operatorController.povRight(), driverController.povLeft());
+            case COLLECT_SUBSTATION_BACK: return new Triggers(operatorController.povLeft(), driverController.povRight());
+            case COLLECT_SINGLE_SUBSTATION_FRONT: return new Triggers();
+            case COLLECT_FLOOR_FRONT_CONE: return new Triggers(operatorController.a());
+            case COLLECT_FLOOR_FRONT_CUBE: return new Triggers(operatorController.b());
+            case COLLECT_FLOOR_BACK_CONE: return new Triggers();
+            case COLLECT_FLOOR_BACK_CUBE: return new Triggers();
+            case HOME: return new Triggers(ALWAYS_FALSE); // TODO: figure out how to bind to home button
+            case HOME_CLAW: return new Triggers(ALWAYS_FALSE); // TODO: figure out how to bind to share button
+            default: return new Triggers(ALWAYS_FALSE);
         }
     }
 

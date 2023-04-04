@@ -8,6 +8,10 @@ public final class TalonFXFactory {
 
     private TalonFXFactory() {}
 
+    public static TalonFX createTalon(int id) {
+        return createTalon(id, null);
+    }
+
     public static TalonFX createTalon(int id, String canivore) {
         if (canivore == null || canivore.isEmpty()) {
             return new LazyTalonFX(id);

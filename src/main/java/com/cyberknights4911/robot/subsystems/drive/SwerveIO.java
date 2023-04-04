@@ -7,16 +7,15 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 public interface SwerveIO {
     @AutoLog
     public static class SwerveIOInputs {
-      public double drivePositionRad = 0.0;
-      public double driveVelocityRadPerSec = 0.0;
-      public double driveVelocityFilteredRadPerSec = 0.0;
+      public double drivePositionDeg = 0.0;
+      public double driveVelocityRpm = 0.0;
       public double driveAppliedVolts = 0.0;
       public double driveCurrentAmps = 0.0;
       public double driveTempCelcius = 0.0;
   
-      public double turnAbsolutePositionRad = 0.0;
-      public double turnPositionRad = 0.0;
-      public double turnVelocityRadPerSec = 0.0;
+      public double turnAbsolutePositionDeg = 0.0;
+      public double turnPositionDeg = 0.0;
+      public double turnVelocityRpm = 0.0;
       public double turnAppliedVolts = 0.0;
       public double turnCurrentAmps = 0.0;
       public double turnTempCelcius = 0.0;

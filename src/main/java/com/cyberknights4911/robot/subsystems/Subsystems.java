@@ -1,6 +1,7 @@
 package com.cyberknights4911.robot.subsystems;
 
 import com.cyberknights4911.robot.subsystems.arm.ArmIO;
+import com.cyberknights4911.robot.subsystems.arm.ArmIOReal;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.bob.BobIO;
 import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
@@ -13,10 +14,8 @@ import com.cyberknights4911.robot.subsystems.drive.v2.SwerveIO;
 import com.cyberknights4911.robot.subsystems.drive.v2.SwerveIOReal;
 import com.cyberknights4911.robot.subsystems.drive.v2.SwerveModuleConstants;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
-import com.cyberknights4911.robot.subsystems.hood.HoodIO;
-import com.cyberknights4911.robot.subsystems.hood.HoodIOReal;
-import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIO;
+import com.cyberknights4911.robot.subsystems.slurpp.SlurppIOReal;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppSubsystem;
 
 import edu.wpi.first.wpilibj.RobotBase;
@@ -31,7 +30,6 @@ public final class Subsystems {
     private final ArmSubsystem armSubsystem ;
     private final SwerveSubsystem swerveSubsystem;
     private final BobSubsystem bobSubsystem;
-    private final HoodSubsystem hoodSubsystem;
 
     public Subsystems() {
         if (RobotBase.isReal()) {
@@ -47,7 +45,6 @@ public final class Subsystems {
                 new SwerveIOReal(SwerveModuleConstants.BACK_RIGHT)
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem(new HoodIOReal());
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
@@ -60,7 +57,6 @@ public final class Subsystems {
                 new SwerveIO() {}
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem(new HoodIO() {});
         }
     }
 
@@ -82,9 +78,5 @@ public final class Subsystems {
 
     public BobSubsystem getBobSubsystem() {
         return bobSubsystem;
-    }
-
-    public HoodSubsystem getHoodSubsystem() {
-        return hoodSubsystem;
     }
 }

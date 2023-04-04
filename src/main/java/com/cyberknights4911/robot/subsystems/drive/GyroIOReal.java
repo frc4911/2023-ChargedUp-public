@@ -13,8 +13,7 @@ public final class GyroIOReal implements GyroIO {
     private final double[] xyzDps = new double[3];
 
     public GyroIOReal() {
-        pigeon = new Pigeon2(Ports.PIGEON, Constants.CANIVORE_NAME);
-        pigeon.configFactoryDefault();
+        pigeon = new Pigeon2(Ports.Drive.PIGEON);
     }
   
     @Override

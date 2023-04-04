@@ -17,7 +17,7 @@ public final class HoodIOReal implements HoodIO {
     private final TalonFX motor;
     
     public HoodIOReal() {
-        motor = TalonFXFactory.createTalon(Ports.ROBOT_2022_HOOD_MOTOR, Constants.CANIVORE_NAME);
+        motor = TalonFXFactory.createTalon(Ports.Robot2022Hood.MOTOR, Constants.CANIVORE_NAME);
         configMotors();
     }
 

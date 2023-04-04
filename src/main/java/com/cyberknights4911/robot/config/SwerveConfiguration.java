@@ -5,19 +5,19 @@ import java.util.List;
 
 import edu.wpi.first.math.geometry.Translation2d;
 
-public class SwerveConfiguration {
+public final class SwerveConfiguration {
     public final double wheelbaseLengthInMeters;
     public final double wheelbaseWidthInMeters;
     public final double maxSpeedInMetersPerSecond;
     public final double maxAccellerationInMetersPerSecondSq;
-    public final double kMaxCentriptalAccelerationInMetersPerSecondSq;
+    public final double maxCentriptalAccelerationInMetersPerSecondSq;
     public final double maxSpeedInRadiansPerSecond;
     public final List<Translation2d> moduleLocations;
     // imu heading PID constants
-    public final double kSwerveHeadingKp;
-    public final double kSwerveHeadingKi;
-    public final double kSwerveHeadingKd;
-    public final double kSwerveHeadingKf;
+    public final double swerveHeadingKp;
+    public final double swerveHeadingKi;
+    public final double swerveHeadingKd;
+    public final double swerveHeadingKf;
     // public TrajectoryConfig trajectoryConfig;
 
     /**
@@ -37,18 +37,18 @@ public class SwerveConfiguration {
      *                                        geometry determines max rotation
      *                                        speed.
      */
-    public SwerveConfiguration(double wheelbaseLengthInMeters,
+    private SwerveConfiguration(double wheelbaseLengthInMeters,
             double wheelbaseWidthInMeters,
             double maxSpeedInMetersPerSecond,
             double maxSpeedInRadiansPerSecondLimit,
-            double kSwerveHeadingKp,
-            double kSwerveHeadingKi,
-            double kSwerveHeadingKd,
-            double kSwerveHeadingKf) {
-        this.kSwerveHeadingKp = kSwerveHeadingKp;
-        this.kSwerveHeadingKi = kSwerveHeadingKi;
-        this.kSwerveHeadingKd = kSwerveHeadingKd;
-        this.kSwerveHeadingKf = kSwerveHeadingKf;
+            double swerveHeadingKp,
+            double swerveHeadingKi,
+            double swerveHeadingKd,
+            double swerveHeadingKf) {
+        this.swerveHeadingKp = swerveHeadingKp;
+        this.swerveHeadingKi = swerveHeadingKi;
+        this.swerveHeadingKd = swerveHeadingKd;
+        this.swerveHeadingKf = swerveHeadingKf;
         this.wheelbaseLengthInMeters = wheelbaseLengthInMeters;
         this.wheelbaseWidthInMeters = wheelbaseWidthInMeters;
         this.maxSpeedInMetersPerSecond = maxSpeedInMetersPerSecond;
@@ -61,7 +61,7 @@ public class SwerveConfiguration {
                 : (this.maxSpeedInMetersPerSecond / radiusInMeters);
 
         // TODO: Verify this is correct
-        this.kMaxCentriptalAccelerationInMetersPerSecondSq = Math.pow(this.maxSpeedInMetersPerSecond, 2)
+        this.maxCentriptalAccelerationInMetersPerSecondSq = Math.pow(this.maxSpeedInMetersPerSecond, 2)
                 / radiusInMeters;
 
         // CCW: left positive, right negative, front positive, back negative
@@ -83,5 +83,62 @@ public class SwerveConfiguration {
         //         this.maxSpeedInRadiansPerSecond, this.kMaxCentriptalAccelerationInMetersPerSecondSq)
         //         .addConstraint(new CentripetalAccelerationConstraint(this.kMaxCentriptalAccelerationInMetersPerSecondSq));
 
-        }    
+        }
+
+    public static final class Builder {
+        private double wheelbaseLengthInMeters;
+        private double wheelbaseWidthInMeters;
+        private double maxSpeedInMetersPerSecond;
+        private double maxSpeedInRadiansPerSecondLimit;
+        private double swerveHeadingKp;
+        private double swerveHeadingKi;
+        private double swerveHeadingKd;
+        private double swerveHeadingKf;
+
+        public Builder setWheelbaseLengthInMeters(double wheelbaseLengthInMeters) {
+            this.wheelbaseLengthInMeters = wheelbaseLengthInMeters;
+            return this;
+        }
+
+        public Builder setWheelbaseWidthInMeters(double wheelbaseWidthInMeters) {
+            this.wheelbaseWidthInMeters = wheelbaseWidthInMeters;
+            return this;
+        }
+
+        public Builder setMaxSpeedInMetersPerSecond(double maxSpeedInMetersPerSecond) {
+            this.maxSpeedInMetersPerSecond = maxSpeedInMetersPerSecond;
+            return this;
+        }
+
+        public Builder setMaxSpeedInRadiansPerSecondLimit(double maxSpeedInRadiansPerSecondLimit) {
+            this.maxSpeedInRadiansPerSecondLimit = maxSpeedInRadiansPerSecondLimit;
+            return this;
+        }
+
+        public Builder setSwerveHeadingKp(double swerveHeadingKp) {
+            this.swerveHeadingKp = swerveHeadingKp;
+            return this;
+        }
+
+        public Builder setSwerveHeadingKi(double swerveHeadingKi) {
+            this.swerveHeadingKi = swerveHeadingKi;
+            return this;
+        }
+
+        public Builder setSwerveHeadingKd(double swerveHeadingKd) {
+            this.swerveHeadingKd = swerveHeadingKd;
+            return this;
+        }
+
+        public Builder setSwerveHeadingKf(double swerveHeadingKf) {
+            this.swerveHeadingKf = swerveHeadingKf;
+            return this;
+        }
+
+        public SwerveConfiguration build() {
+            return new SwerveConfiguration(wheelbaseLengthInMeters, wheelbaseWidthInMeters, maxSpeedInMetersPerSecond,
+                    maxSpeedInRadiansPerSecondLimit, swerveHeadingKp, swerveHeadingKi, swerveHeadingKd,
+                    swerveHeadingKf);
+        }
+    }
 }

@@ -10,31 +10,30 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public final class SlurppSubsystem extends SubsystemBase {
 
-    private final SlurppIO splurppIO;
-    private final SplurppIOInputsAutoLogged inputs = new SplurppIOInputsAutoLogged();
+    private final SlurppIO slurppIO;
+    private final SlurppIOInputsAutoLogged inputs = new SlurppIOInputsAutoLogged();
 
     public SlurppSubsystem(SlurppIO splurppIO) {
         super();
-        this.splurppIO = splurppIO;
+        this.slurppIO = splurppIO;
     }
 
     @Override
     public void periodic() {
-        splurppIO.updateInputs(inputs);
-        Logger.getInstance().processInputs("Slurpp", inputs);
+        // splurppIO.updateInputs(inputs);
+        // Logger.getInstance().processInputs("Slurpp", inputs);
     }
 
     /** "Slurpp" up a game piece. */
-    public void slurpp() {
-        splurppIO.setPercentOutput(0.3);
-    }
-
-    /** "Spit" out a game piece. */
-    public void spit() {
-        splurppIO.setPercentOutput(-0.3);
+    public void slurpp(double percentOutput) {
+        slurppIO.setPercentOutput(percentOutput);
     }
     
     public void stop() {
-        splurppIO.stop();
+        slurppIO.stop();
+    }
+
+    public void holdCurrentPosition() {
+        slurppIO.holdCurrentPosition();
     }
 }

@@ -1,88 +1,167 @@
 package com.cyberknights4911.robot.config;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 
-public class SwerveModuleConfiguration {
-    public String kName = "Name";
-    public int kModuleId = -1;
-    public int kDriveMotorTalonId = -1;
-    public int kSteerMotorTalonId = -1;
+public final class SwerveModuleConfiguration {
+    public static final int STEER_MOTOR_SLOT_0_I_ZONE = 25;
 
-    // Default steer reduction is Mk4_L2i value
-    public double kSteerReduction = (14.0 / 50.0) * (10.0 / 60.0); // 1/21.43
-    public double kSteerTicksPerUnitDistance = (1.0 / 2048.0) * kSteerReduction * (2.0 * Math.PI);
-    public double kSteerTicksPerUnitVelocity = kSteerTicksPerUnitDistance * 10; // Motor controller unit is ticks per
-                                                                                // 100 ms
+    public static final SensorInitializationStrategy CAN_CODER_SENSOR_INITIALIZATION_STRATEGY =
+            SensorInitializationStrategy.BootToAbsolutePosition;
+    // Steer Motor measurement
+    // dt for velocity measurements, ms
+    public static final SensorVelocityMeasPeriod STEER_MOTOR_VELOCITY_MEASUREMENT_PERIOD =
+            SensorVelocityMeasPeriod.Period_100Ms;
+    public static final int STEER_MOTOR_VELOCITY_MEASUREMENT_WINDOW = 64; // # of samples in rolling average
+
+    public final String name;
+    public final int moduleId = -1;
+    public final int driveMotorTalonId;
+    public final int steerMotorTalonId;
+    public final double steerReduction;
+    public final double steerTicksPerUnitDistance;
+    public final double steerTicksPerUnitVelocity;
 
     // general Steer Motor
-    public boolean kInvertSteerMotor = false;
-    public boolean kInvertSteerMotorSensorPhase = true;
-    public NeutralMode kSteerMotorInitNeutralMode = NeutralMode.Coast; // neutral mode could change
-    public double kSteerMotorTicksPerRadian = (2048.0 / kSteerReduction) / (2.0 * Math.PI); // for steer motor
-    public double kSteerMotorTicksPerRadianPerSecond = kSteerMotorTicksPerRadian / 10; // for steer motor
-    public double kSteerMotorEncoderHomeOffset = 0;
+    public final boolean invertSteerMotor;
+    public final double steerMotorTicksPerRadian;
 
     // Steer CANCoder
-    public int kCANCoderId = -1;
-    public SensorInitializationStrategy kCANCoderSensorInitializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-    public int kCANCoderStatusFramePeriodVbatAndFaults = 255;
-    public int kCANCoderStatusFramePeriodSensorData = 20;
-    public double kCANCoderOffsetDegrees = 0.0;
+    public final int CANCoderId;
+    public final double CANCoderOffsetDegrees;
 
     // Steer Motor motion
-    public double kSteerMotorSlot0Kp = 0.4;
-    public double kSteerMotorSlot0Ki = 0.0;
-    public double kSteerMotorSlot0Kd = 0.0;
-    public double kSteerMotorSlot0Kf = 0.0;
-    public int kSteerMotorSlot0IZone = 25;
-    public int kSteerMotorSlot0CruiseVelocity = 1698;
-    public int kSteerMotorSlot0Acceleration = 20379; // 12 * kSteerMotorCruiseVelocity
-    public int kSteerMotorClosedLoopAllowableError = 5;
-
-    // Steer Motor current/voltage
-    public int kSteerMotorContinuousCurrentLimit = 20; // amps
-    public int kSteerMotorPeakCurrentLimit = 60; // amps
-    public int kSteerMotorPeakCurrentDuration = 200; // ms
-    public boolean kSteerMotorEnableCurrentLimit = false;
-    public double kSteerMotorMaxVoltage = 7.0; // volts
-    public boolean kSteerMotorEnableVoltageCompensation = false;
-    public int kSteerMotorVoltageMeasurementFilter = 8; // # of samples in rolling average
-
-    // Steer Motor measurement
-    public int kSteerMotorStatusFrame2UpdateRate = 20; // feedback for selected sensor, ms
-    public int kSteerMotorStatusFrame10UpdateRate = 20; // motion magic, ms
-    // dt for velocity measurements, ms
-    public SensorVelocityMeasPeriod kSteerMotorVelocityMeasurementPeriod = SensorVelocityMeasPeriod.Period_100Ms; 
-    public int kSteerMotorVelocityMeasurementWindow = 64; // # of samples in rolling average
+    public final double steerMotorSlot0Kp;
+    public final double steerMotorSlot0Ki;
+    public final double steerMotorSlot0Kd;
+    public final double steerMotorSlot0Kf;
 
     // general drive
-    public boolean kInvertDrive = true;
-    public boolean kInvertDriveSensorPhase = false;
-    public NeutralMode kDriveInitNeutralMode = NeutralMode.Brake; // neutral mode could change
+    public final boolean invertDrive;
     // Default wheel diameter and drive reduction to Mk4_L2i values which are in SI
     // units
-    public double kWheelDiameter = 0.10033; // Probably should tune for each individual wheel maybe
-    public double kDriveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
-    public double kDriveTicksPerUnitDistance = (1.0 / 2048.0) * kDriveReduction * (Math.PI * kWheelDiameter);
-    public double kDriveTicksPerUnitVelocity = kDriveTicksPerUnitDistance * 10; // Motor controller unit is ticks per
-                                                                                // 100 ms
-    public double kDriveDeadband = 0.01;
+    public final double wheelDiameter;
+    public final double driveReduction;
+    public final double driveTicksPerUnitDistance;
+    public final double driveTicksPerUnitVelocity;
+    public final double driveDeadband = 0.01;
 
-    // drive current/voltage
-    public int kDriveContinuousCurrentLimit = 30; // amps
-    public int kDrivePeakCurrentLimit = 50; // amps
-    public int kDrivePeakCurrentDuration = 200; // ms
-    public boolean kDriveEnableCurrentLimit = false;
-    public double kDriveMaxVoltage = 12.0; // 10 //volts
-    public double kDriveNominalVoltage = 0.0; // volts
-    public int kDriveVoltageMeasurementFilter = 8; // # of samples in rolling average
+    private SwerveModuleConfiguration(String name, int driveMotorTalonId, int steerMotorTalonId, int CANCoderId,
+            double CANCoderOffsetDegrees, double wheelDiameter, double driveReduction, double steerReduction,
+            boolean invertDrive, boolean invertSteerMotor, double steerMotorSlot0Kp, double steerMotorSlot0Ki,
+            double steerMotorSlot0Kd, double steerMotorSlot0Kf) {
+        this.name = name;
+        this.driveMotorTalonId = driveMotorTalonId;
+        this.steerMotorTalonId = steerMotorTalonId;
+        this.CANCoderId = CANCoderId;
+        this.CANCoderOffsetDegrees = CANCoderOffsetDegrees;
+        this.wheelDiameter = wheelDiameter;
+        this.driveReduction = driveReduction;
+        this.steerReduction = steerReduction;
+        this.invertDrive = invertDrive;
+        this.invertSteerMotor = invertSteerMotor;
+        this.steerMotorSlot0Kp = steerMotorSlot0Kp;
+        this.steerMotorSlot0Ki = steerMotorSlot0Ki;
+        this.steerMotorSlot0Kd = steerMotorSlot0Kd;
+        this.steerMotorSlot0Kf = steerMotorSlot0Kf;
 
-    // drive measurement
-    public int kDriveStatusFrame2UpdateRate = 20; // feedback for selected sensor, ms
-    public int kDriveStatusFrame10UpdateRate = 200; // motion magic, ms
-    // dt for velocity measurements, ms
-    public SensorVelocityMeasPeriod kDriveMotorVelocityMeasurementPeriod = SensorVelocityMeasPeriod.Period_100Ms;
-    public int kDriveVelocityMeasurementWindow = 32; // # of samples in rolling average
+        steerTicksPerUnitDistance = (1.0 / 2048.0) * steerReduction * (2.0 * Math.PI);
+        steerTicksPerUnitVelocity = steerTicksPerUnitDistance * 10; // Motor controller unit is ticks per 100 ms
+        steerMotorTicksPerRadian = (2048.0 / steerReduction) / (2.0 * Math.PI); // for steer motor
+        driveTicksPerUnitDistance = (1.0 / 2048.0) * driveReduction * (Math.PI * wheelDiameter);
+        driveTicksPerUnitVelocity = driveTicksPerUnitDistance * 10; // Motor controller unit is ticks per 100 ms
+    }
+
+    public static class Builder {
+        private String name;
+        private int driveMotorTalonId;
+        private int steerMotorTalonId;
+        private int canCoderId;
+        private double canCoderOffsetDegrees;
+        private double wheelDiameter;
+        private double driveReduction;
+        private double steerReduction;
+        private boolean invertDrive;
+        private boolean invertSteerMotor;
+        private double steerMotorSlot0Kp;
+        private double steerMotorSlot0Ki;
+        private double steerMotorSlot0Kd;
+        private double steerMotorSlot0Kf;
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setDriveMotorTalonId(int driveMotorTalonId) {
+            this.driveMotorTalonId = driveMotorTalonId;
+            return this;
+        }
+
+        public Builder setSteerMotorTalonId(int steerMotorTalonId) {
+            this.steerMotorTalonId = steerMotorTalonId;
+            return this;
+        }
+
+        public Builder setCANCoderId(int canCoderId) {
+            this.canCoderId = canCoderId;
+            return this;
+        }
+
+        public Builder setCANCoderOffsetDegrees(double canCoderOffsetDegrees) {
+            this.canCoderOffsetDegrees = canCoderOffsetDegrees;
+            return this;
+        }
+
+        public Builder setWheelDiameter(double wheelDiameter) {
+            this.wheelDiameter = wheelDiameter;
+            return this;
+        }
+
+        public Builder setDriveReduction(double driveReduction) {
+            this.driveReduction = driveReduction;
+            return this;
+        }
+
+        public Builder setSteerReduction(double steerReduction) {
+            this.steerReduction = steerReduction;
+            return this;
+        }
+
+        public Builder setInvertDrive(boolean invertDrive) {
+            this.invertDrive = invertDrive;
+            return this;
+        }
+
+        public Builder setInvertSteerMotor(boolean invertSteerMotor) {
+            this.invertSteerMotor = invertSteerMotor;
+            return this;
+        }
+
+        public Builder setSteerMotorSlot0Kp(double steerMotorSlot0Kp) {
+            this.steerMotorSlot0Kp = steerMotorSlot0Kp;
+            return this;
+        }
+
+        public Builder setSteerMotorSlot0Ki(double steerMotorSlot0Ki) {
+            this.steerMotorSlot0Ki = steerMotorSlot0Ki;
+            return this;
+        }
+
+        public Builder setSteerMotorSlot0Kd(double steerMotorSlot0Kd) {
+            this.steerMotorSlot0Kd = steerMotorSlot0Kd;
+            return this;
+        }
+
+        public Builder setSteerMotorSlot0Kf(double steerMotorSlot0Kf) {
+            this.steerMotorSlot0Kf = steerMotorSlot0Kf;
+            return this;
+        }
+
+        public SwerveModuleConfiguration build() {
+            return new SwerveModuleConfiguration(name, driveMotorTalonId, steerMotorTalonId, canCoderId,
+                    canCoderOffsetDegrees, wheelDiameter, driveReduction, steerReduction, invertDrive, invertSteerMotor,
+                    steerMotorSlot0Kp, steerMotorSlot0Ki, steerMotorSlot0Kd, steerMotorSlot0Kf);
+        }
+    }
 }
