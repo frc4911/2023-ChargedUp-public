@@ -19,11 +19,11 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     private final ArmPositions desiredPosition;
     private final InitializedListener listener;
     
-    private final int shoulderErrorThreshold = 2;
-    private final int wristErrorThreshold = 2;
+    private final double shoulderErrorThreshold = 1.0;
+    private final double wristErrorThreshold = 1.0;
     private final double retryAfter = .5;
 
-    private final int loopsToSettle = 50; // how many loops sensor must be close-enough
+    private final int loopsToSettle = 40; // how many loops sensor must be close-enough
     private int thresholdLoops = 0;
 
     private boolean shouldTuckWrist;
