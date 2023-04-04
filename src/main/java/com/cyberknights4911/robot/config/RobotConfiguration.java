@@ -3,25 +3,25 @@ package com.cyberknights4911.robot.config;
 import com.cyberknights4911.robot.constants.Constants;
 
 public interface RobotConfiguration {
-    public SwerveConfiguration getSwerveConfiguration();
+    SwerveConfiguration getSwerveConfiguration();
 
-    public SwerveModuleConfiguration getFrontRightModuleConstants();
+    SwerveModuleConfiguration getFrontRightModuleConstants();
 
-    public SwerveModuleConfiguration getFrontLeftModuleConstants();
+    SwerveModuleConfiguration getFrontLeftModuleConstants();
 
-    public SwerveModuleConfiguration getBackLeftModuleConstants();
+    SwerveModuleConfiguration getBackLeftModuleConstants();
 
-    public SwerveModuleConfiguration getBackRightModuleConstants();
+    SwerveModuleConfiguration getBackRightModuleConstants();
 
-    public static RobotConfiguration getRobotConfiguration(String robotName) {
+    static RobotConfiguration getRobotConfiguration(String robotName) {
         switch (robotName) {
             // case Constants.kJuniorName:
             //     return new Junior();
             // case Constants.kDeadEyeName:
             //     return new DeadEye();
-            case Constants.ROBOT_NAME_2022:
+            case Constants.ROBOT_NAME_2023:
             default:
-                return new Robot2022();
+                return new Robot2023();
         }
     }    
 }

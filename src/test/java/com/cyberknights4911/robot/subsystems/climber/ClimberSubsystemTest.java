@@ -25,7 +25,7 @@ public class ClimberSubsystemTest {
         climberIOSolenoid = new ClimberIOReal();
         climberSubsystem = new ClimberSubsystem(climberIOSolenoid);
         // Keep args in sync with ClimberSubsystem.java
-        solenoidSim = new SolenoidSim(PneumaticsModuleType.REVPH, Ports.CLIMB_SOLENOID_PORT);
+        solenoidSim = new SolenoidSim(PneumaticsModuleType.REVPH, Ports.Climber.SOLENOID);
     }
 
     @AfterEach

@@ -3,6 +3,7 @@ package com.cyberknights4911.robot.subsystems;
 import com.cyberknights4911.robot.config.RobotConfiguration;
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.subsystems.arm.ArmIO;
+import com.cyberknights4911.robot.subsystems.arm.ArmIOReal;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.bob.BobIO;
 import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
@@ -14,10 +15,8 @@ import com.cyberknights4911.robot.subsystems.drive.GyroIOReal;
 import com.cyberknights4911.robot.subsystems.drive.SwerveIO;
 import com.cyberknights4911.robot.subsystems.drive.SwerveIOReal;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
-import com.cyberknights4911.robot.subsystems.hood.HoodIO;
-import com.cyberknights4911.robot.subsystems.hood.HoodIOReal;
-import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIO;
+import com.cyberknights4911.robot.subsystems.slurpp.SlurppIOReal;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppSubsystem;
 import com.cyberknights4911.robot.subsystems.vision.VisionSubsystem;
 
@@ -33,16 +32,15 @@ public final class Subsystems {
     private final ArmSubsystem armSubsystem ;
     private final SwerveSubsystem swerveSubsystem;
     private final BobSubsystem bobSubsystem;
-    private final HoodSubsystem hoodSubsystem;
     private final VisionSubsystem visionSubsystem;
 
     public Subsystems() {
-        RobotConfiguration configuration =  RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2022);
+        RobotConfiguration configuration =  RobotConfiguration.getRobotConfiguration(Constants.ROBOT_NAME_2023);
         if (RobotBase.isReal()) {
             // TODO swap out these with real implementations once the hardware exists
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
-            slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
-            armSubsystem = new ArmSubsystem(new ArmIO() {});
+            slurppSubsystem = new SlurppSubsystem(new SlurppIOReal());
+            armSubsystem = new ArmSubsystem(new ArmIOReal());
             swerveSubsystem = new SwerveSubsystemCurrent(
                 configuration,
                 new GyroIOReal(),
@@ -52,7 +50,6 @@ public final class Subsystems {
                 new SwerveIOReal(configuration.getBackRightModuleConstants())
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem(new HoodIOReal());
             visionSubsystem = new VisionSubsystem();
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
@@ -67,7 +64,6 @@ public final class Subsystems {
                 new SwerveIO() {}
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            hoodSubsystem = new HoodSubsystem(new HoodIO() {});
             visionSubsystem = new VisionSubsystem();
         }
     }
@@ -90,9 +86,5 @@ public final class Subsystems {
 
     public BobSubsystem getBobSubsystem() {
         return bobSubsystem;
-    }
-
-    public HoodSubsystem getHoodSubsystem() {
-        return hoodSubsystem;
     }
 }

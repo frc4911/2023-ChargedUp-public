@@ -20,8 +20,8 @@ public final class BobIOReal implements BobIO {
     private final TalonFX motor;
     
     public BobIOReal() {
-        solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.BOB_SOLENOID_PORT);
-        motor = TalonFXFactory.createTalon(Ports.BOB_MOTOR, Constants.CANIVORE_NAME);
+        solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.Bob.SOLENOID);
+        motor = TalonFXFactory.createTalon(Ports.Bob.MOTOR, Constants.CANIVORE_NAME);
 
         solenoid.set(false);
         configureMotor();
@@ -45,10 +45,10 @@ public final class BobIOReal implements BobIO {
     public void updateInputs(BobIOInputs inputs) {
         inputs.extended = solenoid.get();
         
-        inputs.positionRad = Units.rotationsToRadians(
+        inputs.positionDeg = Units.rotationsToDegrees(
             motor.getSelectedSensorPosition() / TICKS_PER_REV / GEAR_RATIO);
-        inputs.velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(
-            motor.getSelectedSensorVelocity() * 10 / TICKS_PER_REV / GEAR_RATIO);
+        inputs.velocityRpm =
+            motor.getSelectedSensorVelocity() * 10 / TICKS_PER_REV / GEAR_RATIO;
         inputs.appliedVolts = motor.getMotorOutputVoltage();
         inputs.currentAmps = motor.getSupplyCurrent();
         inputs.tempCelcius = motor.getTemperature();

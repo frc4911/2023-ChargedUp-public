@@ -10,91 +10,65 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public final class ArmSubsystem extends SubsystemBase {
     public static final double SHOULDER_GEAR_RATIO = 120.0;
     public static final double WRIST_GEAR_RATIO = 60.0;
-    public static final int TICKS_PER_REVOLUTION = 2048;
-    public static final int DEGREES_PER_REVOLUTION = 360;
-    //In ticks can be changed to be in degrees
-    //Makes it run much faster because it does not need to be precise
-    private static final double ARM_ERROR = 100;
-    private static final double WRIST_ERROR = 100;
+    public static final double TICKS_PER_REVOLUTION = 4096;
+    public static final double DEGREES_PER_REVOLUTION = 360;
 
     private final ArmIO armIO;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 
-    private ArmPositions desiredPosition = ArmPositions.STOWED;
-
     public ArmSubsystem(ArmIO armIO) {
         super();
         this.armIO = armIO;
+        reset();
     }
 
-    public void setDesiredPosition(ArmPositions desiredPosition) {
-        this.desiredPosition = desiredPosition;
-        moveWrist(desiredPosition);
-        moveShoulder(desiredPosition);
+    public void reset() {
     }
 
-    private void moveShoulder(ArmPositions desiredArmPosition) {
-        double falconTicks = convertDegreesToTicksShoulder(desiredArmPosition.getShoulderPosition());
-
-        armIO.setShoulderPosition(falconTicks);
+    public void setBrakeMode() {
+        setShoulderBrakeMode();
+        setWristBrakeMode();
     }
 
-    private void moveWrist(ArmPositions desiredArmPosition) {
-        double falconTicks = convertDegreesToTicksWrist(desiredArmPosition.getWristPosition());
-        armIO.setWristPosition(falconTicks);
+    public void setShoulderBrakeMode() {
+        armIO.setShoulderOutput(0);
+        armIO.setShoulderBrakeMode();
     }
 
-    public boolean wristAtDesiredPosition() {
-        double wristPosition = armIO.getWristPosition();
-        double desiredWristPosition = desiredPosition.getWristPosition();
-        if (Math.abs(wristPosition - desiredWristPosition) < WRIST_ERROR) {
-            return true;
-        }
-        return false;
+    public void setWristBrakeMode() {
+        armIO.setWristOutput(0);
+        armIO.setWristBrakeMode();
     }
 
-    public boolean shoulderAtDesiredPosition() {
-        double shoulderPosition = armIO.getShoulderPosition();
-
-        if (Math.abs(shoulderPosition - desiredPosition.getShoulderPosition()) < ARM_ERROR) {
-            return true;
-        }
-        return false;
+    public boolean moveShoulder(double desiredShoulderPosition) {
+        armIO.setShoulderPosition(convertDegreesToCtreTicks(desiredShoulderPosition));
+        return true;
     }
 
-    //Check if the robot will be too tall
-    //Avoid between 70-210 degrees
-    public boolean checkForHeightViolation() {
-        double shoulderPosition = convertTicksToDegreesShoulder(armIO.getShoulderPosition());
-        if (shoulderPosition <= 210 && shoulderPosition >= 70 ) {
-            return true;
-        }
-        return false;
+    public boolean moveWrist(double desiredWristPosition) {
+        armIO.setWristPosition(convertDegreesToCtreTicks(desiredWristPosition));
+        return true;
     }
 
     @Override
     public void periodic() {
         armIO.updateInputs(inputs);
         Logger.getInstance().processInputs("Arm", inputs);
-
-        //Override wrist position to avoid being too tall
-        if (checkForHeightViolation()) {
-            armIO.setWristPosition(0);
-        } else {
-            moveWrist(desiredPosition);
-        }
     }
 
-    private double convertDegreesToTicksShoulder(double degrees) {
-        return degrees * TICKS_PER_REVOLUTION * SHOULDER_GEAR_RATIO / DEGREES_PER_REVOLUTION;
+    public double getShoulderPositionDegrees() {
+        return armIO.getShoulderEncoderDegrees();
     }
 
-    private double convertTicksToDegreesShoulder(double degrees) {
-        return degrees * DEGREES_PER_REVOLUTION / TICKS_PER_REVOLUTION / SHOULDER_GEAR_RATIO;
+    public boolean isCurrentMotionFinished() {
+        return armIO.isCurrentMotionFinished();
     }
 
-    private double convertDegreesToTicksWrist(double degrees) {
-        return degrees * TICKS_PER_REVOLUTION * WRIST_GEAR_RATIO / DEGREES_PER_REVOLUTION;
+    public static double convertDegreesToCtreTicks(double degrees) {
+        return degrees * TICKS_PER_REVOLUTION / DEGREES_PER_REVOLUTION;
     }
 
+    public static double convertCtreTicksToDegrees(double ticks) {
+        return ticks / TICKS_PER_REVOLUTION * DEGREES_PER_REVOLUTION;
+    }
 }

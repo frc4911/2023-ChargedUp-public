@@ -12,12 +12,14 @@ public class AutoBalanceCommand extends CommandBase {
     
     private final SwerveSubsystemCurrent mSwerveSubsystem;
     Translation2d tilt;
+    private int counter;
 
 
     
     public AutoBalanceCommand (SwerveSubsystemCurrent swerveSubsystem){
 
       mSwerveSubsystem = swerveSubsystem;
+      counter = 0;
       addRequirements(mSwerveSubsystem);
 
       
@@ -33,8 +35,8 @@ public class AutoBalanceCommand extends CommandBase {
     tilt = new Translation2d(getRoll(), getPitch()); 
     tilt = tilt.times(Constants.MAX_SPEED);
     mSwerveSubsystem.setTeleopInputs(
-                tilt.getX()*0.01,
-                tilt.getY()*0.01,
+                -tilt.getX()*0.003,
+                -tilt.getY()*0.003,
                 0,
                 false,
                 false,
@@ -54,8 +56,12 @@ public class AutoBalanceCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    System.out.println(tilt.getNorm());
-    return (tilt.getNorm()<2); //TODO: make constants
+    if (tilt.getNorm()<2){
+      counter += 1;
+    } else {
+      counter = 0;
+    }
+    return counter >= 10; //TODO: make constants
   }
     
 
