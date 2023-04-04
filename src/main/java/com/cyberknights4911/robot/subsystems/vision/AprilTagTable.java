@@ -1,6 +1,7 @@
 package com.cyberknights4911.robot.subsystems.vision;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTag;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
@@ -37,18 +39,41 @@ public final class AprilTagTable {
     private static final int ARRAY_LENGTH_POSE_T = 3;
     
     private final int tagId;
+    private final NetworkTableInstance networkTables;
     private final NetworkTable tagSubtable;
     private final DoubleArraySubscriber tagValuesSubscriber;
 
+    private int listenerId;
+
     public AprilTagTable(int tagId, NetworkTableInstance networkTables) {
         this.tagId = tagId;
+        this.networkTables = networkTables;
         tagSubtable = networkTables.getTable(APRILTAG_TABLE_NAME)
             .getSubTable(String.format(SUB_TABLE_NAME_PREFIX, tagId));
         tagValuesSubscriber = tagSubtable.getDoubleArrayTopic(VALUES_TOPIC_NAME).subscribe(new double[0]);
     }
 
-    public Optional<AprilTagDetectionInfo> getLatestAprilTag() {
-        double[] valuesArray = tagValuesSubscriber.get();
+    public void listen(OnDetectionInfo onDetectionInfo) {
+        listenerId = networkTables.addListener(
+            tagValuesSubscriber,
+            EnumSet.of(NetworkTableEvent.Kind.kValueAll),
+            event -> {
+                Optional<AprilTagDetectionInfo> detectionInfo = getDetectionInfo(event.valueData.value.getDoubleArray());
+                if (detectionInfo.isPresent()) {
+                    onDetectionInfo.onDetectionInfo(detectionInfo.get());
+                }
+            }
+        );
+    }
+
+    public void stop() {
+        if (listenerId != 0) {
+            networkTables.removeListener(listenerId);
+            listenerId = 0;
+        }
+    }
+
+    private Optional<AprilTagDetectionInfo> getDetectionInfo(double[] valuesArray) {
         if (valuesArray.length == 0) {
             // Nothing is there
             return Optional.empty();
@@ -95,5 +120,9 @@ public final class AprilTagTable {
                 )
             )
         );
+    }
+
+    public interface OnDetectionInfo {
+        public void onDetectionInfo(AprilTagDetectionInfo info);
     }
 }
