@@ -199,9 +199,9 @@ public class Constants {
             new IntPreference("WRIST_INTEGRAL_ZONE", 100);
         
         public static final DoublePreference SHOULDER_CANCODER_OFFSET = 
-            new DoublePreference("SHOULDER_CANCODER_OFFSET", 360 - 233.9);
+            new DoublePreference("SHOULDER_CANCODER_OFFSET", 67.5);
         public static final DoublePreference WRIST_CANCODER_OFFSET = 
-            new DoublePreference("WRIST_CANCODER_OFFSET", 360 - 19);
+            new DoublePreference("WRIST_CANCODER_OFFSET", 40.5);
 
         public static final DoublePreference WRIST_VELOCITY_MOTION_MAGIC = 
             new DoublePreference("WRIST_VELOCITY_MOTION_MAGIC", 10000);

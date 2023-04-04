@@ -33,6 +33,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
+    
     Logger logger = Logger.getInstance();
 
     // Record metadata

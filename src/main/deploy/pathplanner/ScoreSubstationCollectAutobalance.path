@@ -51,22 +51,22 @@
     },
     {
       "anchorPoint": {
-        "x": 1.63,
-        "y": 4.67
+        "x": 3.393446786893574,
+        "y": 3.202099737532809
       },
       "prevControl": {
-        "x": 1.7316002032004065,
-        "y": 4.697093387520109
+        "x": 6.1243154379132925,
+        "y": 3.2020997375328095
       },
       "nextControl": null,
-      "holonomicAngle": 180.001,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreConeTwo"
+          "autoBalance"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -76,15 +76,15 @@
   ],
   "markers": [
     {
-      "position": 0.1,
+      "position": 1.2,
       "names": [
-        "collectConeTwo"
+        "stow"
       ]
     },
     {
-      "position": 1.2,
+      "position": 0.1,
       "names": [
-        "moveArmL2"
+        "collectConeTwo"
       ]
     }
   ]

@@ -204,8 +204,27 @@ public final class ArmIOReal implements ArmIO {
     }
 
     @Override
-    public boolean isCurrentMotionFinished() {
-        return shoulderMotor1.isMotionProfileFinished() && wristMotor.isMotionProfileFinished();
+    public double getShoulderTrajectoryPosition() {
+        return shoulderMotor1.getActiveTrajectoryPosition();
     }
-    
+
+    @Override
+    public double getWristTrajectoryPosition() {
+        return wristMotor.getActiveTrajectoryPosition();
+    }
+
+    @Override
+    public double offsetWrist() {
+        double offset = Constants.Arm.WRIST_CANCODER_OFFSET.getValue() - (getShoulderEncoderDegrees() - Constants.Arm.STOWED_WRIST.getValue());
+        Constants.Arm.WRIST_CANCODER_OFFSET.setValue(offset);
+        return offset;
+    }
+
+    @Override
+    public double offsetShoulder() {
+        double offset = Constants.Arm.SHOULDER_CANCODER_OFFSET.getValue() - (getShoulderEncoderDegrees() - Constants.Arm.STOWED_SHOULDER.getValue());
+        Constants.Arm.SHOULDER_CANCODER_OFFSET.setValue(offset);
+        return offset;
+    }
+
 }

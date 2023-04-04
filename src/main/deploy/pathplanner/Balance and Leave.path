@@ -10,14 +10,14 @@
         "x": 2.891937437721029,
         "y": 3.0
       },
-      "holonomicAngle": -180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "coneScoreSlow"
+          "scoreConeOne"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -26,27 +26,27 @@
     },
     {
       "anchorPoint": {
-        "x": 5.823068536293992,
+        "x": 6.337664144657818,
         "y": 2.996089986473838
       },
       "prevControl": {
-        "x": 4.823068536293992,
+        "x": 5.337664144657818,
         "y": 2.996089986473838
       },
       "nextControl": {
-        "x": 6.823068536293992,
+        "x": 5.337664144657818,
         "y": 2.996089986473838
       },
-      "holonomicAngle": -180.0,
-      "isReversal": false,
+      "holonomicAngle": 0.0,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "after",
-        "waitTime": 3.0
+        "waitTime": 2.0
       }
     },
     {
@@ -59,7 +59,7 @@
         "y": 3.0
       },
       "nextControl": null,
-      "holonomicAngle": -180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -76,10 +76,9 @@
   ],
   "markers": [
     {
-      "position": 0.11636363636362976,
+      "position": 0.0,
       "names": [
-        "event",
-        "stopSlurpp"
+        "stowOne"
       ]
     }
   ]
