@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.TeleopSwerveCommand;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.control.ControllerBinding;
@@ -24,6 +25,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem {
@@ -111,7 +113,7 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
         for (SwerveModule mod : swerveModules) {
             mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
         }
-    }    
+    }
 
     @Override
     public SwerveDriveKinematics getKinematics() {
@@ -137,6 +139,32 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
     public void setPose(Pose2d pose) {
         poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
+    
+    @Override
+    public CommandBase createAutobalanceCommand() {
+        CommandBase balanceCommand =  new AutoBalanceCommand() {
+
+            @Override
+            public void driveTeleop(Translation2d translation, double rotation, boolean fieldRelative) {
+                drive(translation, rotation, fieldRelative, true);
+            }
+
+            @Override
+            public Translation2d getTilt() {
+                double roll = Swerve.INVERT_GYRO
+                    ? 360 - gyro.getRoll()
+                    : gyro.getRoll();
+                double pitch = Swerve.INVERT_GYRO
+                    ? 360 - gyro.getPitch()
+                    : gyro.getPitch();
+                
+                Translation2d tilt = new Translation2d(roll, pitch); 
+                return tilt.times(Swerve.MAX_SPEED);
+            }
+        };
+        balanceCommand.addRequirements(this);
+        return balanceCommand;
+    }
 
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
@@ -154,13 +182,16 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
         return positions;
     }
 
-    public void zeroGyro(){
+    public void zeroGyro() {
         gyro.setYaw(0);
     }
 
     public Rotation2d getYaw() {
-        return Swerve.INVERT_GYRO ?
-            Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
+        double yaw = gyro.getYaw();
+
+        return Swerve.INVERT_GYRO
+            ? Rotation2d.fromDegrees(360 - yaw)
+            : Rotation2d.fromDegrees(yaw);
     }
 
     public void resetModulesToAbsolute() {
@@ -170,7 +201,7 @@ public class SwerveSubsystemNew extends SubsystemBase implements SwerveSubsystem
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
         poseEstimator.update(getYaw(), getModulePositions());  
 
         gyro.updateInputs(inputs);

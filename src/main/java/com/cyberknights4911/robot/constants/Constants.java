@@ -77,6 +77,7 @@ public class Constants {
     //auto balance
     public static final boolean PITCH_INVERSION = false;
     public static final boolean ROLL_INVERSION = false;
+    public static final boolean YAW_INVERSION = false;
 
     public static final double MAX_SPEED = 1;
 

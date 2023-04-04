@@ -2,8 +2,6 @@ package com.cyberknights4911.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.AutoLog;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-
 public interface GyroIO {
     @AutoLog
     public static class GyroIOInputs {

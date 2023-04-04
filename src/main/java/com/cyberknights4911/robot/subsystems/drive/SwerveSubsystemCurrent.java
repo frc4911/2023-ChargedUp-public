@@ -22,8 +22,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.DefaultSwerveCommand;
 import com.cyberknights4911.robot.config.RobotConfiguration;
 import com.cyberknights4911.robot.config.SwerveConfiguration;
@@ -698,10 +700,29 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
         };
     }
 
+    @Override
+    public CommandBase createAutobalanceCommand() {
+        CommandBase balanceCommand = new AutoBalanceCommand() {
+
+            @Override
+            public void driveTeleop(Translation2d translation, double rotation, boolean fieldRelative) {
+                setTeleopInputs(translation.getX(), translation.getY(), rotation, false, fieldRelative, true);
+            }
+
+            @Override
+            public Translation2d getTilt() {
+                Translation2d tilt = new Translation2d(getRoll().getDegrees(), getPitch().getDegrees()); 
+                return tilt.times(Constants.MAX_SPEED);
+            }
+        };
+        balanceCommand.addRequirements(this);
+        return balanceCommand;
+    }
+
     public Rotation2d getRoll() {
         double roll = gyroIO.getRoll();
 
-        return Constants.PITCH_INVERSION 
+        return Constants.ROLL_INVERSION 
             ? Rotation2d.fromDegrees(360 - roll)
             : Rotation2d.fromDegrees(roll);
     }

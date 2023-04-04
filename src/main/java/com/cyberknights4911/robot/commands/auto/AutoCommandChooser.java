@@ -7,13 +7,9 @@ import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
-import com.cyberknights4911.robot.commands.MoveHoodCommand;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
-import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystemCurrent;
-import com.cyberknights4911.robot.subsystems.hood.HoodSubsystem.HoodPositions;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
@@ -111,7 +107,7 @@ public final class AutoCommandChooser {
         HashMap<String, Command> eventMap = new HashMap<>();
         eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.40), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurrp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
-        eventMap.put("autoBalance", new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
+        eventMap.put("autoBalance", subsystems.getSwerveSubsystem().createAutobalanceCommand());
 
 
         Command autoCommand = createSwerveAutoBuilder(
@@ -184,7 +180,7 @@ public final class AutoCommandChooser {
         eventMap.put("stowArm", MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));
         eventMap.put("coneScoreSlow", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.4), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurpp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
-        eventMap.put("autoBalance", new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
+        eventMap.put("autoBalance", subsystems.getSwerveSubsystem().createAutobalanceCommand());
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
@@ -205,7 +201,7 @@ public final class AutoCommandChooser {
         eventMap.put("coneScore", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(-0.4), subsystems.getSlurppSubsystem()));
         eventMap.put("coneSpit", Commands.runOnce(() -> subsystems.getSlurppSubsystem().slurpp(0.4), subsystems.getSlurppSubsystem()));
         eventMap.put("stopSlurpp",Commands.runOnce(() -> subsystems.getSlurppSubsystem().stop(), subsystems.getSlurppSubsystem()));
-        eventMap.put("autoBalance", new AutoBalanceCommand((SwerveSubsystemCurrent) subsystems.getSwerveSubsystem()));
+        eventMap.put("autoBalance", subsystems.getSwerveSubsystem().createAutobalanceCommand());
 
         Command autoCommand = createSwerveAutoBuilder(
             eventMap,
