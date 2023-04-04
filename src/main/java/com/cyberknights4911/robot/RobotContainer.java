@@ -30,6 +30,10 @@ public class RobotContainer {
     controllerBinding = new XboxControllerBinding();
     autoCommandChooser = new AutoCommandChooser(subsystems);
 
+    subsystems.getVisionSubsystem().setListener((robotPoseMeters, timestampSecond) -> {
+      subsystems.getSwerveSubsystem().correctPosition(robotPoseMeters, timestampSecond);
+    });
+
     configureStickBindinges();
     configureButtonBindings();
 

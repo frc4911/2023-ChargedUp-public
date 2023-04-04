@@ -499,6 +499,11 @@ public class SwerveSubsystemCurrent implements SwerveSubsystem {
         setState(SwerveSubsystemCurrent.ControlState.PATH_FOLLOWING);
     }
 
+    @Override
+    public void correctPosition(Pose2d robotPoseMeters, double timestampSeconds) {
+        mEstimator.addVisionMeasurement(robotPoseMeters, timestampSeconds);
+    }
+
     /**
      * Updates the field relative position of the robot.
      *

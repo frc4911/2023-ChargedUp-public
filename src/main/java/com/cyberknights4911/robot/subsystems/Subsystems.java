@@ -18,6 +18,8 @@ import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIO;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIOReal;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppSubsystem;
+import com.cyberknights4911.robot.subsystems.vision.VisionIO;
+import com.cyberknights4911.robot.subsystems.vision.VisionIOReal;
 import com.cyberknights4911.robot.subsystems.vision.VisionSubsystem;
 
 import edu.wpi.first.wpilibj.RobotBase;
@@ -50,7 +52,7 @@ public final class Subsystems {
                 new SwerveIOReal(configuration.getBackRightModuleConstants())
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            visionSubsystem = new VisionSubsystem();
+            visionSubsystem = new VisionSubsystem(new VisionIOReal());
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
@@ -64,7 +66,7 @@ public final class Subsystems {
                 new SwerveIO() {}
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            visionSubsystem = new VisionSubsystem();
+            visionSubsystem = new VisionSubsystem(new VisionIO() {});
         }
     }
 
@@ -86,5 +88,9 @@ public final class Subsystems {
 
     public BobSubsystem getBobSubsystem() {
         return bobSubsystem;
+    }
+
+    public VisionSubsystem getVisionSubsystem() {
+        return visionSubsystem;
     }
 }

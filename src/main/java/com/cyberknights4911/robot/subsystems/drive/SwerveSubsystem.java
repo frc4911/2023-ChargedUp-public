@@ -28,4 +28,7 @@ public interface SwerveSubsystem extends Subsystem {
 
     /** Perform initialization for path following. */
     public void initForPathFollowing();
+
+    /** Correct the odometry-calculated postion with a measured position. */
+    public void correctPosition(Pose2d robotPoseMeters, double timestampSeconds);
 }
