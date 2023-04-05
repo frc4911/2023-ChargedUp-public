@@ -402,8 +402,7 @@ public final class AutoCommandChooser {
         Command collectConeTwo = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
             .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.85, subsystems.getArmSubsystem(), false))
             .andThen(Commands.waitSeconds(1))
-            .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), 0.4, subsystems.getArmSubsystem(), false));
-        Command moveArmL2 = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L2);
+            .andThen(MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.STOWED));
         Command scoreConeTwo = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), false)
             .andThen(Commands.waitSeconds(.1));
         Command collectConeThree = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_FLOOR_FRONT_CONE)
@@ -415,7 +414,6 @@ public final class AutoCommandChooser {
         
         eventMap.put("scoreConeOne", scoreConeOne);
         eventMap.put("collectConeTwo", collectConeTwo);
-        eventMap.put("moveArmL2", moveArmL2);
         eventMap.put("scoreConeTwo", scoreConeTwo);
         eventMap.put("collectConeThree", collectConeThree);
         eventMap.put("scoreConeThree", scoreConeThree);
