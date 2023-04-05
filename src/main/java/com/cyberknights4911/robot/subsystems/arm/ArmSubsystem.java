@@ -2,6 +2,7 @@ package com.cyberknights4911.robot.subsystems.arm;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -50,6 +51,10 @@ public final class ArmSubsystem extends SubsystemBase {
         return true;
     }
 
+    public void resetCANCoders() {
+        armIO.offsetShoulder();
+        armIO.offsetWrist();
+    }
     @Override
     public void periodic() {
         armIO.updateInputs(inputs);
@@ -60,8 +65,12 @@ public final class ArmSubsystem extends SubsystemBase {
         return armIO.getShoulderEncoderDegrees();
     }
 
-    public boolean isCurrentMotionFinished() {
-        return armIO.isCurrentMotionFinished();
+    public double getShoulderTrajectoryPosition() {
+        return armIO.getShoulderTrajectoryPosition();
+    }
+
+    public double getWristTrajectoryPosition() {
+        return armIO.getWristTrajectoryPosition();
     }
 
     public static double convertDegreesToCtreTicks(double degrees) {

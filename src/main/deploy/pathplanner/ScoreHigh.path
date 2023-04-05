@@ -2,59 +2,54 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8778355388379817,
-        "y": 2.149866097164433
+        "x": 2.0,
+        "y": 2.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.877835538837982,
-        "y": 2.149866097164433
+        "x": 2.449608437020012,
+        "y": 1.9897696856734644
       },
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreConeOne"
+          "scoreConeOne",
+          "stowOne"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
-        "waitTime": 1.0
+        "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 4.30215262712979,
-        "y": 2.15
+        "x": 2.0,
+        "y": 2.0
       },
       "prevControl": {
-        "x": 3.3021526271297903,
-        "y": 2.15
+        "x": 1.5462072578924038,
+        "y": 1.9897696856734644
       },
       "nextControl": null,
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "autoBalance"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.014545454545459902,
-      "names": [
-        "stowOne"
-      ]
-    }
-  ]
+  "maxVelocity": 4.0,
+  "maxAcceleration": null,
+  "isReversed": null,
+  "markers": []
 }
