@@ -2,9 +2,11 @@ package com.cyberknights4911.robot.commands;
 
 import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.DoublePreference;
+import com.cyberknights4911.robot.subsystems.arm.ArmIO;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,10 +18,19 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     private final ArmSubsystem armSubsystem;
     private final ArmPositions desiredPosition;
     private final InitializedListener listener;
+    
+    private final double shoulderErrorThreshold = 1.0;
+    private final double wristErrorThreshold = 1.0;
+    private final double retryAfter = .5;
+
+    private final int loopsToSettle = 40; // how many loops sensor must be close-enough
+    private int thresholdLoops = 0;
 
     private boolean shouldTuckWrist;
     private boolean isWristTucked;
+    private boolean isMovingFinal;
     private double safePosition;
+    private double retryStartTime;
 
     private MoveArmMotionMagicCommand(
             ArmSubsystem armSubsystem, ArmPositions desiredPosition, InitializedListener listener) {
@@ -36,7 +47,10 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
         shouldTuckWrist = false;
         isWristTucked = false;
+        isMovingFinal = true;
         safePosition = 0;
+        thresholdLoops = 0;
+        retryStartTime = Timer.getFPGATimestamp();
 
         double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
         double desiredWristPosition = desiredPosition.wristPosition.getValue();
@@ -49,33 +63,37 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             case COLLECT_FLOOR_FRONT_CONE:
             case COLLECT_FLOOR_FRONT_CUBE:
                 if (currentArmPosition > 180) {
-                    this.shouldTuckWrist = true;
-                    this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_FRONT.getValue();
+                    shouldTuckWrist = true;
+                    safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_FRONT.getValue();
                     desiredWristPosition = Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue();
                 }
                 break;
             case SCORE_L3:
             case COLLECT_SUBSTATION_BACK:
                 if (currentArmPosition < 180) {
-                    this.shouldTuckWrist = true;
-                    this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_TOP.getValue();
+                    shouldTuckWrist = true;
+                    safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_TOP.getValue();
                     desiredWristPosition = Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue();
                 } else if (currentArmPosition > 270) {
-                    this.shouldTuckWrist = true;
-                    this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_MIDDLE.getValue();
+                    shouldTuckWrist = true;
+                    safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_MIDDLE.getValue();
                 }
                 break;
             case COLLECT_FLOOR_BACK_CUBE:
             case COLLECT_FLOOR_BACK_CONE:
             // TODO: try combining these cases with those immediately above. See if violations are even possible.
             if (currentArmPosition < 270) {
-                this.shouldTuckWrist = true;
-                this.safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_BOTTOM.getValue();
+                shouldTuckWrist = true;
+                safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_BOTTOM.getValue();
             }
                 break;
             default:
-                this.shouldTuckWrist = false;
+                shouldTuckWrist = false;
                 break;
+        }
+
+        if (shouldTuckWrist) {
+            isMovingFinal = false;
         }
 
         armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
@@ -92,37 +110,44 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
             // No need to keep sending the moveWrist call.
             isWristTucked = true;
+            isMovingFinal = true;
+            // restart the retry start time
+            retryStartTime = Timer.getFPGATimestamp();
+        }
+
+        if (isMovingFinal) {
+            checkCurrentMotionFinished();
+            if (Timer.getFPGATimestamp() - retryStartTime > retryAfter) {
+                rerunMoveToPosition();
+                retryStartTime = Timer.getFPGATimestamp();
+            }
+        }
+    }
+
+    private void checkCurrentMotionFinished() {
+        double shoulderError = Math.abs(armSubsystem.getShoulderTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.shoulderPosition.getValue()));
+        double wristError = Math.abs(armSubsystem.getWristTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.wristPosition.getValue()));
+        System.out.println("shoulder error: " + shoulderError);
+        System.out.println("wrist error: " + wristError);
+        if (shoulderError < shoulderErrorThreshold && wristError < wristErrorThreshold) {
+            thresholdLoops++;
+        } else {
+            thresholdLoops = 0;
         }
     }
 
     @Override
-    public void end(boolean interrupted) {
-        armSubsystem.setBrakeMode();
+    public boolean isFinished() {
+        return thresholdLoops > loopsToSettle;
     }
 
     public ArmPositions getDesiredPosition() {
         return desiredPosition;
     }
 
-    /**
-     * Creates a command that terminates when the arm movement is complete. This is useful for
-     * building command sequences that need to wait for the arm to reach a requested postion since
-     * arm commands never actually finish themselves.
-     */
-    public CommandBase getMovementFinishedCommand() {
-        // Use proxy to defer 
-        return new ProxyCommand(() -> {
-            return new CommandBase() {
-                @Override
-                public boolean isFinished() {
-                    return armSubsystem.isCurrentMotionFinished();
-                }
-            };
-        });
-    }
-
     /** Used in tuning mode to move to the desired positions after modifying them. */
-    private void tuningModeAdjust() {
+    private void rerunMoveToPosition() {
+        System.out.println("rerunMoveToPosition");
         armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
         armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
     }
@@ -176,14 +201,14 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         private CommandBase increase(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() + 1);
-                currentCommand.tuningModeAdjust();
+                currentCommand.rerunMoveToPosition();
             });
         }
 
         private CommandBase decrease(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() - 1);
-                currentCommand.tuningModeAdjust();
+                currentCommand.rerunMoveToPosition();
             });
         }
 

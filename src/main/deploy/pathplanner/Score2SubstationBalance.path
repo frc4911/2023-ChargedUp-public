@@ -26,16 +26,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.732706798746932,
-        "y": 4.36
+        "x": 6.715034257457958,
+        "y": 4.231119446547024
       },
       "prevControl": {
-        "x": 6.482092964185928,
-        "y": 4.366773346880027
+        "x": 6.125588817986955,
+        "y": 4.5710926696033125
       },
       "nextControl": {
-        "x": 6.482092964185928,
-        "y": 4.366773346880027
+        "x": 6.125588817986955,
+        "y": 4.5710926696033125
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -51,14 +51,17 @@
     },
     {
       "anchorPoint": {
-        "x": 1.63,
-        "y": 4.67
+        "x": 1.7291745853106537,
+        "y": 3.5221210528013063
       },
       "prevControl": {
-        "x": 1.7316002032004065,
-        "y": 4.697093387520109
+        "x": 2.8819934103631555,
+        "y": 5.136067407874807
       },
-      "nextControl": null,
+      "nextControl": {
+        "x": 1.5576427158560446,
+        "y": 3.2819764355648537
+      },
       "holonomicAngle": 180.001,
       "isReversal": false,
       "velOverride": null,
@@ -71,6 +74,30 @@
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.222104421384306,
+        "y": 3.144750940001166
+      },
+      "prevControl": {
+        "x": 3.798992476729603,
+        "y": 3.190492771855729
+      },
+      "nextControl": null,
+      "holonomicAngle": -180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "autoBalance"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     }
   ],
@@ -85,6 +112,18 @@
       "position": 1.2,
       "names": [
         "moveArmL2"
+      ]
+    },
+    {
+      "position": 2.1599999999999833,
+      "names": [
+        "stow"
+      ]
+    },
+    {
+      "position": 2.0,
+      "names": [
+        "scoreConeTwo"
       ]
     }
   ]

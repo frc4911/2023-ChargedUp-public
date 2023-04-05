@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8919374377210312,
-        "y": 3.0
+        "x": 1.82,
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.891937437721029,
-        "y": 3.0
+        "x": 1.8020491227072364,
+        "y": 5.0050349837765
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -19,6 +19,31 @@
         "names": [
           "scoreConeOne"
         ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.732706798746932,
+        "y": 4.36
+      },
+      "prevControl": {
+        "x": 6.482092964185928,
+        "y": 4.366773346880027
+      },
+      "nextControl": {
+        "x": 6.482092964185928,
+        "y": 4.366773346880027
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -26,37 +51,12 @@
     },
     {
       "anchorPoint": {
-        "x": 5.502875713312054,
-        "y": 3.0075254444374795
+        "x": 3.393446786893574,
+        "y": 3.202099737532809
       },
       "prevControl": {
-        "x": 4.502875713312054,
-        "y": 3.0075254444374795
-      },
-      "nextControl": {
-        "x": 4.502875713312054,
-        "y": 3.0075254444374795
-      },
-      "holonomicAngle": 0.0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "after",
-        "waitTime": 2.0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 4.256410795275228,
-        "y": 3.0
-      },
-      "prevControl": {
-        "x": 5.028167535435691,
-        "y": 3.0
+        "x": 6.1243154379132925,
+        "y": 3.2020997375328095
       },
       "nextControl": null,
       "holonomicAngle": 0.0,
@@ -68,17 +68,23 @@
         "names": [
           "autoBalance"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
-        "waitTime": 0
+        "waitTime": 0.0
       }
     }
   ],
   "markers": [
     {
-      "position": 0.0,
+      "position": 1.2,
       "names": [
-        "stowOne"
+        "stow"
+      ]
+    },
+    {
+      "position": 0.1,
+      "names": [
+        "collectConeTwo"
       ]
     }
   ]
