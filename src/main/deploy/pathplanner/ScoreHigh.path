@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.999999999999999,
-        "y": 2.0
+        "x": 2.449608437020012,
+        "y": 1.9897696856734644
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -17,9 +17,10 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreConeOne"
+          "scoreConeOne",
+          "stowOne"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -30,8 +31,8 @@
         "y": 2.0
       },
       "prevControl": {
-        "x": 2.9985111465434153,
-        "y": 2.0
+        "x": 1.5462072578924038,
+        "y": 1.9897696856734644
       },
       "nextControl": null,
       "holonomicAngle": 0,
