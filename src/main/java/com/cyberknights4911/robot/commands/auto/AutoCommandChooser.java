@@ -209,7 +209,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("Balance and Leave", new PathConstraints(2, 1))
+            PathPlanner.loadPathGroup("Balance and Leave", new PathConstraints(1, 1))
         );
 
         return new InstantCommand(
