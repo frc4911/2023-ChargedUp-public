@@ -20,8 +20,8 @@ public final class BobSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        bobIO.updateInputs(inputs);
-        Logger.getInstance().processInputs("Bob", inputs);
+        // bobIO.updateInputs(inputs);
+        // Logger.getInstance().processInputs("Bob", inputs);
     }
 
     public void setLockout(boolean extend) {
