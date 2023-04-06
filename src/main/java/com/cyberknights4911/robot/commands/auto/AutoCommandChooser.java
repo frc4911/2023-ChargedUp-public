@@ -111,7 +111,7 @@ public final class AutoCommandChooser {
     private Command getAutoBalanceCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
 
-        Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.COLLECT_SUBSTATION_BACK)
+        Command scoreConeOne = MoveArmMotionMagicCommand.create(subsystems.getArmSubsystem(), ArmPositions.SCORE_L3)
         // .andThen(Commands.waitSeconds(.1))
         .andThen(new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), false))
         .andThen(Commands.waitSeconds(.03));
@@ -128,7 +128,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(3, 1.5))
+            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(4, 3))
         );
 
         return new InstantCommand(
