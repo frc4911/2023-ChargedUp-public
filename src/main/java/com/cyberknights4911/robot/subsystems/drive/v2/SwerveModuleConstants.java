@@ -6,6 +6,11 @@ import com.cyberknights4911.robot.constants.Ports;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class SwerveModuleConstants {
+    private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 20.65;
+    private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 159.50;
+    private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 194.00;
+    private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 104.67;
+
     private static final CotsFalconSwerveConstants PHYSICAL_SWERVE_MODULE =
         CotsFalconSwerveConstants.SDSMK4i(
             CotsFalconSwerveConstants.DriveGearRatios.SDSMK4i_L1
@@ -17,7 +22,7 @@ public final class SwerveModuleConstants {
             Ports.Drive.FRONT_LEFT_DRIVE,
             Ports.Drive.FRONT_LEFT_STEER,
             Ports.Drive.FRONT_LEFT_CANCODER,
-            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES),
             PHYSICAL_SWERVE_MODULE);
 
     public static final SwerveModuleConstants FRONT_RIGHT = 
@@ -26,7 +31,7 @@ public final class SwerveModuleConstants {
             Ports.Drive.FRONT_RIGHT_DRIVE,
             Ports.Drive.FRONT_RIGHT_STEER,
             Ports.Drive.FRONT_RIGHT_CANCODER,
-            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES),
             PHYSICAL_SWERVE_MODULE);
 
     public static final SwerveModuleConstants BACK_LEFT = 
@@ -35,7 +40,7 @@ public final class SwerveModuleConstants {
             Ports.Drive.BACK_LEFT_DRIVE,
             Ports.Drive.BACK_LEFT_STEER,
             Ports.Drive.BACK_LEFT_CANCODER,
-            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES),
             PHYSICAL_SWERVE_MODULE);
 
     public static final SwerveModuleConstants BACK_RIGHT = 
@@ -44,7 +49,7 @@ public final class SwerveModuleConstants {
             Ports.Drive.BACK_RIGHT_DRIVE,
             Ports.Drive.BACK_RIGHT_STEER,
             Ports.Drive.BACK_RIGHT_CANCODER,
-            Rotation2d.fromDegrees(0),
+            Rotation2d.fromDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES),
             PHYSICAL_SWERVE_MODULE);
 
     private final int moduleNumber;

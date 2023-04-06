@@ -55,7 +55,21 @@ public final class SwerveIOReal implements SwerveIO {
     
     @Override
     public void updateInputs(SwerveIOInputs inputs) {
-        // TODO: populate inputs
+        inputs.driveVelocityRpm = Conversions.falconToMPS(
+            getDriveSensorVelocity(),
+            swerveModuleConstants.getPhysicalSwerveModule().wheelCircumference,
+            swerveModuleConstants.getPhysicalSwerveModule().driveGearRatio
+        );
+        inputs.driveAppliedVolts = driveMotor.getMotorOutputVoltage();
+        inputs.driveCurrentAmps = driveMotor.getSupplyCurrent();
+        inputs.driveTempCelcius = driveMotor.getTemperature();
+        
+        inputs.turnPositionDeg = getAngleEncoderDegrees();
+        inputs.turnAppliedVolts = angleMotor.getMotorOutputVoltage();
+        inputs.turnCurrentAmps = angleMotor.getSupplyCurrent();
+        inputs.turnTempCelcius = angleMotor.getTemperature();
+        
+        inputs.turnAbsolutePositionDeg = angleEncoder.getAbsolutePosition();
     }
 
     @Override
