@@ -67,7 +67,7 @@ public class JoystickFinder {
 
     private JoystickFinder(String caller) {
         sClassName = this.getClass().getSimpleName();
-        printUsage(caller);
+        //printUsage(caller);
 
         for (int i = 0; i < mAllJoysticks.length; i++) {
             mAllJoysticks[i] = new Joystick(i);
@@ -75,7 +75,7 @@ public class JoystickFinder {
         }
 
         createJoystickFinder();
-        printSticks();
+        //printSticks();
     }
 
     private void printSticks() {

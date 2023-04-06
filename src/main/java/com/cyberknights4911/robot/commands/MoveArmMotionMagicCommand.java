@@ -127,8 +127,8 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     private void checkCurrentMotionFinished() {
         double shoulderError = Math.abs(armSubsystem.getShoulderTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.shoulderPosition.getValue()));
         double wristError = Math.abs(armSubsystem.getWristTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.wristPosition.getValue()));
-        System.out.println("shoulder error: " + shoulderError);
-        System.out.println("wrist error: " + wristError);
+        // System.out.println("shoulder error: " + shoulderError);
+        // System.out.println("wrist error: " + wristError);
         if (shoulderError < shoulderErrorThreshold && wristError < wristErrorThreshold) {
             thresholdLoops++;
         } else {

@@ -42,6 +42,6 @@ public final class GyroIOReal implements GyroIO {
     @Override
     public void setYaw(double angleInDegrees) {
         pigeon.setYaw(-angleInDegrees, Constants.LONG_CAN_TIMEOUTS_MS);
-        System.out.println("Pigeon yaw set to: " + angleInDegrees);
+        //System.out.println("Pigeon yaw set to: " + angleInDegrees);
     }
 }
