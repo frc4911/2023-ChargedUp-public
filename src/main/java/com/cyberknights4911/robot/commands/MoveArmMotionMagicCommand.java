@@ -147,7 +147,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
     /** Used in tuning mode to move to the desired positions after modifying them. */
     private void rerunMoveToPosition() {
-        System.out.println("rerunMoveToPosition");
+        //System.out.println("rerunMoveToPosition");
         armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
         armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
     }
