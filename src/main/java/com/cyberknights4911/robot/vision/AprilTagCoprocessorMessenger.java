@@ -42,7 +42,7 @@ public final class AprilTagCoprocessorMessenger {
                 try {
                     AprilTag[] tags = onTagsMessage(tableEvent.valueData.value.getString());
                     for (AprilTag tag: tags) {
-                        System.out.println("tag: " + tag.toString());
+                        //System.out.println("tag: " + tag.toString());
                     }
                 } catch (JsonProcessingException|IllegalArgumentException e) {
                     e.printStackTrace();

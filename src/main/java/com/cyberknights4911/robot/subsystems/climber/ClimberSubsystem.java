@@ -18,8 +18,8 @@ public final class ClimberSubsystem extends SubsystemBase {
         
     @Override
     public void periodic() {
-        climberIO.updateInputs(inputs);
-        Logger.getInstance().processInputs("Climber", inputs);
+        // climberIO.updateInputs(inputs);
+        // Logger.getInstance().processInputs("Climber", inputs);
     }
 
     public void setExtended(boolean extended) {

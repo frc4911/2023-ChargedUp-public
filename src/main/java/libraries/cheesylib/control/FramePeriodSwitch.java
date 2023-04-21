@@ -22,7 +22,7 @@ public class FramePeriodSwitch {
         } while(!retVal.equals(ErrorCode.OK) && retries-- > 0);
 
         if (!retVal.equals(ErrorCode.OK)){
-            System.out.println("setStatusFramePeriod("+statusFrame.toString()+") failed with status "+retVal.toString());
+            //System.out.println("setStatusFramePeriod("+statusFrame.toString()+") failed with status "+retVal.toString());
         }
     }
 
@@ -40,7 +40,7 @@ public class FramePeriodSwitch {
         } while(!retVal.equals(ErrorCode.OK) && retries-->0);
 
         if (!retVal.equals(ErrorCode.OK)){
-            System.out.println("setControlFramePeriod("+controlFrame.toString()+") failed with status "+retVal.toString());
+            //System.out.println("setControlFramePeriod("+controlFrame.toString()+") failed with status "+retVal.toString());
         }
     }
 
@@ -231,7 +231,7 @@ public class FramePeriodSwitch {
         // }
 
 
-        System.out.println("setFramePeriods took "+(Timer.getFPGATimestamp()-start));
+        //System.out.println("setFramePeriods took "+(Timer.getFPGATimestamp()-start));
     }
 
     public static double getStatorCurrent(TalonFX FXMotor){

@@ -20,7 +20,7 @@ public final class SlurppSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // splurppIO.updateInputs(inputs);
+        // slurppIO.updateInputs(inputs);
         // Logger.getInstance().processInputs("Slurpp", inputs);
     }
 

@@ -91,7 +91,7 @@ public class SwerveDriveModule {
             cancoderDegrees = cancoderPositions[0];
         }
         else{
-            System.out.println(moduleName +" assuming wheels aligned to 0 degrees, not using CANCoders");
+            //System.out.println(moduleName +" assuming wheels aligned to 0 degrees, not using CANCoders");
             cancoderDegrees = 0;
         }
         double fxTicksBefore = swerveIO.getTurnSensorPosition();
@@ -107,9 +107,9 @@ public class SwerveDriveModule {
             loops++;
         }
 
-        System.out.println(config.name + " cancoder degrees: " + cancoderDegrees +
-                ",  fx encoder ticks (before, target, adjusted): (" + fxTicksBefore + "," + fxTicksTarget + ","
-                + fxTicksNow + ") loops:" + loops);
+        // System.out.println(config.name + " cancoder degrees: " + cancoderDegrees +
+        //         ",  fx encoder ticks (before, target, adjusted): (" + fxTicksBefore + "," + fxTicksTarget + ","
+        //         + fxTicksNow + ") loops:" + loops);
     }
 
     // protected void convertCancoderToFX(){

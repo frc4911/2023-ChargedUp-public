@@ -57,8 +57,8 @@ public final class ArmSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        armIO.updateInputs(inputs);
-        Logger.getInstance().processInputs("Arm", inputs);
+        // armIO.updateInputs(inputs);
+        // Logger.getInstance().processInputs("Arm", inputs);
     }
 
     public double getShoulderPositionDegrees() {

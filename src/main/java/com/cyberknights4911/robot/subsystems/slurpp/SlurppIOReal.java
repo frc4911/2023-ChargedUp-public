@@ -20,6 +20,7 @@ public final class SlurppIOReal implements SlurppIO {
 
     public SlurppIOReal() {
         motor = TalonFXFactory.createTalon(Ports.Slurpp.MOTOR, Constants.CANIVORE_NAME);
+        motor.configFactoryDefault();
         motor.setInverted(false);
         motor.configStatorCurrentLimit(Constants.SLURPP_STATOR_LIMIT, Constants.LONG_CAN_TIMEOUTS_MS);
         motor.configSupplyCurrentLimit(Constants.SLURPP_SUPPLY_LIMIT, Constants.LONG_CAN_TIMEOUTS_MS);

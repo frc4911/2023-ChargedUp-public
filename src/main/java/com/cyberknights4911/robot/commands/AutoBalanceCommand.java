@@ -35,8 +35,8 @@ public class AutoBalanceCommand extends CommandBase {
     tilt = new Translation2d(getRoll(), getPitch()); 
     tilt = tilt.times(Constants.MAX_SPEED);
     mSwerveSubsystem.setTeleopInputs(
-                -tilt.getX()*0.01,
-                -tilt.getY()*0.01,
+                -tilt.getX()*0.003,
+                -tilt.getY()*0.003,
                 0,
                 false,
                 false,

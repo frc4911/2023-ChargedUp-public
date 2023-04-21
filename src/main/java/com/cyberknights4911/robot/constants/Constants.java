@@ -21,7 +21,7 @@ public class Constants {
      * Used to control whether to log to NetworkTables. This can be resource intensive so it should
      * be disabled for competitions.
      */
-    public static final boolean ENABLE_NT_LOGGING = true;
+    public static final boolean ENABLE_NT_LOGGING = false;
 
     //2023 Physical Robot Dimensions
     public static final double ROBOT_WHEEL_BASE = 22.75;
@@ -99,7 +99,7 @@ public class Constants {
     public static class Arm {
         private Arm() {}
 
-        public static final boolean IS_TUNING_ENABLED = false;
+        public static final boolean IS_TUNING_ENABLED = true;
 
         public static BooleanPreference SHOULD_USE_GRAVITY_FEED_FORWARD =
             new BooleanPreference("Should use shoulder gravity feed forward", true);
