@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.82,
-        "y": 5.0
+        "x": 1.8778355388379817,
+        "y": 2.149866097164433
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8020491227072364,
-        "y": 5.0050349837765
+        "x": 1.8778355388379817,
+        "y": 2.149866097164433
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -17,28 +17,29 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreConeOne"
+          "scoreConeOne",
+          "stowOne"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "after",
-        "waitTime": 0.0
+        "waitBehavior": "none",
+        "waitTime": 1.0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.73790517338524,
-        "y": 4.425522231928914
+        "x": 2.3809956892381683,
+        "y": 2.149866097164433
       },
       "prevControl": {
-        "x": 6.487291338824236,
-        "y": 4.432295578808941
+        "x": 2.426737717083253,
+        "y": 2.149866097164433
       },
       "nextControl": {
-        "x": 6.487291338824236,
-        "y": 4.432295578808941
+        "x": 2.2094637675193156,
+        "y": 2.149866097164433
       },
-      "holonomicAngle": 0,
-      "isReversal": true,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -51,41 +52,28 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8778355388379817,
-        "y": 4.928682382329101
+        "x": 4.599474534184447,
+        "y": 2.1384306392007923
       },
       "prevControl": {
-        "x": 2.6100621193692985,
-        "y": 4.928682382329101
+        "x": 3.5994745341844467,
+        "y": 2.1384306392007923
       },
       "nextControl": null,
-      "holonomicAngle": 180.001,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreConeTwo"
+          "autoBalance"
         ],
-        "executionBehavior": "sequential",
+        "executionBehavior": "parallel",
         "waitBehavior": "none",
-        "waitTime": 0.0
+        "waitTime": 0
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.1,
-      "names": [
-        "collectConeTwo"
-      ]
-    },
-    {
-      "position": 1.2,
-      "names": [
-        "moveArmL2"
-      ]
-    }
-  ]
+  "markers": []
 }

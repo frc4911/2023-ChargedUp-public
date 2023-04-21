@@ -128,7 +128,7 @@ public final class AutoCommandChooser {
             eventMap,
             subsystems.getSwerveSubsystem()
         ).fullAuto(
-            PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(4, 3))
+            PathPlanner.loadPathGroup("AutoBalance2", new PathConstraints(4, 3))
         );
 
         return new InstantCommand(
