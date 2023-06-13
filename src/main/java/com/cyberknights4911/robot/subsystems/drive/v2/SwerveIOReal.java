@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.util.Conversions;
 
@@ -20,15 +21,15 @@ public final class SwerveIOReal implements SwerveIO {
         this.swerveModuleConstants = swerveModuleConstants;
         
         /* Angle Encoder Config */
-        angleEncoder = new CANCoder(swerveModuleConstants.getCanCoderId());
+        angleEncoder = new CANCoder(swerveModuleConstants.getCanCoderId(), Constants.CANIVORE_NAME);
         configAngleEncoder();
 
         /* Angle Motor Config */
-        angleMotor = new TalonFX(swerveModuleConstants.getAngleMotorId());
+        angleMotor = new TalonFX(swerveModuleConstants.getAngleMotorId(), Constants.CANIVORE_NAME);
         configAngleMotor();
 
         /* Drive Motor Config */
-        driveMotor = new TalonFX(swerveModuleConstants.getDriveMotorId());
+        driveMotor = new TalonFX(swerveModuleConstants.getDriveMotorId(), Constants.CANIVORE_NAME);
         configDriveMotor();
     }
 
