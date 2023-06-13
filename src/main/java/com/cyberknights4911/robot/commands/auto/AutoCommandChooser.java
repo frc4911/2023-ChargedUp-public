@@ -85,7 +85,7 @@ public final class AutoCommandChooser {
         loggedDashboardChooser.addOption("Riley Test", getRileyTest());
         loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
         loggedDashboardChooser.addOption("TranslationTest", getTranslationTestCommand());
-        loggedDashboardChooser.addOption("Test", getTestCommand());
+        // loggedDashboardChooser.addOption("Test", getTestCommand());
 
     }
 

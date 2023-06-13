@@ -12,8 +12,8 @@ public final class SwerveModuleConstants {
     private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 104.67;
 
     private static final CotsFalconSwerveConstants PHYSICAL_SWERVE_MODULE =
-        CotsFalconSwerveConstants.SDSMK4i(
-            CotsFalconSwerveConstants.DriveGearRatios.SDSMK4i_L1
+        CotsFalconSwerveConstants.SDSMK2(
+            CotsFalconSwerveConstants.DriveGearRatios.SDSMK2
         );
 
     public static final SwerveModuleConstants FRONT_LEFT = 

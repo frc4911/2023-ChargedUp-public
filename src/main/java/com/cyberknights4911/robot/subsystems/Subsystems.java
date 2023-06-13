@@ -10,6 +10,7 @@ import com.cyberknights4911.robot.subsystems.climber.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.drive.v2.SwerveSubsystemNew;
 import com.cyberknights4911.robot.subsystems.drive.GyroIO;
 import com.cyberknights4911.robot.subsystems.drive.GyroIOReal;
+import com.cyberknights4911.robot.subsystems.drive.GyroIORealPigeon1;
 import com.cyberknights4911.robot.subsystems.drive.v2.SwerveIO;
 import com.cyberknights4911.robot.subsystems.drive.v2.SwerveIOReal;
 import com.cyberknights4911.robot.subsystems.drive.v2.SwerveModuleConstants;
@@ -38,7 +39,7 @@ public final class Subsystems {
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
             armSubsystem = new ArmSubsystem(new ArmIO() {});
             swerveSubsystem = new SwerveSubsystemNew(
-                new GyroIOReal(),
+                new GyroIORealPigeon1(),
                 new SwerveIOReal(SwerveModuleConstants.FRONT_LEFT),
                 new SwerveIOReal(SwerveModuleConstants.FRONT_RIGHT),
                 new SwerveIOReal(SwerveModuleConstants.BACK_LEFT),
