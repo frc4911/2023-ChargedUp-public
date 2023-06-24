@@ -8,6 +8,8 @@ import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.util.Conversions;
 
+import libraries.cyberlib.drivers.TalonFXFactory;
+
 public final class SwerveIOReal implements SwerveIO {
     private final TalonFX angleMotor;
     private final TalonFX driveMotor;
@@ -25,16 +27,17 @@ public final class SwerveIOReal implements SwerveIO {
         configAngleEncoder();
 
         /* Angle Motor Config */
-        angleMotor = new TalonFX(swerveModuleConstants.getAngleMotorId(), Constants.CANIVORE_NAME);
+        angleMotor = TalonFXFactory.createTalon(swerveModuleConstants.getAngleMotorId(), Constants.CANIVORE_NAME);
         configAngleMotor();
 
         /* Drive Motor Config */
-        driveMotor = new TalonFX(swerveModuleConstants.getDriveMotorId(), Constants.CANIVORE_NAME);
+        driveMotor = TalonFXFactory.createTalon(swerveModuleConstants.getDriveMotorId(), Constants.CANIVORE_NAME);
         configDriveMotor();
     }
 
     private void configAngleEncoder() {        
         angleEncoder.configFactoryDefault();
+        // swerveModuleConstants.getCtreConfigs().swerveCanCoderConfig.magnetOffsetDegrees = swerveModuleConstants.getAngleOffset().getDegrees();
         angleEncoder.configAllSettings(swerveModuleConstants.getCtreConfigs().swerveCanCoderConfig);
     }
 
@@ -65,7 +68,7 @@ public final class SwerveIOReal implements SwerveIO {
         inputs.driveCurrentAmps = driveMotor.getSupplyCurrent();
         inputs.driveTempCelcius = driveMotor.getTemperature();
         
-        inputs.turnPositionDeg = getAngleEncoderDegrees();
+        inputs.turnPositionDeg = 0;
         inputs.turnAppliedVolts = angleMotor.getMotorOutputVoltage();
         inputs.turnCurrentAmps = angleMotor.getSupplyCurrent();
         inputs.turnTempCelcius = angleMotor.getTemperature();

@@ -6,10 +6,10 @@ import com.cyberknights4911.robot.constants.Ports;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class SwerveModuleConstants {
-    private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 20.65;
-    private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 159.50;
-    private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 194.00;
-    private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 104.67;
+    private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 330;
+    private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 182.5;
+    private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 262.7;
+    private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 64.5;
 
     private static final CotsFalconSwerveConstants PHYSICAL_SWERVE_MODULE =
         CotsFalconSwerveConstants.SDSMK4i(
