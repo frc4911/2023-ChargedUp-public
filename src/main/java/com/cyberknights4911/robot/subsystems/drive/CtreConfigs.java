@@ -1,4 +1,4 @@
-package com.cyberknights4911.robot.subsystems.drive.v2;
+package com.cyberknights4911.robot.subsystems.drive;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;

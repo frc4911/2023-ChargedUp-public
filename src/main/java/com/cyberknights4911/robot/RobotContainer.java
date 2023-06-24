@@ -7,7 +7,7 @@ import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.XboxControllerBinding;
 import com.cyberknights4911.robot.subsystems.Subsystems;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
-import com.cyberknights4911.robot.subsystems.drive.v2.SwerveSubsystemNew;
+import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 import com.cyberknights4911.robot.commands.CANCoderResetCommand;
 import com.cyberknights4911.robot.commands.MoveArmMotionMagicCommand;
 import com.cyberknights4911.robot.commands.SlurppCommand;
@@ -57,8 +57,8 @@ public class RobotContainer {
     controllerBinding.triggersFor(ButtonAction.RESET_IMU).onTrue(
       Commands.runOnce(
         () -> {
-          ((SwerveSubsystemNew) subsystems.getSwerveSubsystem()).zeroGyro();
-          ((SwerveSubsystemNew) subsystems.getSwerveSubsystem()).resetModulesToAbsolute();
+          ((SwerveSubsystem) subsystems.getSwerveSubsystem()).zeroGyro();
+          ((SwerveSubsystem) subsystems.getSwerveSubsystem()).resetModulesToAbsolute();
         }
       )
     );

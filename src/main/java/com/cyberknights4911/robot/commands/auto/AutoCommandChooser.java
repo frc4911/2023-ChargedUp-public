@@ -19,11 +19,8 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public final class AutoCommandChooser {
@@ -128,9 +125,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("AutoBalance", new PathConstraints(3, 1.5))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getNothingCommand() {
@@ -139,9 +134,7 @@ public final class AutoCommandChooser {
 
         Command autoCommand = Commands.none();
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getScoreHighCommand() {
@@ -162,9 +155,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("ScoreHigh", new PathConstraints(0, 0))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getScoreLowCommand() {
@@ -181,9 +172,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("ScoreLow", new PathConstraints(0, 0))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
 
@@ -207,9 +196,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("Balance and Leave", new PathConstraints(4, 2))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getScoreCollectBalanceSubstationCommand() {
@@ -238,9 +225,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("ScoreSubstationCollectAutobalance", new PathConstraints(3, 1.2))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     //Tested by rileyTest
@@ -274,9 +259,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("Score2SubstationBalance", new PathConstraints(3, 1))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getScoreLeaveGuardCommand() {
@@ -297,9 +280,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("ScoreLeaveGuard", new PathConstraints(1, 3))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getScoreLeaveSubstationCommand() {
@@ -320,9 +301,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("ScoreLeaveSubstation", new PathConstraints(3, 1))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getScore2SubstationCommand() {
@@ -353,9 +332,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("Score2Substation", new PathConstraints(3, 1))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getScore2GuardrailCommand() {
@@ -374,7 +351,6 @@ public final class AutoCommandChooser {
         Command scoreConeTwo = new SlurppCommand(subsystems.getSlurppSubsystem(), -0.85, subsystems.getArmSubsystem(), true)
             .withTimeout(.5);
         
-        
         eventMap.put("scoreConeOne", scoreConeOne);
         eventMap.put("stowOne", stowOne);
         eventMap.put("collectCone", collectCone);
@@ -389,9 +365,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("Score2Guard", new PathConstraints(1, 3))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getScore3Substation() {
@@ -428,9 +402,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("Score3Substation", new PathConstraints(3, 1))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
     
     private Command getRileyTest() {
@@ -478,9 +450,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("Score3Guard", new PathConstraints(1, 3))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getRotationTestCommand() {
@@ -493,9 +463,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("RotationTest", new PathConstraints(1, 3))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getTranslationTestCommand() {
@@ -508,9 +476,7 @@ public final class AutoCommandChooser {
             PathPlanner.loadPathGroup("TranslationTest", new PathConstraints(3, 1))
         );
 
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     private Command getTestCommand() {
@@ -524,9 +490,7 @@ public final class AutoCommandChooser {
         );
 
         //TODO: We might need to call a stop on this or set something to stop the robot after it runs.
-        return new InstantCommand(
-            () -> subsystems.getSwerveSubsystem().initForPathFollowing()
-        ).andThen(autoCommand);
+        return autoCommand;
     }
 
     public Command getCurrentCommand() {
