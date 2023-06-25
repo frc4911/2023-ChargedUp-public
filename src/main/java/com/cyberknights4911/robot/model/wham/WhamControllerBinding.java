@@ -1,19 +1,22 @@
-package com.cyberknights4911.robot.control;
+package com.cyberknights4911.robot.model.wham;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.control.ControllerBinding;
+import com.cyberknights4911.robot.control.DriveStickAction;
+import com.cyberknights4911.robot.control.Triggers;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * Default controller binding. Do not place alternate bindings in this class. Instead, create a new
- * ControllerBinding specific to the alternate control scheme and swap the binding out in
+ * WHAM default controller binding. Do not place alternate bindings in this class. Instead, create
+ * a new ControllerBinding specific to the alternate control scheme and swap the binding out in
  * RobotContainer.
  */
-public final class XboxControllerBinding implements ControllerBinding {
+public final class WhamControllerBinding implements ControllerBinding<WhamButtonAction> {
     private static final Trigger ALWAYS_FALSE = new Trigger(new BooleanSupplier() {
         @Override
         public boolean getAsBoolean() {
@@ -25,14 +28,14 @@ public final class XboxControllerBinding implements ControllerBinding {
     private final CommandXboxController driverController;
     private final CommandXboxController operatorController;
 
-    public XboxControllerBinding() {
+    public WhamControllerBinding() {
         this(
             new CommandXboxController(Constants.DRIVER_CONTROLLER_PORT),
             new CommandXboxController(Constants.OPERATOR_CONTROLLER_PORT)
         );
     }
 
-    public XboxControllerBinding(
+    public WhamControllerBinding(
         CommandXboxController driverController, CommandXboxController operatorController
     ) {
         this.driverController = driverController;
@@ -40,7 +43,7 @@ public final class XboxControllerBinding implements ControllerBinding {
     }
 
     @Override
-    public Triggers triggersFor(ButtonAction action) {
+    public Triggers triggersFor(WhamButtonAction action) {
         switch(action) {
             case ALIGN_COLLECT: return new Triggers();
             case RESET_IMU: return new Triggers(driverController.y());
@@ -70,9 +73,8 @@ public final class XboxControllerBinding implements ControllerBinding {
         }
     }
 
-
     @Override
-    public DoubleSupplier supplierFor(StickAction action) {
+    public DoubleSupplier supplierFor(DriveStickAction action) {
         switch (action) {
             case FORWARD: return this::getForwardInput;
             case STRAFE: return this::getStrafeInput;

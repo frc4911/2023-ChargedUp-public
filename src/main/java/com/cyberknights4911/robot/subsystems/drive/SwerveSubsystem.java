@@ -11,7 +11,7 @@ import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.TeleopSwerveCommand;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.control.ControllerBinding;
-import com.cyberknights4911.robot.control.StickAction;
+import com.cyberknights4911.robot.control.DriveStickAction;
 
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
@@ -207,9 +207,9 @@ public class SwerveSubsystem extends SubsystemBase {
     public Command createDefaultCommand(ControllerBinding controllerBinding) {
         return new TeleopSwerveCommand(
             this,
-            controllerBinding.supplierFor(StickAction.FORWARD),
-            controllerBinding.supplierFor(StickAction.STRAFE),
-            controllerBinding.supplierFor(StickAction.ROTATE),
+            controllerBinding.supplierFor(DriveStickAction.FORWARD),
+            controllerBinding.supplierFor(DriveStickAction.STRAFE),
+            controllerBinding.supplierFor(DriveStickAction.ROTATE),
             () -> false
         );
     }

@@ -7,6 +7,9 @@ import com.cyberknights4911.robot.subsystems.bob.BobIO;
 import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
 import com.cyberknights4911.robot.subsystems.climber.ClimberIO;
 import com.cyberknights4911.robot.subsystems.climber.ClimberSubsystem;
+import com.cyberknights4911.robot.subsystems.collector.Collector;
+import com.cyberknights4911.robot.subsystems.collector.CollectorIO;
+import com.cyberknights4911.robot.subsystems.collector.CollectorIOReal;
 import com.cyberknights4911.robot.subsystems.drive.GyroIO;
 import com.cyberknights4911.robot.subsystems.drive.GyroIOReal;
 import com.cyberknights4911.robot.subsystems.drive.SwerveIO;
@@ -29,6 +32,7 @@ public final class Subsystems {
     private final ArmSubsystem armSubsystem ;
     private final SwerveSubsystem swerveSubsystem;
     private final BobSubsystem bobSubsystem;
+    private final Collector collector;
 
     public Subsystems() {
         if (RobotBase.isReal()) {
@@ -44,6 +48,7 @@ public final class Subsystems {
                 new SwerveIOReal(SwerveModuleConstants.BACK_RIGHT)
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
+            collector = new Collector(new CollectorIOReal());
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
@@ -56,6 +61,7 @@ public final class Subsystems {
                 new SwerveIO() {}
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
+            collector = new Collector(new CollectorIO() {});
         }
     }
 
@@ -77,5 +83,9 @@ public final class Subsystems {
 
     public BobSubsystem getBobSubsystem() {
         return bobSubsystem;
+    }
+
+    public Collector getCollector() {
+        return collector;
     }
 }
