@@ -30,9 +30,7 @@ public class RobotContainer {
     controllerBinding = new XboxControllerBinding();
     autoCommandChooser = new AutoCommandChooser(subsystems);
 
-    subsystems.getVisionSubsystem().setListener((robotPoseMeters, timestampSecond) -> {
-      subsystems.getSwerveSubsystem().correctPosition(robotPoseMeters, timestampSecond);
-    });
+    // TODO: set swerve as pose estimation listener on vision subsystem
 
     configureStickBindinges();
     configureButtonBindings();

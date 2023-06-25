@@ -31,8 +31,13 @@ public class VisionSubsystem extends SubsystemBase implements AprilTagTable.OnDe
         }
     }
 
-    public void setListener(PoseEstimateListener listener) {
-        this.listener = listener;
+    public interface PoseEstimateListener {
+        /**
+         * Called when a new pose estimate is received from the vision system
+         * @param pose2d the estimaged pose, in meters
+         * @param timeStampSeconds the time the pose was estimated
+         */
+        void onPoseEstimate(Pose2d pose2d, double timestampSeconds);
     }
 
     @Override
@@ -45,13 +50,11 @@ public class VisionSubsystem extends SubsystemBase implements AprilTagTable.OnDe
             // TODO: convert info into robot pose, then pass it to estimator
         }
     }
+    
 
-    public interface PoseEstimateListener {
-        /**
-         * Called when a new pose estimate is received from the vision system
-         * @param pose2d the estimaged pose, in meters
-         * @param timeStampSeconds the time the pose was estimated
-         */
-        void onPoseEstimate(Pose2d pose2d, double timestampSeconds);
+    @Override
+    public void periodic() {
+        // TODO Auto-generated method stub
+        super.periodic();
     }
 }
