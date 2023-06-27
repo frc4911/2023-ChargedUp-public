@@ -37,10 +37,10 @@ public final class QuickDrop implements RobotModel {
             )
           );
         binding.triggersFor(QuickDropButtonAction.COLLECTOR_RUN_FORWARD).whileTrue(
-            new QuickDropCollectorCommand(subsystems, 0.10)
+            new QuickDropCollectorCommand(subsystems, 0.5)
         );
         binding.triggersFor(QuickDropButtonAction.COLLECTOR_RUN_REVERSE).whileTrue(
-            new QuickDropCollectorCommand(subsystems, -0.10)
+            new QuickDropCollectorCommand(subsystems, -0.5)
         );
         binding.triggersFor(QuickDropButtonAction.COLLECTOR_EXTEND).onTrue(
             Commands.runOnce(

@@ -5,6 +5,7 @@ import com.cyberknights4911.robot.subsystems.arm.ArmIOReal;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.bob.BobIO;
 import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
+import com.cyberknights4911.robot.subsystems.camera.CollectorCamera;
 import com.cyberknights4911.robot.subsystems.climber.ClimberIO;
 import com.cyberknights4911.robot.subsystems.climber.ClimberSubsystem;
 import com.cyberknights4911.robot.subsystems.collector.Collector;
@@ -33,6 +34,7 @@ public final class Subsystems {
     private final SwerveSubsystem swerveSubsystem;
     private final BobSubsystem bobSubsystem;
     private final Collector collector;
+    private final CollectorCamera camera;
 
     public Subsystems() {
         if (RobotBase.isReal()) {
@@ -49,6 +51,7 @@ public final class Subsystems {
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
             collector = new Collector(new CollectorIOReal());
+            camera = new CollectorCamera();
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
@@ -62,6 +65,7 @@ public final class Subsystems {
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
             collector = new Collector(new CollectorIO() {});
+            camera = new CollectorCamera();
         }
     }
 
@@ -87,5 +91,9 @@ public final class Subsystems {
 
     public Collector getCollector() {
         return collector;
+    }
+
+    public CollectorCamera getCamera() {
+        return camera;
     }
 }
