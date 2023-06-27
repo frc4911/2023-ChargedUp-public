@@ -5,15 +5,18 @@ import com.cyberknights4911.robot.subsystems.arm.ArmIOReal;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 import com.cyberknights4911.robot.subsystems.bob.BobIO;
 import com.cyberknights4911.robot.subsystems.bob.BobSubsystem;
+import com.cyberknights4911.robot.subsystems.camera.CollectorCamera;
 import com.cyberknights4911.robot.subsystems.climber.ClimberIO;
 import com.cyberknights4911.robot.subsystems.climber.ClimberSubsystem;
-import com.cyberknights4911.robot.subsystems.drive.v2.SwerveSubsystemNew;
+import com.cyberknights4911.robot.subsystems.collector.Collector;
+import com.cyberknights4911.robot.subsystems.collector.CollectorIO;
+import com.cyberknights4911.robot.subsystems.collector.CollectorIOReal;
 import com.cyberknights4911.robot.subsystems.drive.GyroIO;
 import com.cyberknights4911.robot.subsystems.drive.GyroIOReal;
 import com.cyberknights4911.robot.subsystems.drive.GyroIORealPigeon1;
-import com.cyberknights4911.robot.subsystems.drive.v2.SwerveIO;
-import com.cyberknights4911.robot.subsystems.drive.v2.SwerveIOReal;
-import com.cyberknights4911.robot.subsystems.drive.v2.SwerveModuleConstants;
+import com.cyberknights4911.robot.subsystems.drive.SwerveIO;
+import com.cyberknights4911.robot.subsystems.drive.SwerveIOReal;
+import com.cyberknights4911.robot.subsystems.drive.SwerveModuleConstants;
 import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIO;
 import com.cyberknights4911.robot.subsystems.slurpp.SlurppIOReal;
@@ -31,6 +34,8 @@ public final class Subsystems {
     private final ArmSubsystem armSubsystem ;
     private final SwerveSubsystem swerveSubsystem;
     private final BobSubsystem bobSubsystem;
+    private final Collector collector;
+    private final CollectorCamera camera;
 
     public Subsystems() {
         if (RobotBase.isReal()) {
@@ -38,7 +43,7 @@ public final class Subsystems {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
             armSubsystem = new ArmSubsystem(new ArmIO() {});
-            swerveSubsystem = new SwerveSubsystemNew(
+            swerveSubsystem = new SwerveSubsystem(
                 new GyroIORealPigeon1(),
                 new SwerveIOReal(SwerveModuleConstants.FRONT_LEFT),
                 new SwerveIOReal(SwerveModuleConstants.FRONT_RIGHT),
@@ -46,11 +51,13 @@ public final class Subsystems {
                 new SwerveIOReal(SwerveModuleConstants.BACK_RIGHT)
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
+            collector = new Collector(new CollectorIOReal());
+            camera = new CollectorCamera();
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
             armSubsystem = new ArmSubsystem(new ArmIO() {});
-            swerveSubsystem = new SwerveSubsystemNew(
+            swerveSubsystem = new SwerveSubsystem(
                 new GyroIO() {},
                 new SwerveIO() {},
                 new SwerveIO() {},
@@ -58,6 +65,8 @@ public final class Subsystems {
                 new SwerveIO() {}
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
+            collector = new Collector(new CollectorIO() {});
+            camera = new CollectorCamera();
         }
     }
 
@@ -79,5 +88,13 @@ public final class Subsystems {
 
     public BobSubsystem getBobSubsystem() {
         return bobSubsystem;
+    }
+
+    public Collector getCollector() {
+        return collector;
+    }
+
+    public CollectorCamera getCamera() {
+        return camera;
     }
 }

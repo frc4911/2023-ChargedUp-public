@@ -4,21 +4,21 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.cyberknights4911.robot.constants.Constants;
-import com.cyberknights4911.robot.subsystems.drive.v2.SwerveSubsystemNew;
+import com.cyberknights4911.robot.subsystems.drive.SwerveSubsystem;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TeleopSwerveCommand extends CommandBase {    
-    private SwerveSubsystemNew swerveSubsystem;    
+    private SwerveSubsystem swerveSubsystem;    
     private DoubleSupplier translationSup;
     private DoubleSupplier strafeSup;
     private DoubleSupplier rotationSup;
     private BooleanSupplier robotCentricSup;
 
     public TeleopSwerveCommand(
-        SwerveSubsystemNew swerveSubsystem,
+        SwerveSubsystem swerveSubsystem,
         DoubleSupplier translationSupplier,
         DoubleSupplier strafeSupplier,
         DoubleSupplier rotationSupplier,
