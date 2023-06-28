@@ -39,7 +39,6 @@ public final class Subsystems {
 
     public Subsystems() {
         if (RobotBase.isReal()) {
-            // TODO swap out these with real implementations once the hardware exists
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});
             slurppSubsystem = new SlurppSubsystem(new SlurppIO() {});
             armSubsystem = new ArmSubsystem(new ArmIO() {});
@@ -51,7 +50,7 @@ public final class Subsystems {
                 new SwerveIOReal(SwerveModuleConstants.BACK_RIGHT)
             );
             bobSubsystem = new BobSubsystem(new BobIO() {});
-            collector = new Collector(new CollectorIOReal());
+            collector = new Collector(new CollectorIO() {});
             camera = new CollectorCamera();
         } else {
             climberSubsystem = new ClimberSubsystem(new ClimberIO() {});

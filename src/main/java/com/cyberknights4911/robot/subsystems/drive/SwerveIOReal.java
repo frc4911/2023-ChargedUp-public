@@ -23,15 +23,15 @@ public final class SwerveIOReal implements SwerveIO {
         this.swerveModuleConstants = swerveModuleConstants;
         
         /* Angle Encoder Config */
-        angleEncoder = new CANCoder(swerveModuleConstants.getCanCoderId(), Constants.CANIVORE_NAME);
+        angleEncoder = new CANCoder(swerveModuleConstants.getCanCoderId());
         configAngleEncoder();
 
         /* Angle Motor Config */
-        angleMotor = TalonFXFactory.createTalon(swerveModuleConstants.getAngleMotorId(), Constants.CANIVORE_NAME);
+        angleMotor = TalonFXFactory.createTalon(swerveModuleConstants.getAngleMotorId());
         configAngleMotor();
 
         /* Drive Motor Config */
-        driveMotor = TalonFXFactory.createTalon(swerveModuleConstants.getDriveMotorId(), Constants.CANIVORE_NAME);
+        driveMotor = TalonFXFactory.createTalon(swerveModuleConstants.getDriveMotorId());
         configDriveMotor();
     }
 
