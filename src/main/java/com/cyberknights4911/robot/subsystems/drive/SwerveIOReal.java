@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.cyberknights4911.robot.constants.Constants;
+import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.util.Conversions;
 
@@ -16,11 +16,17 @@ public final class SwerveIOReal implements SwerveIO {
     private final CANCoder angleEncoder;
 
     private final SwerveModuleConstants swerveModuleConstants;
+    private final CotsFalconSwerveConstants cotsFalconSwerveConstants;
+    private final CtreConfigs ctreConfigs;
 
     public SwerveIOReal(
-        SwerveModuleConstants swerveModuleConstants
+        SwerveModuleConstants swerveModuleConstants,
+        CotsFalconSwerveConstants cotsFalconSwerveConstants
     ) {
         this.swerveModuleConstants = swerveModuleConstants;
+        this.cotsFalconSwerveConstants = cotsFalconSwerveConstants;
+
+        this.ctreConfigs = new CtreConfigs(cotsFalconSwerveConstants);
         
         /* Angle Encoder Config */
         angleEncoder = new CANCoder(swerveModuleConstants.getCanCoderId());
@@ -37,22 +43,22 @@ public final class SwerveIOReal implements SwerveIO {
 
     private void configAngleEncoder() {        
         angleEncoder.configFactoryDefault();
-        // swerveModuleConstants.getCtreConfigs().swerveCanCoderConfig.magnetOffsetDegrees = swerveModuleConstants.getAngleOffset().getDegrees();
-        angleEncoder.configAllSettings(swerveModuleConstants.getCtreConfigs().swerveCanCoderConfig);
+        // ctreConfigs.swerveCanCoderConfig.magnetOffsetDegrees = swerveModuleConstants.getAngleOffset().getDegrees();
+        angleEncoder.configAllSettings(ctreConfigs.swerveCanCoderConfig);
     }
 
     private void configAngleMotor() {
         angleMotor.configFactoryDefault();
-        angleMotor.configAllSettings(swerveModuleConstants.getCtreConfigs().swerveAngleFXConfig);
-        angleMotor.setInverted(swerveModuleConstants.getPhysicalSwerveModule().angleMotorInvert);
+        angleMotor.configAllSettings(ctreConfigs.swerveAngleFXConfig);
+        angleMotor.setInverted(cotsFalconSwerveConstants.angleMotorInvert);
         angleMotor.setNeutralMode(Swerve.ANGLE_NEUTRAL_MODE);
         resetToAbsolute();
     }
 
     private void configDriveMotor() {        
         driveMotor.configFactoryDefault();
-        driveMotor.configAllSettings(swerveModuleConstants.getCtreConfigs().swerveDriveFXConfig);
-        driveMotor.setInverted(swerveModuleConstants.getPhysicalSwerveModule().driveMotorInvert);
+        driveMotor.configAllSettings(ctreConfigs.swerveDriveFXConfig);
+        driveMotor.setInverted(cotsFalconSwerveConstants.driveMotorInvert);
         driveMotor.setNeutralMode(Swerve.DRIVE_NEUTRAL_MODE);
         driveMotor.setSelectedSensorPosition(0);
     }
@@ -61,8 +67,8 @@ public final class SwerveIOReal implements SwerveIO {
     public void updateInputs(SwerveIOInputs inputs) {
         inputs.driveVelocityRpm = Conversions.falconToMPS(
             getDriveSensorVelocity(),
-            swerveModuleConstants.getPhysicalSwerveModule().wheelCircumference,
-            swerveModuleConstants.getPhysicalSwerveModule().driveGearRatio
+            cotsFalconSwerveConstants.wheelCircumference,
+            cotsFalconSwerveConstants.driveGearRatio
         );
         inputs.driveAppliedVolts = driveMotor.getMotorOutputVoltage();
         inputs.driveCurrentAmps = driveMotor.getSupplyCurrent();
@@ -80,7 +86,7 @@ public final class SwerveIOReal implements SwerveIO {
     public void resetToAbsolute() {
         double absolutePosition = Conversions.degreesToFalcon(
             getAngleEncoderDegrees() - swerveModuleConstants.getAngleOffset().getDegrees(),
-            swerveModuleConstants.getPhysicalSwerveModule().angleGearRatio
+            cotsFalconSwerveConstants.angleGearRatio
         );
         angleMotor.setSelectedSensorPosition(absolutePosition);
     }

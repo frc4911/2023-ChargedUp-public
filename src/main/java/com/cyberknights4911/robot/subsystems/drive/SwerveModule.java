@@ -9,25 +9,29 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.util.Conversions;
 
 public class SwerveModule {
     private Rotation2d lastAngle;
 
+    private final int moduleNumber;
     private final String moduleName;
     private final SwerveIO swerveIO;
     private final SimpleMotorFeedforward feedforward;
-    private final SwerveModuleConstants swerveModuleConstants;
+    private final CotsFalconSwerveConstants cotsFalconSwerveConstants;
     private final SwerveIOInputsAutoLogged inputs = new SwerveIOInputsAutoLogged();
 
     public SwerveModule(
+        int moduleNumber,
         SwerveIO swerveIO,
-        SwerveModuleConstants swerveModuleConstants
+        CotsFalconSwerveConstants cotsFalconSwerveConstants
     ) {
         this.swerveIO = swerveIO;
-        this.swerveModuleConstants = swerveModuleConstants;
-        this.moduleName = String.format("Swerve %d", swerveModuleConstants.getModuleNumber());
+        this.cotsFalconSwerveConstants = cotsFalconSwerveConstants;
+        this.moduleNumber = moduleNumber;
+        this.moduleName = String.format("Swerve %d", moduleNumber);
 
         feedforward = new SimpleMotorFeedforward(
             Swerve.DRIVE_KS,
@@ -53,8 +57,8 @@ public class SwerveModule {
         } else {
             double velocity = Conversions.MPSToFalcon(
                 desiredState.speedMetersPerSecond,
-                swerveModuleConstants.getPhysicalSwerveModule().wheelCircumference,
-                swerveModuleConstants.getPhysicalSwerveModule().driveGearRatio
+                cotsFalconSwerveConstants.wheelCircumference,
+                cotsFalconSwerveConstants.driveGearRatio
             );
             swerveIO.setDrive(
                 ControlMode.Velocity,
@@ -75,7 +79,7 @@ public class SwerveModule {
             ControlMode.Position,
             Conversions.degreesToFalcon(
                 angle.getDegrees(),
-                swerveModuleConstants.getPhysicalSwerveModule().angleGearRatio
+                cotsFalconSwerveConstants.angleGearRatio
             )
         );
         lastAngle = angle;
@@ -85,7 +89,7 @@ public class SwerveModule {
         return Rotation2d.fromDegrees(
             Conversions.falconToDegrees(
                 swerveIO.getAngleSensorPosition(),
-                swerveModuleConstants.getPhysicalSwerveModule().angleGearRatio
+                cotsFalconSwerveConstants.angleGearRatio
             )
         );
     }
@@ -102,8 +106,8 @@ public class SwerveModule {
         return new SwerveModuleState(
             Conversions.falconToMPS(
                 swerveIO.getDriveSensorVelocity(),
-                swerveModuleConstants.getPhysicalSwerveModule().wheelCircumference,
-                swerveModuleConstants.getPhysicalSwerveModule().driveGearRatio
+                cotsFalconSwerveConstants.wheelCircumference,
+                cotsFalconSwerveConstants.driveGearRatio
             ), 
             getAngle()
         ); 
@@ -113,8 +117,8 @@ public class SwerveModule {
         return new SwerveModulePosition(
             Conversions.falconToMeters(
                 swerveIO.getDriveSensorPosition(),
-                swerveModuleConstants.getPhysicalSwerveModule().wheelCircumference,
-                swerveModuleConstants.getPhysicalSwerveModule().driveGearRatio
+                cotsFalconSwerveConstants.wheelCircumference,
+                cotsFalconSwerveConstants.driveGearRatio
             ), 
             getAngle()
         );
@@ -126,6 +130,6 @@ public class SwerveModule {
     }
 
     public int getModuleNumber() {
-        return swerveModuleConstants.getModuleNumber();
+        return moduleNumber;
     }
 }

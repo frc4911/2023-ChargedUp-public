@@ -4,8 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.cyberknights4911.robot.constants.Constants;
-import com.cyberknights4911.robot.constants.Ports;
+import com.cyberknights4911.robot.model.wham.WhamConstants;
+import com.cyberknights4911.robot.model.wham.WhamPorts.Slurpp;
 
 import edu.wpi.first.math.util.Units;
 import libraries.cyberlib.drivers.TalonFXFactory;
@@ -19,11 +19,11 @@ public final class SlurppIOReal implements SlurppIO {
     private double lastStoppedPosition = 0;
 
     public SlurppIOReal() {
-        motor = TalonFXFactory.createTalon(Ports.Slurpp.MOTOR, Constants.CANIVORE_NAME);
+        motor = TalonFXFactory.createTalon(Slurpp.MOTOR, WhamConstants.CANIVORE_NAME);
         motor.setInverted(false);
-        motor.configStatorCurrentLimit(Constants.SLURPP_STATOR_LIMIT, Constants.LONG_CAN_TIMEOUTS_MS);
-        motor.configSupplyCurrentLimit(Constants.SLURPP_SUPPLY_LIMIT, Constants.LONG_CAN_TIMEOUTS_MS);
-        motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0 , Constants.LONG_CAN_TIMEOUTS_MS);
+        motor.configStatorCurrentLimit(WhamConstants.Slurpp.SLURPP_STATOR_LIMIT, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        motor.configSupplyCurrentLimit(WhamConstants.Slurpp.SLURPP_SUPPLY_LIMIT, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0 , WhamConstants.LONG_CAN_TIMEOUTS_MS);
         
         lastStoppedPosition = motor.getSelectedSensorPosition();
     }

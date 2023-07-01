@@ -1,8 +1,7 @@
 package com.cyberknights4911.robot.commands;
 
-import com.cyberknights4911.robot.constants.Constants;
 import com.cyberknights4911.robot.constants.DoublePreference;
-import com.cyberknights4911.robot.subsystems.arm.ArmIO;
+import com.cyberknights4911.robot.model.wham.WhamConstants;
 import com.cyberknights4911.robot.subsystems.arm.ArmPositions;
 import com.cyberknights4911.robot.subsystems.arm.ArmSubsystem;
 
@@ -64,19 +63,19 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             case COLLECT_FLOOR_FRONT_CUBE:
                 if (currentArmPosition > 180) {
                     shouldTuckWrist = true;
-                    safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_FRONT.getValue();
-                    desiredWristPosition = Constants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue();
+                    safePosition = WhamConstants.Arm.SHOULDER_SAFE_ANGLE_FRONT.getValue();
+                    desiredWristPosition = WhamConstants.Arm.WRIST_TUCKED_ANGLE_BACK_TO_FRONT.getValue();
                 }
                 break;
             case SCORE_L3:
             case COLLECT_SUBSTATION_BACK:
                 if (currentArmPosition < 180) {
                     shouldTuckWrist = true;
-                    safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_TOP.getValue();
-                    desiredWristPosition = Constants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue();
+                    safePosition = WhamConstants.Arm.SHOULDER_SAFE_ANGLE_BACK_TOP.getValue();
+                    desiredWristPosition = WhamConstants.Arm.WRIST_TUCKED_ANGLE_FRONT_TO_BACK.getValue();
                 } else if (currentArmPosition > 270) {
                     shouldTuckWrist = true;
-                    safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_MIDDLE.getValue();
+                    safePosition = WhamConstants.Arm.SHOULDER_SAFE_ANGLE_BACK_MIDDLE.getValue();
                 }
                 break;
             case COLLECT_FLOOR_BACK_CUBE:
@@ -84,7 +83,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             // TODO: try combining these cases with those immediately above. See if violations are even possible.
             if (currentArmPosition < 270) {
                 shouldTuckWrist = true;
-                safePosition = Constants.Arm.SHOULDER_SAFE_ANGLE_BACK_BOTTOM.getValue();
+                safePosition = WhamConstants.Arm.SHOULDER_SAFE_ANGLE_BACK_BOTTOM.getValue();
             }
                 break;
             default:
@@ -160,7 +159,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, LISTENER);
     }
 
-    private static final InitializedListener LISTENER = Constants.Arm.IS_TUNING_ENABLED ?
+    private static final InitializedListener LISTENER = WhamConstants.Arm.IS_TUNING_ENABLED ?
        new TestMode() : (command) -> {};
 
     private interface InitializedListener {

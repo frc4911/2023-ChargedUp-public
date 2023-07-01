@@ -9,6 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.cyberknights4911.robot.commands.AutoBalanceCommand;
 import com.cyberknights4911.robot.commands.TeleopSwerveCommand;
+import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.constants.Constants.Swerve;
 import com.cyberknights4911.robot.control.ControllerBinding;
 import com.cyberknights4911.robot.control.DriveStickAction;
@@ -38,7 +39,12 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveIO frontLeftSwerveIO,
         SwerveIO frontRightSwerveIO,
         SwerveIO backLeftSwerveIO,
-        SwerveIO backRightSwerveIO
+        SwerveIO backRightSwerveIO,
+        int frontLeftSwerveModuleNumber,
+        int frontRightSwerveModuleNumber,
+        int backLeftSwerveModuleNumber,
+        int backRightSwerveModuleNumber,
+        CotsFalconSwerveConstants cotsFalconSwerveConstants
     ) {
         this.gyro = gyro;
         zeroGyro();
@@ -52,21 +58,21 @@ public class SwerveSubsystem extends SubsystemBase {
 
         swerveModules = new SwerveModule[] {
             new SwerveModule(
+                frontLeftSwerveModuleNumber,
                 frontLeftSwerveIO,
-                SwerveModuleConstants.FRONT_LEFT
-            ),
+                cotsFalconSwerveConstants),
             new SwerveModule(
-                frontRightSwerveIO,
-                SwerveModuleConstants.FRONT_RIGHT
-            ),
+                frontRightSwerveModuleNumber,
+                frontRightSwerveIO, 
+                cotsFalconSwerveConstants),
             new SwerveModule(
-                backLeftSwerveIO,
-                SwerveModuleConstants.BACK_LEFT
-            ),
+                backLeftSwerveModuleNumber,
+                backLeftSwerveIO, 
+                cotsFalconSwerveConstants),
             new SwerveModule(
+                backRightSwerveModuleNumber,
                 backRightSwerveIO,
-                SwerveModuleConstants.BACK_RIGHT
-            )
+                cotsFalconSwerveConstants)
         };
 
         /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.

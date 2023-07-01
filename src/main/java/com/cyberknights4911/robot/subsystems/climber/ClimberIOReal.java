@@ -1,6 +1,6 @@
 package com.cyberknights4911.robot.subsystems.climber;
 
-import com.cyberknights4911.robot.constants.Ports;
+import com.cyberknights4911.robot.model.wham.WhamPorts.Climber;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -9,7 +9,7 @@ public final class ClimberIOReal implements ClimberIO, AutoCloseable {
     private final Solenoid solenoid;
 
     public ClimberIOReal() {
-        solenoid = new Solenoid(PneumaticsModuleType.REVPH, Ports.Climber.SOLENOID);
+        solenoid = new Solenoid(PneumaticsModuleType.REVPH, Climber.SOLENOID);
         solenoid.set(false);
     }
     

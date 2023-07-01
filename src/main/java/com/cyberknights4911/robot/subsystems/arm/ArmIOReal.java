@@ -12,8 +12,8 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.cyberknights4911.robot.constants.Constants;
-import com.cyberknights4911.robot.constants.Ports.Arm;
+import com.cyberknights4911.robot.model.wham.WhamConstants;
+import com.cyberknights4911.robot.model.wham.WhamPorts;
 
 import libraries.cyberlib.drivers.TalonFXFactory;
 
@@ -30,15 +30,15 @@ public final class ArmIOReal implements ArmIO {
     public ArmIOReal() {
         // 1 is closest to robot front (battery side) and the numbering inceases rearward
         shoulderMotor1 =
-            TalonFXFactory.createTalon(Arm.SHOULDER_MOTOR_1, Constants.CANIVORE_NAME);
+            TalonFXFactory.createTalon(WhamPorts.Arm.SHOULDER_MOTOR_1, WhamConstants.CANIVORE_NAME);
         shoulderMotor2 =
-            TalonFXFactory.createTalon(Arm.SHOULDER_MOTOR_2, Constants.CANIVORE_NAME);
+            TalonFXFactory.createTalon(WhamPorts.Arm.SHOULDER_MOTOR_2, WhamConstants.CANIVORE_NAME);
         shoulderMotor3 =
-            TalonFXFactory.createTalon(Arm.SHOULDER_MOTOR_3, Constants.CANIVORE_NAME);
-        wristMotor = TalonFXFactory.createTalon(Arm.WRIST_MOTOR, Constants.CANIVORE_NAME);
+            TalonFXFactory.createTalon(WhamPorts.Arm.SHOULDER_MOTOR_3, WhamConstants.CANIVORE_NAME);
+        wristMotor = TalonFXFactory.createTalon(WhamPorts.Arm.WRIST_MOTOR, WhamConstants.CANIVORE_NAME);
 
-        shoulderEncoder = new CANCoder(Arm.SHOULDER_CANCODER, Constants.CANIVORE_NAME);
-        wristEncoder = new CANCoder(Arm.WRIST_CANCODER, Constants.CANIVORE_NAME);
+        shoulderEncoder = new CANCoder(WhamPorts.Arm.SHOULDER_CANCODER, WhamConstants.CANIVORE_NAME);
+        wristEncoder = new CANCoder(WhamPorts.Arm.WRIST_CANCODER, WhamConstants.CANIVORE_NAME);
 
         configMotors();
         configureEncoders();
@@ -47,30 +47,30 @@ public final class ArmIOReal implements ArmIO {
     private void configMotors() {
         //SHOULDER CONFIGURATION
         shoulderMotor1.configRemoteFeedbackFilter(
-            shoulderEncoder, Constants.REMOTE_SENSOR_ZERO, Constants.LONG_CAN_TIMEOUTS_MS);
+            shoulderEncoder, WhamConstants.REMOTE_SENSOR_ZERO, WhamConstants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.configSelectedFeedbackSensor(
-            FeedbackDevice.RemoteSensor0, Constants.PRIMARY_PID, Constants.LONG_CAN_TIMEOUTS_MS);
+            FeedbackDevice.RemoteSensor0, WhamConstants.PRIMARY_PID, WhamConstants.LONG_CAN_TIMEOUTS_MS);
         shoulderMotor1.setSensorPhase(true);
 
         TalonFXConfiguration shoulderConfiguration1 = new TalonFXConfiguration();
         TalonFXConfiguration shoulderConfigurationFollowers = new TalonFXConfiguration();
 
-        shoulderConfiguration1.supplyCurrLimit = Constants.Arm.SHOULDER_SUPPLY_LIMIT;
-        shoulderConfiguration1.statorCurrLimit = Constants.Arm.SHOULDER_STATOR_LIMIT;
+        shoulderConfiguration1.supplyCurrLimit = WhamConstants.Arm.SHOULDER_SUPPLY_LIMIT;
+        shoulderConfiguration1.statorCurrLimit = WhamConstants.Arm.SHOULDER_STATOR_LIMIT;
         shoulderConfiguration1.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
-        shoulderConfiguration1.remoteFilter0 = Constants.Arm.SHOULDER_FILTER_CONFIG;
-        shoulderConfiguration1.slot0 = Constants.Arm.SHOULDER_SLOT_CONFIG;
-        shoulderConfiguration1.neutralDeadband = Constants.Arm.SHOULDER_NEUTRAL_DEADBAND.getValue();
+        shoulderConfiguration1.remoteFilter0 = WhamConstants.Arm.SHOULDER_FILTER_CONFIG;
+        shoulderConfiguration1.slot0 = WhamConstants.Arm.SHOULDER_SLOT_CONFIG;
+        shoulderConfiguration1.neutralDeadband = WhamConstants.Arm.SHOULDER_NEUTRAL_DEADBAND.getValue();
 
-        shoulderConfigurationFollowers.supplyCurrLimit = Constants.Arm.SHOULDER_SUPPLY_LIMIT;
-        shoulderConfigurationFollowers.statorCurrLimit = Constants.Arm.SHOULDER_STATOR_LIMIT;
+        shoulderConfigurationFollowers.supplyCurrLimit = WhamConstants.Arm.SHOULDER_SUPPLY_LIMIT;
+        shoulderConfigurationFollowers.statorCurrLimit = WhamConstants.Arm.SHOULDER_STATOR_LIMIT;
         
         shoulderMotor1.configAllSettings(shoulderConfiguration1);
-        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.PRIMARY_PID_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MOTION_MAGIC_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.PRIMARY_PID0_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        shoulderMotor1.configMotionCruiseVelocity(Constants.Arm.SHOULDER_VELOCITY_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
-        shoulderMotor1.configMotionAcceleration(Constants.Arm.SHOULDER_ACCELERATION_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, WhamConstants.PRIMARY_PID_PERIOD, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, WhamConstants.MOTION_MAGIC_PERIOD, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, WhamConstants.PRIMARY_PID0_PERIOD, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.configMotionCruiseVelocity(WhamConstants.Arm.SHOULDER_VELOCITY_MOTION_MAGIC.getValue(), WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor1.configMotionAcceleration(WhamConstants.Arm.SHOULDER_ACCELERATION_MOTION_MAGIC.getValue(), WhamConstants.LONG_CAN_TIMEOUTS_MS);
 
         shoulderMotor2.configAllSettings(shoulderConfigurationFollowers);
         shoulderMotor3.configAllSettings(shoulderConfigurationFollowers);
@@ -79,8 +79,8 @@ public final class ArmIOReal implements ArmIO {
         shoulderMotor1.setInverted(true);
         shoulderMotor2.setInverted(InvertType.FollowMaster);
         shoulderMotor3.setInverted(InvertType.FollowMaster);
-        shoulderMotor2.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100, Constants.LONG_CAN_TIMEOUTS_MS);
-        shoulderMotor3.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor2.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        shoulderMotor3.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100, WhamConstants.LONG_CAN_TIMEOUTS_MS);
 
         shoulderMotor1.setNeutralMode(NeutralMode.Coast);
         shoulderMotor2.setNeutralMode(NeutralMode.Coast);
@@ -88,25 +88,25 @@ public final class ArmIOReal implements ArmIO {
 
         //WRIST CONFIGURATION
         wristMotor.configRemoteFeedbackFilter(
-            wristEncoder, Constants.REMOTE_SENSOR_ZERO, Constants.LONG_CAN_TIMEOUTS_MS);
+            wristEncoder, WhamConstants.REMOTE_SENSOR_ZERO, WhamConstants.LONG_CAN_TIMEOUTS_MS);
         wristMotor.configSelectedFeedbackSensor(
-            FeedbackDevice.RemoteSensor0, Constants.PRIMARY_PID, Constants.LONG_CAN_TIMEOUTS_MS);
+            FeedbackDevice.RemoteSensor0, WhamConstants.PRIMARY_PID, WhamConstants.LONG_CAN_TIMEOUTS_MS);
         wristMotor.setSensorPhase(true);
 
         TalonFXConfiguration wristConfiguration = new TalonFXConfiguration();
-        wristConfiguration.supplyCurrLimit = Constants.Arm.WRIST_SUPPLY_LIMIT;
-        wristConfiguration.statorCurrLimit = Constants.Arm.WRIST_STATOR_LIMIT;
+        wristConfiguration.supplyCurrLimit = WhamConstants.Arm.WRIST_SUPPLY_LIMIT;
+        wristConfiguration.statorCurrLimit = WhamConstants.Arm.WRIST_STATOR_LIMIT;
         wristConfiguration.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
-        wristConfiguration.remoteFilter0 = Constants.Arm.WRIST_FILTER_CONFIG;
-        wristConfiguration.slot0 = Constants.Arm.WRIST_SLOT_CONFIG;
-        wristConfiguration.neutralDeadband = Constants.Arm.WRIST_NEUTRAL_DEADBAND.getValue();
+        wristConfiguration.remoteFilter0 = WhamConstants.Arm.WRIST_FILTER_CONFIG;
+        wristConfiguration.slot0 = WhamConstants.Arm.WRIST_SLOT_CONFIG;
+        wristConfiguration.neutralDeadband = WhamConstants.Arm.WRIST_NEUTRAL_DEADBAND.getValue();
         
         wristMotor.configAllSettings(wristConfiguration);
-        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, Constants.PRIMARY_PID_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, Constants.MOTION_MAGIC_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, Constants.PRIMARY_PID0_PERIOD, Constants.LONG_CAN_TIMEOUTS_MS);
-        wristMotor.configMotionCruiseVelocity(Constants.Arm.WRIST_VELOCITY_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
-        wristMotor.configMotionAcceleration(Constants.Arm.WRIST_ACCELERATION_MOTION_MAGIC.getValue(), Constants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, WhamConstants.PRIMARY_PID_PERIOD, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, WhamConstants.MOTION_MAGIC_PERIOD, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, WhamConstants.PRIMARY_PID0_PERIOD, WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.configMotionCruiseVelocity(WhamConstants.Arm.WRIST_VELOCITY_MOTION_MAGIC.getValue(), WhamConstants.LONG_CAN_TIMEOUTS_MS);
+        wristMotor.configMotionAcceleration(WhamConstants.Arm.WRIST_ACCELERATION_MOTION_MAGIC.getValue(), WhamConstants.LONG_CAN_TIMEOUTS_MS);
         wristMotor.setInverted(true);
         wristMotor.setNeutralMode(NeutralMode.Coast);
     }
@@ -115,18 +115,18 @@ public final class ArmIOReal implements ArmIO {
         CANCoderConfiguration shoulderConfig = new CANCoderConfiguration();
         shoulderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         shoulderConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        shoulderConfig.magnetOffsetDegrees = Constants.Arm.SHOULDER_CANCODER_OFFSET.getValue();
+        shoulderConfig.magnetOffsetDegrees = WhamConstants.Arm.SHOULDER_CANCODER_OFFSET.getValue();
         shoulderConfig.sensorDirection = false;
 
-        shoulderEncoder.configAllSettings(shoulderConfig, Constants.LONG_CAN_TIMEOUTS_MS);
+        shoulderEncoder.configAllSettings(shoulderConfig, WhamConstants.LONG_CAN_TIMEOUTS_MS);
         
         CANCoderConfiguration wristConfig = new CANCoderConfiguration();
         wristConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         wristConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        wristConfig.magnetOffsetDegrees = Constants.Arm.WRIST_CANCODER_OFFSET.getValue();
+        wristConfig.magnetOffsetDegrees = WhamConstants.Arm.WRIST_CANCODER_OFFSET.getValue();
         wristConfig.sensorDirection = false;
 
-        wristEncoder.configAllSettings(wristConfig, Constants.LONG_CAN_TIMEOUTS_MS);
+        wristEncoder.configAllSettings(wristConfig, WhamConstants.LONG_CAN_TIMEOUTS_MS);
     }
     
     @Override
@@ -173,14 +173,14 @@ public final class ArmIOReal implements ArmIO {
     @Override
     public void setShoulderPosition(double position) {
         // TODO: reject positions beyond soft stops
-        if (Constants.Arm.SHOULD_USE_GRAVITY_FEED_FORWARD.getValue()) {
+        if (WhamConstants.Arm.SHOULD_USE_GRAVITY_FEED_FORWARD.getValue()) {
             double degrees = getShoulderEncoderDegrees() - 90;
             double cosineScalar = java.lang.Math.cos(Math.toRadians(degrees));
             shoulderMotor1.set(
                 ControlMode.MotionMagic,
                 position,
                 DemandType.ArbitraryFeedForward,
-                cosineScalar * Constants.Arm.SHOULDER_G.getValue());
+                cosineScalar * WhamConstants.Arm.SHOULDER_G.getValue());
         } else {
             shoulderMotor1.set(ControlMode.MotionMagic, position);
         }
@@ -215,15 +215,15 @@ public final class ArmIOReal implements ArmIO {
 
     @Override
     public double offsetWrist() {
-        double offset = Constants.Arm.WRIST_CANCODER_OFFSET.getValue() - (getShoulderEncoderDegrees() - Constants.Arm.STOWED_WRIST.getValue());
-        Constants.Arm.WRIST_CANCODER_OFFSET.setValue(offset);
+        double offset = WhamConstants.Arm.WRIST_CANCODER_OFFSET.getValue() - (getShoulderEncoderDegrees() - WhamConstants.Arm.STOWED_WRIST.getValue());
+        WhamConstants.Arm.WRIST_CANCODER_OFFSET.setValue(offset);
         return offset;
     }
 
     @Override
     public double offsetShoulder() {
-        double offset = Constants.Arm.SHOULDER_CANCODER_OFFSET.getValue() - (getShoulderEncoderDegrees() - Constants.Arm.STOWED_SHOULDER.getValue());
-        Constants.Arm.SHOULDER_CANCODER_OFFSET.setValue(offset);
+        double offset = WhamConstants.Arm.SHOULDER_CANCODER_OFFSET.getValue() - (getShoulderEncoderDegrees() - WhamConstants.Arm.STOWED_SHOULDER.getValue());
+        WhamConstants.Arm.SHOULDER_CANCODER_OFFSET.setValue(offset);
         return offset;
     }
 
