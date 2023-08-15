@@ -31,5 +31,16 @@ public final class QuickDropPorts {
         public static final int MOTOR = 20;
         public static final int SOLENOID = 2;
     }
-    
+
+    public static final class Hood {
+        private Hood() {}
+
+        public static final int MOTOR = 12;
+    }
+
+    public static final class Controller {
+        private Controller() {}
+
+        public static final int DRIVER_CONTROLLER_PORT = 0;
+    }
 }

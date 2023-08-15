@@ -1,5 +1,6 @@
 package com.cyberknights4911.robot.model.wham;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -9,8 +10,8 @@ import com.cyberknights4911.robot.constants.BooleanPreference;
 import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.constants.DoublePreference;
 import com.cyberknights4911.robot.constants.IntPreference;
-import com.cyberknights4911.robot.subsystems.drive.SwerveModuleConstants;
-
+import com.cyberknights4911.robot.drive.swerve.SwerveDriveConstants;
+import com.cyberknights4911.robot.drive.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -18,20 +19,7 @@ public final class WhamConstants {
     private WhamConstants() {}
 
     public static final String CANIVORE_NAME = "CANivore";
-
-    // Physical Robot Dimensions
-    public static final double ROBOT_WHEEL_BASE = 22.75;
-    public static final double ROBOT_WHEEL_LENGTH = 22.75;
-    public static final double ROBOT_WHEEL_BASE_METERS = Units.inchesToMeters(ROBOT_WHEEL_BASE);
-    public static final double ROBOT_WHEEL_LENGTH_METERS = Units.inchesToMeters(ROBOT_WHEEL_LENGTH);
-    public static final double ROBOT_HALF_WIDTH = ROBOT_WHEEL_BASE / 2.0;
-    public static final double ROBOT_HALF_LENGTH = ROBOT_WHEEL_LENGTH / 2.0;
-
-    public static final int LONG_CAN_TIMEOUTS_MS = 100; // use for constructors
-
-    // Controller port
-    public static final int DRIVER_CONTROLLER_PORT = 0;
-    public static final int OPERATOR_CONTROLLER_PORT = 1;
+    public static final int LONG_CAN_TIMEOUTS_MS = 100;
 
     // pidIdx for BaseMotorController indicating primary closed-loop
     public static final int PRIMARY_PID = 0;
@@ -54,38 +42,120 @@ public final class WhamConstants {
         private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 194.00;
         private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 104.67;
 
-        private static final CotsFalconSwerveConstants PHYSICAL_SWERVE_MODULE =
+        private static final double TRACK_WIDTH = Units.inchesToMeters(22.75);
+        private static final double WHEEL_BASE = Units.inchesToMeters(22.75);
+
+        private static final boolean INVERT_GYRO = false;
+
+        private static final double STICK_DEADBAND = 0.1;
+
+        /* Meters per Second */
+        private static final double MAX_SPEED = 4.5;
+        /* Radians per Second */
+        private static final double MAX_ANGULAR_VELOCITY = 10.0;
+
+        /* Swerve Current Limiting */
+        private static final int ANGLE_CONTINUOUS_CURRENT_LIMIT = 25;
+        private static final int ANGLE_PEAK_CURRENT_LIMIT = 40;
+        private static final double ANGLE_PEAK_CURRENT_DURATION = 0.1;
+        private static final boolean ANGLE_ENABLE_CURRENT_LIMIT = true;
+
+        private static final int DRIVE_CONTINUOUS_CURRENT_LIMIT = 35;
+        private static final int DRIVE_PEAK_CURRENT_LIMIT = 60;
+        private static final double DRIVE_PEAK_CURRENT_DURATION = 0.1;
+        private static final boolean DRIVE_ENABLE_CURRENT_LIMIT = true;
+
+        /*
+         * These values are used by the drive falcon to ramp in open loop and closed loop driving.
+         * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
+         */
+        private static final double OPEN_LOOP_RAMP = 0.25;
+        private static final double CLOSED_LOOP_RAMP = 0.0;
+        
+        /* Drive Motor PID Values */
+        private static final double DRIVE_KP = 0.05; //TODO: This must be tuned to specific robot
+        private static final double DRIVE_KI = 0.0;
+        private static final double DRIVE_KD = 0.0;
+        private static final double DRIVE_KF = 0.0;
+
+        /* 
+         * Drive Motor Characterization Values.
+         * Divide SYSID values by 12 to convert from volts to percent output for CTRE
+         */
+        private static final double DRIVE_KS = (0.32 / 12.0);
+        private static final double DRIVE_KV = (1.51 / 12.0);
+        private static final double DRIVE_KA = (0.27 / 12.0);
+
+        /* Neutral Modes */
+        private static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
+        private static final NeutralMode DRIVE_NEUTRAL_MODE = NeutralMode.Brake;
+
+        public static final SwerveDriveConstants SWERVE_DRIVE_CONSTANTS =
+            SwerveDriveConstants.builder()
+                .setWheelBase(WHEEL_BASE)
+                .setTrackWidth(TRACK_WIDTH)
+                .setInvertGyro(INVERT_GYRO)
+                .setGyroId(WhamPorts.Drive.PIGEON)
+                .setMaxSpeed(MAX_SPEED)
+                .setMaxAngularVelocity(MAX_ANGULAR_VELOCITY)
+                .setStickDeadband(STICK_DEADBAND)
+                .setAngleContinuousCurrentLimit(ANGLE_CONTINUOUS_CURRENT_LIMIT)
+                .setAnglePeakCurrentLimit(ANGLE_PEAK_CURRENT_LIMIT)
+                .setAnglePeakCurrentDuration(ANGLE_PEAK_CURRENT_DURATION)
+                .setAngleEnableCurrentLimit(ANGLE_ENABLE_CURRENT_LIMIT)
+                .setDriveContinuousCurrentLimit(DRIVE_CONTINUOUS_CURRENT_LIMIT)
+                .setDrivePeakCurrentLimit(DRIVE_PEAK_CURRENT_LIMIT)
+                .setDrivePeakCurrentDuration(DRIVE_PEAK_CURRENT_DURATION)
+                .setDriveEnableCurrentLimit(DRIVE_ENABLE_CURRENT_LIMIT)
+                .setOpenloopRamp(OPEN_LOOP_RAMP)
+                .setClosedloopRamp(CLOSED_LOOP_RAMP)
+                .setDriveProportionalGain(DRIVE_KP)
+                .setDriveIntegralGain(DRIVE_KI)
+                .setDriveDerivativeGain(DRIVE_KD)
+                .setDriveFeedForwardGain(DRIVE_KF)
+                .setDriveStaticGain(DRIVE_KS)
+                .setDriveVelocityGain(DRIVE_KV)
+                .setDriveAccelerationGain(DRIVE_KA)
+                .setAngleNeutralMode(ANGLE_NEUTRAL_MODE)
+                .setDriveNeutralMode(DRIVE_NEUTRAL_MODE)
+                .build();
+
+        public static final CotsFalconSwerveConstants PHYSICAL_SWERVE_MODULE =
             CotsFalconSwerveConstants.SDSMK4i(
                 CotsFalconSwerveConstants.DriveGearRatios.SDSMK4i_L1
             );
 
         public static final SwerveModuleConstants FRONT_LEFT = 
-            new SwerveModuleConstants(
-                WhamPorts.Drive.FRONT_LEFT_DRIVE,
-                WhamPorts.Drive.FRONT_LEFT_STEER,
-                WhamPorts.Drive.FRONT_LEFT_CANCODER,
-                Rotation2d.fromDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES));
+            SwerveModuleConstants.builder()
+                .setDriveMotorId(WhamPorts.Drive.FRONT_LEFT_DRIVE)
+                .setAngleMotorId(WhamPorts.Drive.FRONT_LEFT_STEER)
+                .setCanCoderId(WhamPorts.Drive.FRONT_LEFT_CANCODER)
+                .setAngleOffset(Rotation2d.fromDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES))
+                .build();
 
         public static final SwerveModuleConstants FRONT_RIGHT = 
-            new SwerveModuleConstants(
-                WhamPorts.Drive.FRONT_RIGHT_DRIVE,
-                WhamPorts.Drive.FRONT_RIGHT_STEER,
-                WhamPorts.Drive.FRONT_RIGHT_CANCODER,
-                Rotation2d.fromDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES));
+            SwerveModuleConstants.builder()
+                .setDriveMotorId(WhamPorts.Drive.FRONT_RIGHT_DRIVE)
+                .setAngleMotorId(WhamPorts.Drive.FRONT_RIGHT_STEER)
+                .setCanCoderId(WhamPorts.Drive.FRONT_RIGHT_CANCODER)
+                .setAngleOffset(Rotation2d.fromDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES))
+                .build();
 
         public static final SwerveModuleConstants BACK_LEFT = 
-            new SwerveModuleConstants(
-                WhamPorts.Drive.BACK_LEFT_DRIVE,
-                WhamPorts.Drive.BACK_LEFT_STEER,
-                WhamPorts.Drive.BACK_LEFT_CANCODER,
-                Rotation2d.fromDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES));
+            SwerveModuleConstants.builder()
+                .setDriveMotorId(WhamPorts.Drive.BACK_LEFT_DRIVE)
+                .setAngleMotorId(WhamPorts.Drive.BACK_LEFT_STEER)
+                .setCanCoderId(WhamPorts.Drive.BACK_LEFT_CANCODER)
+                .setAngleOffset(Rotation2d.fromDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES))
+                .build();
 
         public static final SwerveModuleConstants BACK_RIGHT = 
-            new SwerveModuleConstants(
-                WhamPorts.Drive.BACK_RIGHT_DRIVE,
-                WhamPorts.Drive.BACK_RIGHT_STEER,
-                WhamPorts.Drive.BACK_RIGHT_CANCODER,
-                Rotation2d.fromDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES));
+            SwerveModuleConstants.builder()
+                .setDriveMotorId(WhamPorts.Drive.BACK_RIGHT_DRIVE)
+                .setAngleMotorId(WhamPorts.Drive.BACK_RIGHT_STEER)
+                .setCanCoderId(WhamPorts.Drive.BACK_RIGHT_CANCODER)
+                .setAngleOffset(Rotation2d.fromDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES))
+                .build();
     }
 
     public static class Arm {
@@ -94,7 +164,7 @@ public final class WhamConstants {
         public static final boolean IS_TUNING_ENABLED = false;
 
         public static BooleanPreference SHOULD_USE_GRAVITY_FEED_FORWARD =
-            new BooleanPreference("Should use shoulder gravity feed forward", true);
+            new BooleanPreference("USE_GRAVITY_FEED_FORWARD", true);
             
         public static final DoublePreference WRIST_TUCKED_ANGLE_BACK_TO_FRONT = 
             new DoublePreference("WRIST_TUCKED_ANGLE_BACK_TO_FRONT", 315);
@@ -256,5 +326,4 @@ public final class WhamConstants {
     public static final StatorCurrentLimitConfiguration SLURPP_STATOR_LIMIT =
         new StatorCurrentLimitConfiguration(true, 35.0, 0, 0);
     }
-    
 }

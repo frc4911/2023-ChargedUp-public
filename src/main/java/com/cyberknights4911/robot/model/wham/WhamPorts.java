@@ -46,5 +46,11 @@ public final class WhamPorts {
 
         public static final int SOLENOID = 1;
     }
-    
+
+    public static final class Controller {
+        private Controller() {}
+
+        public static final int DRIVER_CONTROLLER_PORT = 0;
+        public static final int OPERATOR_CONTROLLER_PORT = 1;
+    }
 }

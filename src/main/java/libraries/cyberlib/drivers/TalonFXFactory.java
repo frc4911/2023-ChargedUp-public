@@ -1,30 +1,29 @@
 package libraries.cyberlib.drivers;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 /** Factory for creating TalonFX objects. */
 public final class TalonFXFactory {
+    private final String canivoreName;
 
-    private TalonFXFactory() {}
-
-    public static TalonFX createTalon(int id) {
-        return createTalon(id, null);
+    public static TalonFXFactory createOnRoboRio() {
+        return new TalonFXFactory(null);
     }
 
-    public static TalonFX createTalon(int id, String canivore) {
-        if (canivore == null || canivore.isEmpty()) {
+    public static TalonFXFactory createOnCanivore(String canivoreName) {
+        return new TalonFXFactory(canivoreName);
+    }
+
+    private TalonFXFactory(String canivoreName) {
+        this.canivoreName = canivoreName;
+    }
+
+    public WPI_TalonFX createTalon(int id) {
+        if (canivoreName == null || canivoreName.isEmpty()) {
             return new LazyTalonFX(id);
         } else {
-            return new LazyTalonFX(id, canivore);
-        }
-    }
-
-    public static double getLastSet(TalonFX talonFX) {
-        if (talonFX instanceof LazyTalonFX) {
-            return ((LazyTalonFX) talonFX).lastSet;
-        } else {
-            return -1.0;
+            return new LazyTalonFX(id, canivoreName);
         }
     }
 
@@ -32,9 +31,9 @@ public final class TalonFXFactory {
      * Wrapper around the TalonFX that reduces CAN bus / CPU overhead by skipping duplicate set
      * commands. (By default the Talon flushes the Tx buffer on every set call).
      */
-    private static class LazyTalonFX extends TalonFX {
-        protected double lastSet = Double.NaN;
-        protected ControlMode lastControlMode = null;
+    private static class LazyTalonFX extends WPI_TalonFX {
+        private double lastSet = Double.NaN;
+        private ControlMode lastControlMode = null;
     
         public LazyTalonFX(int deviceNumber) {
             super(deviceNumber);

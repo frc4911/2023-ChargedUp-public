@@ -2,16 +2,14 @@ package com.cyberknights4911.robot.model.quickdrop;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
-
-import com.cyberknights4911.robot.constants.Constants;
-import com.cyberknights4911.robot.control.ControllerBinding;
+import com.cyberknights4911.robot.control.ButtonBinding;
 import com.cyberknights4911.robot.control.DriveStickAction;
+import com.cyberknights4911.robot.control.StickBinding;
 import com.cyberknights4911.robot.control.Triggers;
-
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public final class QuickDropControllerBinding implements ControllerBinding<QuickDropButtonAction> {
+public final class QuickDropControllerBinding implements ButtonBinding<QuickDropButtonAction>, StickBinding {
     private static final Trigger ALWAYS_FALSE = new Trigger(new BooleanSupplier() {
         @Override
         public boolean getAsBoolean() {
@@ -23,7 +21,7 @@ public final class QuickDropControllerBinding implements ControllerBinding<Quick
     private final CommandXboxController driverController;
 
     public QuickDropControllerBinding() {
-        this(new CommandXboxController(Constants.DRIVER_CONTROLLER_PORT));
+        this(new CommandXboxController(QuickDropPorts.Controller.DRIVER_CONTROLLER_PORT));
     }
 
     public QuickDropControllerBinding(CommandXboxController driverController) {
@@ -45,35 +43,10 @@ public final class QuickDropControllerBinding implements ControllerBinding<Quick
     @Override
     public DoubleSupplier supplierFor(DriveStickAction action) {
         switch (action) {
-            case FORWARD: return this::getForwardInput;
-            case STRAFE: return this::getStrafeInput;
-            case ROTATE: return this::getRotationInput;
+            case FORWARD: return driverController::getLeftY;
+            case STRAFE: return driverController::getLeftX;
+            case ROTATE: return driverController::getRightX;
             default: return ALWAYS_ZERO;
         }
     }
-
-    private static double deadband(double value, double tolerance) {
-      if (Math.abs(value) < tolerance) {
-        return 0.0;
-      }
-  
-      return Math.copySign(value, (value - tolerance) / (1.0 - tolerance));
-    }
-  
-    private static double square(double value) {
-      return Math.copySign(value * value, value);
-    }
-  
-    private double getForwardInput() {
-        return -square(deadband(driverController.getLeftY(), Constants.DRIVE_DEADBAND));
-    }
-  
-    private double getStrafeInput() {
-        return -square(deadband(driverController.getLeftX(), Constants.DRIVE_DEADBAND));
-    }
-  
-    private double getRotationInput() {
-        return -square(deadband(driverController.getRightX(), Constants.DRIVE_DEADBAND));
-    }
-    
 }
