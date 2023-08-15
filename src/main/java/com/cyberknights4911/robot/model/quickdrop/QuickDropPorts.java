@@ -4,7 +4,6 @@ public final class QuickDropPorts {
 
     private QuickDropPorts() {}
 
-    
     public static final class Drive {
         private Drive() {}
 

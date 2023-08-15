@@ -1,7 +1,7 @@
 package com.cyberknights4911.robot.model.deadeye;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
+import com.cyberknights4911.robot.drive.swerve.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveDriveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.geometry.Rotation2d;

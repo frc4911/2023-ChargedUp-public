@@ -6,7 +6,6 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
-import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 
 public final class CtreConfigs {
     public TalonFXConfiguration swerveAngleFXConfig;

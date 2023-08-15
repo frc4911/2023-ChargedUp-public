@@ -1,6 +1,5 @@
 package com.cyberknights4911.robot.model.wham.slurpp;
 
-import java.util.function.Supplier;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -19,13 +18,7 @@ public final class SlurppIOReal implements SlurppIO {
 
     private double lastStoppedPosition = 0;
 
-    public static Supplier<SlurppIO> getSupplier(TalonFXFactory talonFXFactory, CtreError ctreError) {
-        return () -> {
-            return new SlurppIOReal(talonFXFactory, ctreError);
-        };
-    }
-
-    private SlurppIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
+    public SlurppIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
         motor = talonFXFactory.createTalon(Slurpp.MOTOR);
         motor.setInverted(false);
         ctreError.checkError(motor.configStatorCurrentLimit(WhamConstants.Slurpp.SLURPP_STATOR_LIMIT, ctreError.canTimeoutMs()));

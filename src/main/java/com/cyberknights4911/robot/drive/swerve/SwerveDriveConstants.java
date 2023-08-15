@@ -3,6 +3,11 @@ package com.cyberknights4911.robot.drive.swerve;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.google.auto.value.AutoValue;
 
+/**
+ * Holds constants related to a robot's entire swerve drive.
+ * For module specific values, use {@link SwerveModuleConstants}.
+ * For manufacturer specific values, use {@link CotsFalconSwerveConstants}.
+ */
 @AutoValue
 public abstract class SwerveDriveConstants {
     /* Robot dimensions */

@@ -7,10 +7,9 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import com.cyberknights4911.robot.BuildConstants;
-import com.cyberknights4911.robot.RobotStateListener;
 import edu.wpi.first.wpilibj.RobotBase;
 
-public final class RobotLogger implements RobotStateListener {
+public final class RobotLogger {
   /*
    * Used to control whether to log to NetworkTables. This can be resource intensive so it should
    * be disabled for competitions.
@@ -24,7 +23,6 @@ public final class RobotLogger implements RobotStateListener {
   }
 
   public void startLogging(LoggedRobot robot) {
-    
     // Record metadata
     logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);

@@ -11,17 +11,7 @@ public final class GyroIORealPigeon implements GyroIO {
     private final CtreError ctreError;
     private final BasePigeon pigeon;
 
-    public static Supplier<GyroIO> getSupplier(
-        PigeonFactory pigeonFactory,
-        SwerveDriveConstants swerveDriveConstants,
-        CtreError ctreError
-    ) {
-        return () -> {
-            return new GyroIORealPigeon(pigeonFactory, swerveDriveConstants, ctreError);
-        };
-    }
-
-    private GyroIORealPigeon(
+    public GyroIORealPigeon(
         PigeonFactory pigeonFactory, SwerveDriveConstants swerveDriveConstants, CtreError ctreError
     ) {
         this.ctreError = ctreError;

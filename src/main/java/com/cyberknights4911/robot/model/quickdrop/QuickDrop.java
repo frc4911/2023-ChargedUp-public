@@ -1,12 +1,14 @@
 package com.cyberknights4911.robot.model.quickdrop;
 
-import java.util.function.Supplier;
-import com.cyberknights4911.robot.auto.AutoCommandChooser;
-import com.cyberknights4911.robot.drive.swerve.GyroIO;
+import org.littletonrobotics.junction.LoggedRobot;
+
+import com.cyberknights4911.robot.RobotStateListener;
+import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.GyroIORealPigeon;
-import com.cyberknights4911.robot.drive.swerve.SwerveIO;
 import com.cyberknights4911.robot.drive.swerve.SwerveIOReal;
+import com.cyberknights4911.robot.drive.swerve.SwerveModuleArgs;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
+import com.cyberknights4911.robot.drive.swerve.SwerveSubsystemArgs;
 import com.cyberknights4911.robot.model.quickdrop.camera.CollectorCamera;
 import com.cyberknights4911.robot.model.quickdrop.collector.Collector;
 import com.cyberknights4911.robot.model.quickdrop.collector.CollectorIO;
@@ -19,70 +21,105 @@ import libraries.cyberlib.drivers.CtreError;
 import libraries.cyberlib.drivers.Pigeon2Factory;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
-public final class QuickDrop {
+public final class QuickDrop implements RobotStateListener {
 
-    private final AutoCommandChooser chooser;
+    private final AutoCommandHandler autoHandler;
     private final QuickDropControllerBinding binding;
     private final Collector collector;
     private final CollectorCamera collectorCamera;
     private final SwerveSubsystem swerveSubsystem;
 
     public QuickDrop() {
-        TalonFXFactory roboRioTalonFactory = TalonFXFactory.createOnRoboRio();
         TalonFXFactory canivoreTalonFactory = TalonFXFactory.createOnCanivore(QuickDropConstants.CANIVORE_NAME);
-        CANCoderFactory roboRioCANCoderFactory = CANCoderFactory.createOnRoboRio();
+        CANCoderFactory canivoreCANCoderFactory = CANCoderFactory.createOnCanivore(QuickDropConstants.CANIVORE_NAME);
         Pigeon2Factory pigeon2Factory = Pigeon2Factory.createOnCanivore(QuickDropConstants.CANIVORE_NAME);
         CtreError ctreError = new CtreError(QuickDropConstants.LONG_CAN_TIMEOUTS_MS);
 
-        Supplier<SwerveIO> frontLeftSwerveSupplier = SwerveIOReal.getSupplier(
-          roboRioTalonFactory,
-          roboRioCANCoderFactory,
-          ctreError,
-          QuickDropConstants.Drive.FRONT_LEFT,
-          QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-          QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
-        Supplier<SwerveIO> frontRightSwerveSupplier = SwerveIOReal.getSupplier(
-          roboRioTalonFactory,
-          roboRioCANCoderFactory,
-          ctreError,
-          QuickDropConstants.Drive.FRONT_RIGHT,
-          QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-          QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
-        Supplier<SwerveIO> backLeftSwerveSupplier = SwerveIOReal.getSupplier(
-          roboRioTalonFactory,
-          roboRioCANCoderFactory,
-          ctreError,
-          QuickDropConstants.Drive.BACK_LEFT,
-          QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-          QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
-        Supplier<SwerveIO> backRightSwerveSupplier = SwerveIOReal.getSupplier(
-          roboRioTalonFactory,
-          roboRioCANCoderFactory,
-          ctreError,
-          QuickDropConstants.Drive.BACK_RIGHT,
-          QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-          QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
-        Supplier<GyroIO> gyroSupplier = GyroIORealPigeon.getSupplier(
-          pigeon2Factory, QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError);
-
-        chooser = new QuickDropAutoCommandChooser();
+        autoHandler = new QuickDropAutoCommandHandler();
         binding = new QuickDropControllerBinding();
 
-        collector = new Collector(CollectorIO.create(RobotBase.isReal(), CollectorIOReal.getSupplier(canivoreTalonFactory)));
         collectorCamera = new CollectorCamera();
+        collector = createCollector(canivoreTalonFactory);
+        swerveSubsystem = createSwerveSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, pigeon2Factory, ctreError);
 
-        swerveSubsystem = new SwerveSubsystem(
-            GyroIO.create(RobotBase.isReal(), gyroSupplier),
-            SwerveIO.create(RobotBase.isReal(), frontLeftSwerveSupplier),
-            SwerveIO.create(RobotBase.isReal(), frontRightSwerveSupplier),
-            SwerveIO.create(RobotBase.isReal(), backLeftSwerveSupplier),
-            SwerveIO.create(RobotBase.isReal(), backRightSwerveSupplier),
-            1, 2, 3, 4,
+        applyDefaultCommands();
+        applyButtonActions();
+    }
+
+    @Override
+    public void onAutonomousInit(LoggedRobot robot) {
+        autoHandler.startCurrentAutonomousCommand();
+    }
+  
+    @Override
+    public void onAutonomousExit(LoggedRobot robot) {
+        autoHandler.stopCurrentAutonomousCommand();
+    }
+    
+     private Collector createCollector(TalonFXFactory canivoreTalonFactory) {
+        if (RobotBase.isReal()) {
+            return new Collector(new CollectorIOReal(canivoreTalonFactory));
+        } else {
+            return new Collector(new CollectorIO() {});
+        }
+    }
+
+    private SwerveSubsystem createSwerveSubsystem(
+        TalonFXFactory canivoreTalonFactory,
+        CANCoderFactory canivoreCANCoderFactory,
+        Pigeon2Factory pigeon2Factory,
+        CtreError ctreError
+    ) {
+        SwerveModuleArgs.Builder frontLeftArgs = SwerveModuleArgs.builder()
+        .setModuleNumber(1)
+        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+        SwerveModuleArgs.Builder frontRightArgs = SwerveModuleArgs.builder()
+        .setModuleNumber(2)
+        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+        SwerveModuleArgs.Builder backLeftArgs = SwerveModuleArgs.builder()
+        .setModuleNumber(3)
+        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+        SwerveModuleArgs.Builder backRightArgs = SwerveModuleArgs.builder()
+        .setModuleNumber(4)
+        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+        SwerveSubsystemArgs.Builder swerveArgs = SwerveSubsystemArgs.builder()
+        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS);
+        if (RobotBase.isReal()) {
+        frontLeftArgs.setSwerveIO(new SwerveIOReal(
+            canivoreTalonFactory,
+            canivoreCANCoderFactory,
+            ctreError,
+            QuickDropConstants.Drive.FRONT_LEFT,
             QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
-
-            applyDefaultCommands();
-            applyButtonActions();
+            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+        frontRightArgs.setSwerveIO(new SwerveIOReal(
+            canivoreTalonFactory,
+            canivoreCANCoderFactory,
+            ctreError,
+            QuickDropConstants.Drive.FRONT_RIGHT,
+            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+        backLeftArgs.setSwerveIO(new SwerveIOReal(
+            canivoreTalonFactory,
+            canivoreCANCoderFactory,
+            ctreError,
+            QuickDropConstants.Drive.BACK_LEFT,
+            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+        backRightArgs.setSwerveIO(new SwerveIOReal(
+            canivoreTalonFactory,
+            canivoreCANCoderFactory,
+            ctreError,
+            QuickDropConstants.Drive.BACK_RIGHT,
+            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+        swerveArgs.setGyroIO(new GyroIORealPigeon(pigeon2Factory, QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError));
+        }
+        return new SwerveSubsystem(swerveArgs.build());
     }
 
     private void applyDefaultCommands() {
@@ -121,9 +158,4 @@ public final class QuickDrop {
                 collector)
         );
     }
-
-    // @Override
-    // public AutoCommandChooser geAutoCommandChooser() {
-    //     return chooser;
-    // }
 }

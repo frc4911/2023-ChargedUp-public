@@ -1,6 +1,5 @@
 package com.cyberknights4911.robot.model.wham.arm;
 
-import java.util.function.Supplier;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -28,15 +27,7 @@ public final class ArmIOReal implements ArmIO {
     private final WPI_CANCoder wristEncoder;
     private final CtreError ctreError;
 
-    public static Supplier<ArmIO> getSupplier(
-        TalonFXFactory talonFXFactory, CANCoderFactory canCoderFactory, CtreError ctreError
-    ) {
-        return () -> {
-            return new ArmIOReal(talonFXFactory, canCoderFactory, ctreError);
-        };
-    }
-
-    private ArmIOReal(TalonFXFactory talonFXFactory, CANCoderFactory canCoderFactory, CtreError ctreError) {
+    public ArmIOReal(TalonFXFactory talonFXFactory, CANCoderFactory canCoderFactory, CtreError ctreError) {
         this.ctreError = ctreError;
 
         // 1 is closest to robot front (battery side) and the numbering inceases rearward

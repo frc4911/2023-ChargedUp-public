@@ -1,6 +1,5 @@
 package com.cyberknights4911.robot.model.quickdrop.collector;
 
-import java.util.function.Supplier;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -14,13 +13,7 @@ public final class CollectorIOReal implements CollectorIO {
     private final WPI_TalonFX motor;
     private final Solenoid solenoid;
 
-    public static Supplier<CollectorIO> getSupplier(TalonFXFactory talonFXFactory) {
-        return () -> {
-            return new CollectorIOReal(talonFXFactory);
-        };
-    }
-
-    private CollectorIOReal(TalonFXFactory talonFXFactory) {
+    public CollectorIOReal(TalonFXFactory talonFXFactory) {
         motor = talonFXFactory.createTalon(QuickDropPorts.Collector.MOTOR);
         motor.setInverted(false);
         // motor.configStatorCurrentLimit(Constants.SLURPP_STATOR_LIMIT, Constants.LONG_CAN_TIMEOUTS_MS);

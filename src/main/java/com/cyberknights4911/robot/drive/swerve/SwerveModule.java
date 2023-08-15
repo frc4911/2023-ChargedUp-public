@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.util.Conversions;
 
 public class SwerveModule {
@@ -21,16 +20,11 @@ public class SwerveModule {
     private final CotsFalconSwerveConstants cotsConstants;
     private final SwerveIOInputsAutoLogged inputs = new SwerveIOInputsAutoLogged();
 
-    public SwerveModule(
-        int moduleNumber,
-        SwerveIO swerveIO,
-        SwerveDriveConstants swerveDriveConstants,
-        CotsFalconSwerveConstants cotsConstants
-    ) {
-        this.swerveIO = swerveIO;
-        this.swerveDriveConstants = swerveDriveConstants;
-        this.cotsConstants = cotsConstants;
-        this.moduleNumber = moduleNumber;
+    public SwerveModule(SwerveModuleArgs args) {
+        this.swerveIO = args.swerveIO();
+        this.swerveDriveConstants = args.swerveDriveConstants();
+        this.cotsConstants = args.cotsConstants();
+        this.moduleNumber = args.moduleNumber();
         this.moduleName = String.format("Swerve %d", moduleNumber);
 
         feedforward = new SimpleMotorFeedforward(

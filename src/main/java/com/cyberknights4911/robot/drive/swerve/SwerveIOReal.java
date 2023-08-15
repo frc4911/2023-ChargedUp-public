@@ -1,11 +1,9 @@
 package com.cyberknights4911.robot.drive.swerve;
 
-import java.util.function.Supplier;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
-import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.util.Conversions;
 import libraries.cyberlib.drivers.CANCoderFactory;
 import libraries.cyberlib.drivers.CtreError;
@@ -22,20 +20,7 @@ public final class SwerveIOReal implements SwerveIO {
     private final CotsFalconSwerveConstants cotsConstants;
     private final CtreConfigs ctreConfigs;
 
-    public static Supplier<SwerveIO> getSupplier(
-        TalonFXFactory talonFXFactory,
-        CANCoderFactory canCoderFactory,
-        CtreError ctreError,
-        SwerveModuleConstants swerveModuleConstants,
-        SwerveDriveConstants swerveDriveConstants,
-        CotsFalconSwerveConstants cotsConstants
-    ) {
-        return () -> {
-            return new SwerveIOReal(talonFXFactory, canCoderFactory, ctreError, swerveModuleConstants, swerveDriveConstants, cotsConstants);
-        };
-    }
-
-    private SwerveIOReal(
+    public SwerveIOReal(
         TalonFXFactory talonFXFactory,
         CANCoderFactory canCoderFactory,
         CtreError ctreError,

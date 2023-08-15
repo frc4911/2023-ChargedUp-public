@@ -3,6 +3,11 @@ package com.cyberknights4911.robot.drive.swerve;
 import com.google.auto.value.AutoValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 
+/**
+ * Holds constants related to individual swerve modules.
+ * For overall swerve drive values, use {@link SwerveDriveConstants}.
+ * For manufacturer specific values, use {@link CotsFalconSwerveConstants}.
+ */
 @AutoValue
 public abstract class SwerveModuleConstants {
     public abstract int driveMotorId();

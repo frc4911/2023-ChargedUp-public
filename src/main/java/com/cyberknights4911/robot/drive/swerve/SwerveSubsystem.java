@@ -8,7 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.Logger;
-import com.cyberknights4911.robot.constants.CotsFalconSwerveConstants;
+
 import com.cyberknights4911.robot.control.DriveStickAction;
 import com.cyberknights4911.robot.control.StickBinding;
 import com.cyberknights4911.robot.model.wham.drive.AutoBalanceCommand;
@@ -36,23 +36,11 @@ public class SwerveSubsystem extends SubsystemBase {
     
     private final GyroIOInputsAutoLogged inputs = new GyroIOInputsAutoLogged();
 
-    public SwerveSubsystem(
-        GyroIO gyro,
-        SwerveIO frontLeftSwerveIO,
-        SwerveIO frontRightSwerveIO,
-        SwerveIO backLeftSwerveIO,
-        SwerveIO backRightSwerveIO,
-        int frontLeftSwerveModuleNumber,
-        int frontRightSwerveModuleNumber,
-        int backLeftSwerveModuleNumber,
-        int backRightSwerveModuleNumber,
-        SwerveDriveConstants swerveDriveConstants,
-        CotsFalconSwerveConstants cotsFalconSwerveConstants
-    ) {
-        this.gyro = gyro;
-        this.swerveDriveConstants = swerveDriveConstants;
+    public SwerveSubsystem(SwerveSubsystemArgs args) {
+        this.gyro = args.gyroIO();
+        this.swerveDriveConstants = args.swerveDriveConstants();
         zeroGyro();
-        
+
         kinematics = new SwerveDriveKinematics(
             new Translation2d(swerveDriveConstants.wheelBase() / 2.0, swerveDriveConstants.trackWidth() / 2.0),
             new Translation2d(swerveDriveConstants.wheelBase() / 2.0, -swerveDriveConstants.trackWidth() / 2.0),
@@ -60,28 +48,17 @@ public class SwerveSubsystem extends SubsystemBase {
             new Translation2d(-swerveDriveConstants.wheelBase() / 2.0, -swerveDriveConstants.trackWidth() / 2.0)
         );
 
-        swerveModules = new SwerveModule[] {
-            new SwerveModule(
-                frontLeftSwerveModuleNumber,
-                frontLeftSwerveIO,
-                swerveDriveConstants,
-                cotsFalconSwerveConstants),
-            new SwerveModule(
-                frontRightSwerveModuleNumber,
-                frontRightSwerveIO,
-                swerveDriveConstants,
-                cotsFalconSwerveConstants),
-            new SwerveModule(
-                backLeftSwerveModuleNumber,
-                backLeftSwerveIO,
-                swerveDriveConstants,
-                cotsFalconSwerveConstants),
-            new SwerveModule(
-                backRightSwerveModuleNumber,
-                backRightSwerveIO,
-                swerveDriveConstants,
-                cotsFalconSwerveConstants)
-        };
+        swerveModules = new SwerveModule[4];
+        swerveModules[args.frontLeftSwerveModule().getModuleNumber()] = args.frontLeftSwerveModule();
+        swerveModules[args.frontRightSwerveModule().getModuleNumber()] = args.frontRightSwerveModule();
+        swerveModules[args.backLeftSwerveModule().getModuleNumber()] = args.backLeftSwerveModule();
+        swerveModules[args.backRightSwerveModule().getModuleNumber()] = args.backRightSwerveModule();
+
+        for (SwerveModule swerveModule : swerveModules) {
+            if (swerveModule == null) {
+                throw new IllegalArgumentException("Four modules required, numbered 0 to 3");
+            }
+        }
 
         /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
          * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
@@ -96,7 +73,7 @@ public class SwerveSubsystem extends SubsystemBase {
             new Pose2d(),
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // State measurement standard deviations. X, Y, theta.
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01)); // Global measurement standard deviations. X, Y, and theta.
-        
+
         new SwerveDriveOdometry(kinematics, getYaw(), getModulePositions());
     }
 
@@ -137,7 +114,7 @@ public class SwerveSubsystem extends SubsystemBase {
         for (SwerveModule mod : swerveModules) {
             mod.setDesiredState(desiredStates[mod.getModuleNumber()], false);
         }
-    }    
+    }
 
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
@@ -146,7 +123,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public void setPose(Pose2d pose) {
         poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
-    
+
     public CommandBase createAutobalanceCommand() {
         CommandBase balanceCommand =  new AutoBalanceCommand() {
 

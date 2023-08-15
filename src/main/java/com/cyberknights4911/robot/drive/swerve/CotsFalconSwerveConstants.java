@@ -1,10 +1,13 @@
-package com.cyberknights4911.robot.constants;
+package com.cyberknights4911.robot.drive.swerve;
 
 import com.google.auto.value.AutoValue;
-
 import edu.wpi.first.math.util.Units;
 
-/* Contains values and required settings for common COTS swerve modules. */
+/**
+ * Holds constants related to common off-the-shelf physical swerve modules.
+ * For overall swerve drive values, use {@link SwerveDriveConstants}.
+ * For module specific values, use {@link SwerveModuleConstants}.
+ */
 @AutoValue
 public abstract class CotsFalconSwerveConstants {
   public abstract double wheelDiameter();

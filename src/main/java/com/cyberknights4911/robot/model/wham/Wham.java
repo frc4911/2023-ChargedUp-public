@@ -1,14 +1,13 @@
 package com.cyberknights4911.robot.model.wham;
 
-import java.util.function.Supplier;
 import org.littletonrobotics.junction.LoggedRobot;
 import com.cyberknights4911.robot.RobotStateListener;
-import com.cyberknights4911.robot.auto.AutoCommandChooser;
-import com.cyberknights4911.robot.drive.swerve.GyroIO;
+import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.GyroIORealPigeon;
-import com.cyberknights4911.robot.drive.swerve.SwerveIO;
 import com.cyberknights4911.robot.drive.swerve.SwerveIOReal;
+import com.cyberknights4911.robot.drive.swerve.SwerveModuleArgs;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
+import com.cyberknights4911.robot.drive.swerve.SwerveSubsystemArgs;
 import com.cyberknights4911.robot.model.wham.arm.ArmIO;
 import com.cyberknights4911.robot.model.wham.arm.ArmIOReal;
 import com.cyberknights4911.robot.model.wham.arm.ArmPositions;
@@ -31,10 +30,8 @@ public final class Wham implements RobotStateListener {
   private final ArmSubsystem armSubsystem ;
   private final SwerveSubsystem swerveSubsystem;
 
-  private final AutoCommandChooser autoCommandChooser;
+  private final AutoCommandHandler autoHandler;
   private final WhamControllerBinding binding;
-
-  private Command autonomousCommand;
 
   public Wham() {
     TalonFXFactory roboRioTalonFactory = TalonFXFactory.createOnRoboRio();
@@ -44,72 +41,99 @@ public final class Wham implements RobotStateListener {
     Pigeon2Factory pigeon2Factory = Pigeon2Factory.createOnRoboRio();
     CtreError ctreError = new CtreError(WhamConstants.LONG_CAN_TIMEOUTS_MS);
 
-    Supplier<SlurppIO> slurppSupplier = SlurppIOReal.getSupplier(canivoreTalonFactory, ctreError);
-    Supplier<ArmIO> armSupplier = ArmIOReal.getSupplier(canivoreTalonFactory, canivoreCANCoderFactory, ctreError);
-    Supplier<SwerveIO> frontLeftSwerveSupplier = SwerveIOReal.getSupplier(
-      roboRioTalonFactory,
-      roboRioCANCoderFactory,
-      ctreError,
-      WhamConstants.Drive.FRONT_LEFT,
-      WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-      WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
-    Supplier<SwerveIO> frontRightSwerveSupplier = SwerveIOReal.getSupplier(
-      roboRioTalonFactory,
-      roboRioCANCoderFactory,
-      ctreError,
-      WhamConstants.Drive.FRONT_RIGHT,
-      WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-      WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
-    Supplier<SwerveIO> backLeftSwerveSupplier = SwerveIOReal.getSupplier(
-      roboRioTalonFactory,
-      roboRioCANCoderFactory,
-      ctreError,
-      WhamConstants.Drive.BACK_LEFT,
-      WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-      WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
-    Supplier<SwerveIO> backRightSwerveSupplier = SwerveIOReal.getSupplier(
-      roboRioTalonFactory,
-      roboRioCANCoderFactory,
-      ctreError,
-      WhamConstants.Drive.BACK_RIGHT,
-      WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-      WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
-    Supplier<GyroIO> gyroSupplier = GyroIORealPigeon.getSupplier(
-      pigeon2Factory, WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError);
-
-    slurppSubsystem = new SlurppSubsystem(SlurppIO.create(RobotBase.isReal(), slurppSupplier));
-    armSubsystem = new ArmSubsystem(ArmIO.create(RobotBase.isReal(), armSupplier));
-    swerveSubsystem = new SwerveSubsystem(
-      GyroIO.create(RobotBase.isReal(), gyroSupplier),
-      SwerveIO.create(RobotBase.isReal(), frontLeftSwerveSupplier),
-      SwerveIO.create(RobotBase.isReal(), frontRightSwerveSupplier),
-      SwerveIO.create(RobotBase.isReal(), backLeftSwerveSupplier),
-      SwerveIO.create(RobotBase.isReal(), backRightSwerveSupplier),
-      1, 2, 3, 4,
-      WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-      WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
-
-    autoCommandChooser = new WhamAutoCommandChooser(armSubsystem, slurppSubsystem, swerveSubsystem);
-
+    slurppSubsystem = createSlurppSubsystem(canivoreTalonFactory, ctreError);
+    armSubsystem = createArmSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, ctreError);
+    swerveSubsystem = createSwerveSubsystem(roboRioTalonFactory, roboRioCANCoderFactory, pigeon2Factory, ctreError);
+    autoHandler = new WhamAutoCommandHandler(armSubsystem, slurppSubsystem, swerveSubsystem);
     binding = new WhamControllerBinding();
+
     applyDefaultCommands();
     applyButtonActions();
   }
 
+  private ArmSubsystem createArmSubsystem(TalonFXFactory canivoreTalonFactory, CANCoderFactory canivoreCANCoderFactory,
+      CtreError ctreError) {
+    if (RobotBase.isReal()) {
+      return new ArmSubsystem(new ArmIOReal(canivoreTalonFactory, canivoreCANCoderFactory, ctreError));
+    } else {
+      return new ArmSubsystem(new ArmIO() {});
+    }
+  }
+
+  private SlurppSubsystem createSlurppSubsystem(TalonFXFactory canivoreTalonFactory, CtreError ctreError) {
+    if (RobotBase.isReal()) {
+      return new SlurppSubsystem(new SlurppIOReal(canivoreTalonFactory, ctreError));
+    } else {
+      return new SlurppSubsystem(new SlurppIO() {});
+    }
+  }
+
+  private SwerveSubsystem createSwerveSubsystem(
+    TalonFXFactory roboRioTalonFactory,
+    CANCoderFactory roboRioCANCoderFactory,
+    Pigeon2Factory pigeon2Factory,
+    CtreError ctreError
+  ) {
+    SwerveModuleArgs.Builder frontLeftArgs = SwerveModuleArgs.builder()
+      .setModuleNumber(1)
+      .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+      .setCotsConstants(WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
+    SwerveModuleArgs.Builder frontRightArgs = SwerveModuleArgs.builder()
+      .setModuleNumber(2)
+      .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+      .setCotsConstants(WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
+    SwerveModuleArgs.Builder backLeftArgs = SwerveModuleArgs.builder()
+      .setModuleNumber(3)
+      .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+      .setCotsConstants(WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
+    SwerveModuleArgs.Builder backRightArgs = SwerveModuleArgs.builder()
+      .setModuleNumber(4)
+      .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+      .setCotsConstants(WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
+    SwerveSubsystemArgs.Builder swerveArgs = SwerveSubsystemArgs.builder()
+      .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS);
+    if (RobotBase.isReal()) {
+      frontLeftArgs.setSwerveIO(new SwerveIOReal(
+        roboRioTalonFactory,
+        roboRioCANCoderFactory,
+        ctreError,
+        WhamConstants.Drive.FRONT_LEFT,
+        WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+        WhamConstants.Drive.PHYSICAL_SWERVE_MODULE));
+      frontRightArgs.setSwerveIO(new SwerveIOReal(
+        roboRioTalonFactory,
+        roboRioCANCoderFactory,
+        ctreError,
+        WhamConstants.Drive.FRONT_RIGHT,
+        WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+        WhamConstants.Drive.PHYSICAL_SWERVE_MODULE));
+      backLeftArgs.setSwerveIO(new SwerveIOReal(
+        roboRioTalonFactory,
+        roboRioCANCoderFactory,
+        ctreError,
+        WhamConstants.Drive.BACK_LEFT,
+        WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+        WhamConstants.Drive.PHYSICAL_SWERVE_MODULE));
+      backRightArgs.setSwerveIO(new SwerveIOReal(
+        roboRioTalonFactory,
+        roboRioCANCoderFactory,
+        ctreError,
+        WhamConstants.Drive.BACK_RIGHT,
+        WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+        WhamConstants.Drive.PHYSICAL_SWERVE_MODULE));
+      swerveArgs.setGyroIO(new GyroIORealPigeon(pigeon2Factory, WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError));
+    }
+    return new SwerveSubsystem(swerveArgs.build());
+  }
+
   @Override
   public void onAutonomousInit(LoggedRobot robot) {
-    autonomousCommand = autoCommandChooser.getAutonomousCommand();
-
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
+    autoHandler.startCurrentAutonomousCommand();
   }
 
   @Override
   public void onAutonomousExit(LoggedRobot robot) {
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
-    }
+    autoHandler.stopCurrentAutonomousCommand();
   }
 
   private void applyDefaultCommands() {
