@@ -125,8 +125,8 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     private void checkCurrentMotionFinished() {
         double shoulderError = Math.abs(armSubsystem.getShoulderTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.shoulderPosition.getValue()));
         double wristError = Math.abs(armSubsystem.getWristTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.wristPosition.getValue()));
-        System.out.println("shoulder error: " + shoulderError);
-        System.out.println("wrist error: " + wristError);
+        // System.out.println("shoulder error: " + shoulderError);
+        // System.out.println("wrist error: " + wristError);
         if (shoulderError < shoulderErrorThreshold && wristError < wristErrorThreshold) {
             thresholdLoops++;
         } else {
@@ -145,7 +145,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
 
     /** Used in tuning mode to move to the desired positions after modifying them. */
     private void rerunMoveToPosition() {
-        System.out.println("rerunMoveToPosition");
+        //System.out.println("rerunMoveToPosition");
         armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
         armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
     }
