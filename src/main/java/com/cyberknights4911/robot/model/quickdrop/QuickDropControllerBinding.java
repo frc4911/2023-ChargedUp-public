@@ -26,6 +26,7 @@ public final class QuickDropControllerBinding implements ButtonBinding<QuickDrop
             case COLLECTOR_RETRACT: return new Triggers( driverController.leftTrigger());
             case COLLECTOR_RUN_FORWARD: return new Triggers(driverController.rightBumper());
             case COLLECTOR_RUN_REVERSE: return new Triggers(driverController.leftBumper());
+            case INDEXER_RUN: return new Triggers(driverController.a());
             default: return new Triggers(ALWAYS_FALSE);
         }
     }

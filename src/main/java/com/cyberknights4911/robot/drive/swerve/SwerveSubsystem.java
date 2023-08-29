@@ -4,15 +4,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
 import java.util.function.DoubleSupplier;
-
 import org.littletonrobotics.junction.Logger;
-
 import com.cyberknights4911.robot.control.DriveStickAction;
 import com.cyberknights4911.robot.control.StickBinding;
 import com.cyberknights4911.robot.model.wham.drive.AutoBalanceCommand;
-
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Nat;
@@ -48,11 +44,12 @@ public class SwerveSubsystem extends SubsystemBase {
             new Translation2d(-swerveDriveConstants.wheelBase() / 2.0, -swerveDriveConstants.trackWidth() / 2.0)
         );
 
-        swerveModules = new SwerveModule[4];
-        swerveModules[args.frontLeftSwerveModule().getModuleNumber()] = args.frontLeftSwerveModule();
-        swerveModules[args.frontRightSwerveModule().getModuleNumber()] = args.frontRightSwerveModule();
-        swerveModules[args.backLeftSwerveModule().getModuleNumber()] = args.backLeftSwerveModule();
-        swerveModules[args.backRightSwerveModule().getModuleNumber()] = args.backRightSwerveModule();
+        swerveModules = new SwerveModule[] {
+            args.frontLeftSwerveModule(),
+            args.frontRightSwerveModule(),
+            args.backLeftSwerveModule(),
+            args.backRightSwerveModule()
+        };
 
         for (SwerveModule swerveModule : swerveModules) {
             if (swerveModule == null) {
@@ -99,7 +96,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, swerveDriveConstants.maxSpeed());
 
         for (SwerveModule mod : swerveModules) {
-            mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
+            mod.setDesiredState(swerveModuleStates[mod.getModuleNumber() - 1], isOpenLoop);
         }
     }
 
@@ -112,7 +109,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, swerveDriveConstants.maxSpeed());
         
         for (SwerveModule mod : swerveModules) {
-            mod.setDesiredState(desiredStates[mod.getModuleNumber()], false);
+            mod.setDesiredState(desiredStates[mod.getModuleNumber() - 1], false);
         }
     }
 
@@ -152,7 +149,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : swerveModules) {
-            states[mod.getModuleNumber()] = mod.getState();
+            states[mod.getModuleNumber() - 1] = mod.getState();
         }
         return states;
     }
@@ -160,7 +157,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : swerveModules) {
-            positions[mod.getModuleNumber()] = mod.getPosition();
+            positions[mod.getModuleNumber() - 1] = mod.getPosition();
         }
         return positions;
     }

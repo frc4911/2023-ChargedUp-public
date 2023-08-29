@@ -6,6 +6,7 @@ import com.cyberknights4911.robot.RobotStateListener;
 import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.GyroIORealPigeon;
 import com.cyberknights4911.robot.drive.swerve.SwerveIOReal;
+import com.cyberknights4911.robot.drive.swerve.SwerveModule;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleArgs;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystemArgs;
@@ -14,6 +15,11 @@ import com.cyberknights4911.robot.model.quickdrop.collector.Collector;
 import com.cyberknights4911.robot.model.quickdrop.collector.CollectorIO;
 import com.cyberknights4911.robot.model.quickdrop.collector.CollectorIOReal;
 import com.cyberknights4911.robot.model.quickdrop.collector.QuickDropCollectorCommand;
+import com.cyberknights4911.robot.model.quickdrop.indexer.Indexer;
+import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerCommand;
+import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerIO;
+import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerIOReal;
+
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import libraries.cyberlib.drivers.CANCoderFactory;
@@ -26,6 +32,7 @@ public final class QuickDrop implements RobotStateListener {
     private final AutoCommandHandler autoHandler;
     private final QuickDropControllerBinding binding;
     private final Collector collector;
+    private final Indexer indexer;
     private final CollectorCamera collectorCamera;
     private final SwerveSubsystem swerveSubsystem;
 
@@ -40,6 +47,7 @@ public final class QuickDrop implements RobotStateListener {
 
         collectorCamera = new CollectorCamera();
         collector = createCollector(canivoreTalonFactory);
+        indexer = createIndexer(canivoreTalonFactory);
         swerveSubsystem = createSwerveSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, pigeon2Factory, ctreError);
 
         applyDefaultCommands();
@@ -63,6 +71,14 @@ public final class QuickDrop implements RobotStateListener {
             return new Collector(new CollectorIO() {});
         }
     }
+    
+    private Indexer createIndexer(TalonFXFactory canivoreTalonFactory) {
+       if (RobotBase.isReal()) {
+           return new Indexer(new IndexerIOReal(canivoreTalonFactory));
+       } else {
+           return new Indexer(new IndexerIO() {});
+       }
+   }
 
     private SwerveSubsystem createSwerveSubsystem(
         TalonFXFactory canivoreTalonFactory,
@@ -71,54 +87,58 @@ public final class QuickDrop implements RobotStateListener {
         CtreError ctreError
     ) {
         SwerveModuleArgs.Builder frontLeftArgs = SwerveModuleArgs.builder()
-        .setModuleNumber(1)
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
-        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+            .setModuleNumber(1)
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+            .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder frontRightArgs = SwerveModuleArgs.builder()
-        .setModuleNumber(2)
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
-        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+            .setModuleNumber(2)
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+            .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder backLeftArgs = SwerveModuleArgs.builder()
-        .setModuleNumber(3)
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
-        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+            .setModuleNumber(3)
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+            .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder backRightArgs = SwerveModuleArgs.builder()
-        .setModuleNumber(4)
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
-        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+            .setModuleNumber(4)
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+            .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveSubsystemArgs.Builder swerveArgs = SwerveSubsystemArgs.builder()
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS);
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS);
         if (RobotBase.isReal()) {
-        frontLeftArgs.setSwerveIO(new SwerveIOReal(
-            canivoreTalonFactory,
-            canivoreCANCoderFactory,
-            ctreError,
-            QuickDropConstants.Drive.FRONT_LEFT,
-            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
-        frontRightArgs.setSwerveIO(new SwerveIOReal(
-            canivoreTalonFactory,
-            canivoreCANCoderFactory,
-            ctreError,
-            QuickDropConstants.Drive.FRONT_RIGHT,
-            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
-        backLeftArgs.setSwerveIO(new SwerveIOReal(
-            canivoreTalonFactory,
-            canivoreCANCoderFactory,
-            ctreError,
-            QuickDropConstants.Drive.BACK_LEFT,
-            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
-        backRightArgs.setSwerveIO(new SwerveIOReal(
-            canivoreTalonFactory,
-            canivoreCANCoderFactory,
-            ctreError,
-            QuickDropConstants.Drive.BACK_RIGHT,
-            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
-        swerveArgs.setGyroIO(new GyroIORealPigeon(pigeon2Factory, QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError));
+            frontLeftArgs.setSwerveIO(new SwerveIOReal(
+                canivoreTalonFactory,
+                canivoreCANCoderFactory,
+                ctreError,
+                QuickDropConstants.Drive.FRONT_LEFT,
+                QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+                QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+            frontRightArgs.setSwerveIO(new SwerveIOReal(
+                canivoreTalonFactory,
+                canivoreCANCoderFactory,
+                ctreError,
+                QuickDropConstants.Drive.FRONT_RIGHT,
+                QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+                QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+            backLeftArgs.setSwerveIO(new SwerveIOReal(
+                canivoreTalonFactory,
+                canivoreCANCoderFactory,
+                ctreError,
+                QuickDropConstants.Drive.BACK_LEFT,
+                QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+                QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+            backRightArgs.setSwerveIO(new SwerveIOReal(
+                canivoreTalonFactory,
+                canivoreCANCoderFactory,
+                ctreError,
+                QuickDropConstants.Drive.BACK_RIGHT,
+                QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+                QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+            swerveArgs.setGyroIO(new GyroIORealPigeon(pigeon2Factory, QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError));
         }
+        swerveArgs.setFrontLeftSwerveModule(new SwerveModule(frontLeftArgs.build()))
+            .setFrontRightSwerveModule(new SwerveModule(frontRightArgs.build()))
+            .setBackLeftSwerveModule(new SwerveModule(backLeftArgs.build()))
+            .setBackRightSwerveModule(new SwerveModule(backRightArgs.build()));
         return new SwerveSubsystem(swerveArgs.build());
     }
 
@@ -156,6 +176,10 @@ public final class QuickDrop implements RobotStateListener {
                     collector.retract();
                 },
                 collector)
+        );
+
+        binding.triggersFor(QuickDropButtonAction.INDEXER_RUN).onTrue(
+            new IndexerCommand(indexer, 0.5)
         );
     }
 }

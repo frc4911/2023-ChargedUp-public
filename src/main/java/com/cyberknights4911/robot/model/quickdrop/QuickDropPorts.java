@@ -31,6 +31,15 @@ public final class QuickDropPorts {
         public static final int SOLENOID = 2;
     }
 
+    public static final class Indexer {
+        private Indexer() {}
+
+        public static final int MOTOR = 30;
+        public static final int BEAM_BREAK_ENTER = 0;
+        public static final int BEAM_BREAK_EXIT = 1;
+    }
+
+
     public static final class Hood {
         private Hood() {}
 
