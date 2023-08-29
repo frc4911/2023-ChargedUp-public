@@ -1,6 +1,7 @@
 package com.cyberknights4911.robot.model.wham.arm;
 
 import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -55,8 +56,8 @@ public final class ArmSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        // armIO.updateInputs(inputs);
-        // Logger.getInstance().processInputs("Arm", inputs);
+        armIO.updateInputs(inputs);
+        Logger.getInstance().processInputs("Arm", inputs);
     }
 
     public double getShoulderPositionDegrees() {

@@ -1,6 +1,5 @@
 package com.cyberknights4911.robot.drive.swerve;
 
-import java.util.function.Supplier;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.sensors.BasePigeon;
 import edu.wpi.first.math.util.Units;

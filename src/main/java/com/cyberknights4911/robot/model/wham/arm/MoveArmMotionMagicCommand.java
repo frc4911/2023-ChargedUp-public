@@ -2,7 +2,6 @@ package com.cyberknights4911.robot.model.wham.arm;
 
 import com.cyberknights4911.robot.constants.DoublePreference;
 import com.cyberknights4911.robot.model.wham.WhamConstants;
-import com.cyberknights4911.robot.model.wham.WhamConstants.Arm;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
