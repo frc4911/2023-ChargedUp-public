@@ -11,4 +11,5 @@ public enum QuickDropButtonAction implements ButtonAction {
     COLLECTOR_RETRACT,
     COLLECTOR_RUN_FORWARD,
     COLLECTOR_RUN_REVERSE,
+    INDEXER_RUN,
 }

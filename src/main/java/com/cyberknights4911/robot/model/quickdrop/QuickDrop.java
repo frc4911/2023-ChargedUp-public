@@ -15,6 +15,11 @@ import com.cyberknights4911.robot.model.quickdrop.collector.Collector;
 import com.cyberknights4911.robot.model.quickdrop.collector.CollectorIO;
 import com.cyberknights4911.robot.model.quickdrop.collector.CollectorIOReal;
 import com.cyberknights4911.robot.model.quickdrop.collector.QuickDropCollectorCommand;
+import com.cyberknights4911.robot.model.quickdrop.indexer.Indexer;
+import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerCommand;
+import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerIO;
+import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerIOReal;
+
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import libraries.cyberlib.drivers.CANCoderFactory;
@@ -27,6 +32,7 @@ public final class QuickDrop implements RobotStateListener {
     private final AutoCommandHandler autoHandler;
     private final QuickDropControllerBinding binding;
     private final Collector collector;
+    private final Indexer indexer;
     private final CollectorCamera collectorCamera;
     private final SwerveSubsystem swerveSubsystem;
 
@@ -41,6 +47,7 @@ public final class QuickDrop implements RobotStateListener {
 
         collectorCamera = new CollectorCamera();
         collector = createCollector(canivoreTalonFactory);
+        indexer = createIndexer(canivoreTalonFactory);
         swerveSubsystem = createSwerveSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, pigeon2Factory, ctreError);
 
         applyDefaultCommands();
@@ -64,6 +71,14 @@ public final class QuickDrop implements RobotStateListener {
             return new Collector(new CollectorIO() {});
         }
     }
+    
+    private Indexer createIndexer(TalonFXFactory canivoreTalonFactory) {
+       if (RobotBase.isReal()) {
+           return new Indexer(new IndexerIOReal(canivoreTalonFactory));
+       } else {
+           return new Indexer(new IndexerIO() {});
+       }
+   }
 
     private SwerveSubsystem createSwerveSubsystem(
         TalonFXFactory canivoreTalonFactory,
@@ -161,6 +176,10 @@ public final class QuickDrop implements RobotStateListener {
                     collector.retract();
                 },
                 collector)
+        );
+
+        binding.triggersFor(QuickDropButtonAction.INDEXER_RUN).onTrue(
+            new IndexerCommand(indexer, 0.5)
         );
     }
 }
