@@ -6,6 +6,7 @@ import com.cyberknights4911.robot.RobotStateListener;
 import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.GyroIORealPigeon;
 import com.cyberknights4911.robot.drive.swerve.SwerveIOReal;
+import com.cyberknights4911.robot.drive.swerve.SwerveModule;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleArgs;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystemArgs;
@@ -71,54 +72,58 @@ public final class QuickDrop implements RobotStateListener {
         CtreError ctreError
     ) {
         SwerveModuleArgs.Builder frontLeftArgs = SwerveModuleArgs.builder()
-        .setModuleNumber(1)
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
-        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+            .setModuleNumber(1)
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+            .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder frontRightArgs = SwerveModuleArgs.builder()
-        .setModuleNumber(2)
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
-        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+            .setModuleNumber(2)
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+            .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder backLeftArgs = SwerveModuleArgs.builder()
-        .setModuleNumber(3)
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
-        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+            .setModuleNumber(3)
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+            .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder backRightArgs = SwerveModuleArgs.builder()
-        .setModuleNumber(4)
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
-        .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
+            .setModuleNumber(4)
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
+            .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveSubsystemArgs.Builder swerveArgs = SwerveSubsystemArgs.builder()
-        .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS);
+            .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS);
         if (RobotBase.isReal()) {
-        frontLeftArgs.setSwerveIO(new SwerveIOReal(
-            canivoreTalonFactory,
-            canivoreCANCoderFactory,
-            ctreError,
-            QuickDropConstants.Drive.FRONT_LEFT,
-            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
-        frontRightArgs.setSwerveIO(new SwerveIOReal(
-            canivoreTalonFactory,
-            canivoreCANCoderFactory,
-            ctreError,
-            QuickDropConstants.Drive.FRONT_RIGHT,
-            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
-        backLeftArgs.setSwerveIO(new SwerveIOReal(
-            canivoreTalonFactory,
-            canivoreCANCoderFactory,
-            ctreError,
-            QuickDropConstants.Drive.BACK_LEFT,
-            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
-        backRightArgs.setSwerveIO(new SwerveIOReal(
-            canivoreTalonFactory,
-            canivoreCANCoderFactory,
-            ctreError,
-            QuickDropConstants.Drive.BACK_RIGHT,
-            QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
-            QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
-        swerveArgs.setGyroIO(new GyroIORealPigeon(pigeon2Factory, QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError));
+            frontLeftArgs.setSwerveIO(new SwerveIOReal(
+                canivoreTalonFactory,
+                canivoreCANCoderFactory,
+                ctreError,
+                QuickDropConstants.Drive.FRONT_LEFT,
+                QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+                QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+            frontRightArgs.setSwerveIO(new SwerveIOReal(
+                canivoreTalonFactory,
+                canivoreCANCoderFactory,
+                ctreError,
+                QuickDropConstants.Drive.FRONT_RIGHT,
+                QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+                QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+            backLeftArgs.setSwerveIO(new SwerveIOReal(
+                canivoreTalonFactory,
+                canivoreCANCoderFactory,
+                ctreError,
+                QuickDropConstants.Drive.BACK_LEFT,
+                QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+                QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+            backRightArgs.setSwerveIO(new SwerveIOReal(
+                canivoreTalonFactory,
+                canivoreCANCoderFactory,
+                ctreError,
+                QuickDropConstants.Drive.BACK_RIGHT,
+                QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS,
+                QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE));
+            swerveArgs.setGyroIO(new GyroIORealPigeon(pigeon2Factory, QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError));
         }
+        swerveArgs.setFrontLeftSwerveModule(new SwerveModule(frontLeftArgs.build()))
+            .setFrontRightSwerveModule(new SwerveModule(frontRightArgs.build()))
+            .setBackLeftSwerveModule(new SwerveModule(backLeftArgs.build()))
+            .setBackRightSwerveModule(new SwerveModule(backRightArgs.build()));
         return new SwerveSubsystem(swerveArgs.build());
     }
 
