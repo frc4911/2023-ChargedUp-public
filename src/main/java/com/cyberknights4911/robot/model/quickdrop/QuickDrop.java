@@ -24,6 +24,7 @@ import com.cyberknights4911.robot.model.quickdrop.shooter.ShooterIO;
 import com.cyberknights4911.robot.model.quickdrop.shooter.ShooterIOReal;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import libraries.cyberlib.drivers.CANCoderFactory;
 import libraries.cyberlib.drivers.CtreError;
@@ -194,6 +195,25 @@ public final class QuickDrop implements RobotStateListener {
 
         binding.triggersFor(QuickDropButtonAction.INDEXER_RUN).onTrue(
             new IndexerCommand(indexer, 0.15)
+        );
+
+        Command spinFlywheel = Commands.runOnce(
+            () -> {
+                shooter.setShooterSpeed(12000);
+            }, shooter);
+        Command waitOne = Commands.waitSeconds(1.5);
+        Command runIndexer = Commands.runOnce(
+            () -> {
+                indexer.run(0.3);
+            }, indexer);
+        Command waitTwo = Commands.waitSeconds(1.0);
+        Command stopitnow = Commands.runOnce(
+            () -> {
+                indexer.run(0);
+                shooter.setShooterSpeed(0);
+            }, shooter, indexer);
+        binding.triggersFor(QuickDropButtonAction.SHOOTER_BLAST).onTrue(
+            spinFlywheel.andThen(waitOne).andThen(runIndexer).andThen(waitTwo).andThen(stopitnow)
         );
     }
 }

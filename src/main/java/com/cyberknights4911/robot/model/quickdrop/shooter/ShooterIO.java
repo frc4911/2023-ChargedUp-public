@@ -17,4 +17,6 @@ public interface ShooterIO {
     /** Stop the motor. */
     default void stop() {}
 
+    default void setShooterSpeed(double speed) {}
+
 }

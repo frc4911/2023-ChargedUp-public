@@ -27,6 +27,13 @@ public class ShooterIOReal implements ShooterIO {
         inputs.velocityRpm = flywheelRightMotor.getSelectedSensorVelocity() * 10 / 2048;
     }
 
+    
+
+    @Override
+    public void setShooterSpeed(double speed) {
+        flywheelRightMotor.set(ControlMode.Velocity, speed);
+    }
+
     private void configMotors() {
         hoodMotor.setInverted(true);
 

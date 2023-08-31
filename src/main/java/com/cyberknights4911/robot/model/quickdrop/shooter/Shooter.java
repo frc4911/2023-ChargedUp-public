@@ -17,4 +17,8 @@ public final class Shooter extends SubsystemBase {
         shooterIO.updateInputs(inputs);
         Logger.getInstance().processInputs("Shooter", inputs);
     }
+
+    public void setShooterSpeed(double speed) {
+        shooterIO.setShooterSpeed(speed);
+    }
 }
