@@ -23,15 +23,12 @@ public class IndexerCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("Indexer Initializing...");
+        
     }
 
     @Override
     public void execute() {
-        System.out.println("Execute Executing...");
-        System.out.println("isBlocked = " + indexer.isEnterBlocked());
         if (indexer.isEnterBlocked()) {
-            System.out.println("Setting output: " + percentOutput);
             indexer.run(percentOutput);
 
         }
@@ -39,13 +36,11 @@ public class IndexerCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Ended");
         indexer.stop();
     }
 
     @Override
     public boolean isFinished() {
-        System.out.println("isFinished = " + indexer.isExitBlocked());
         return indexer.isExitBlocked();
     }
 }

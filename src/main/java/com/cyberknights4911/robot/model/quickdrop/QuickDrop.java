@@ -38,6 +38,7 @@ public final class QuickDrop implements RobotStateListener {
 
     public QuickDrop() {
         TalonFXFactory canivoreTalonFactory = TalonFXFactory.createOnCanivore(QuickDropConstants.CANIVORE_NAME);
+        TalonFXFactory rioTalonFactory = TalonFXFactory.createOnRoboRio();
         CANCoderFactory canivoreCANCoderFactory = CANCoderFactory.createOnCanivore(QuickDropConstants.CANIVORE_NAME);
         Pigeon2Factory pigeon2Factory = Pigeon2Factory.createOnCanivore(QuickDropConstants.CANIVORE_NAME);
         CtreError ctreError = new CtreError(QuickDropConstants.LONG_CAN_TIMEOUTS_MS);
@@ -47,7 +48,7 @@ public final class QuickDrop implements RobotStateListener {
 
         collectorCamera = new CollectorCamera();
         collector = createCollector(canivoreTalonFactory);
-        indexer = createIndexer(canivoreTalonFactory);
+        indexer = createIndexer(rioTalonFactory);
         swerveSubsystem = createSwerveSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, pigeon2Factory, ctreError);
 
         applyDefaultCommands();
@@ -72,9 +73,9 @@ public final class QuickDrop implements RobotStateListener {
         }
     }
     
-    private Indexer createIndexer(TalonFXFactory canivoreTalonFactory) {
+    private Indexer createIndexer(TalonFXFactory talonFactory) {
        if (RobotBase.isReal()) {
-           return new Indexer(new IndexerIOReal(canivoreTalonFactory));
+           return new Indexer(new IndexerIOReal(talonFactory));
        } else {
            return new Indexer(new IndexerIO() {});
        }
@@ -179,7 +180,7 @@ public final class QuickDrop implements RobotStateListener {
         );
 
         binding.triggersFor(QuickDropButtonAction.INDEXER_RUN).onTrue(
-            new IndexerCommand(indexer, 0.5)
+            new IndexerCommand(indexer, 0.15)
         );
     }
 }

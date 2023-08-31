@@ -16,10 +16,18 @@ public class IndexerIOReal implements IndexerIO {
 
     public IndexerIOReal(TalonFXFactory talonFXFactory) {
         motor = talonFXFactory.createTalon(QuickDropPorts.Indexer.MOTOR);
-        motor.setInverted(false);
+        motor.configFactoryDefault();
+        motor.setInverted(true);
         enter = new AnalogInput(QuickDropPorts.Indexer.BEAM_BREAK_ENTER);
         exit = new AnalogInput(QuickDropPorts.Indexer.BEAM_BREAK_EXIT);
     
+    }
+
+    @Override
+    public void updateInputs(IndexerIOInputs inputs) {
+        inputs.enterVoltage = enter.getVoltage();
+        inputs.exitVoltage = exit.getVoltage();
+        inputs.velocityRpm = motor.getSelectedSensorVelocity() * 10 / 2048;
     }
 
     @Override
