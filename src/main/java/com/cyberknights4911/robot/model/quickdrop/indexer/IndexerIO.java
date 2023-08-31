@@ -2,8 +2,6 @@ package com.cyberknights4911.robot.model.quickdrop.indexer;
 
 import org.littletonrobotics.junction.AutoLog;
 
-
-
 public interface IndexerIO {
     
     @AutoLog
@@ -11,7 +9,6 @@ public interface IndexerIO {
         public double enterVoltage = 0.0;
         public double exitVoltage = 0.0;
         public double velocityRpm = 0.0;
-        
     }
 
     default void updateInputs(IndexerIOInputs inputs) {}

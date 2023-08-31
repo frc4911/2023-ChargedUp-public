@@ -19,6 +19,9 @@ import com.cyberknights4911.robot.model.quickdrop.indexer.Indexer;
 import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerCommand;
 import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerIO;
 import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerIOReal;
+import com.cyberknights4911.robot.model.quickdrop.shooter.Shooter;
+import com.cyberknights4911.robot.model.quickdrop.shooter.ShooterIO;
+import com.cyberknights4911.robot.model.quickdrop.shooter.ShooterIOReal;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -33,6 +36,7 @@ public final class QuickDrop implements RobotStateListener {
     private final QuickDropControllerBinding binding;
     private final Collector collector;
     private final Indexer indexer;
+    private final Shooter shooter;
     private final CollectorCamera collectorCamera;
     private final SwerveSubsystem swerveSubsystem;
 
@@ -49,6 +53,7 @@ public final class QuickDrop implements RobotStateListener {
         collectorCamera = new CollectorCamera();
         collector = createCollector(canivoreTalonFactory);
         indexer = createIndexer(rioTalonFactory);
+        shooter = createShooter(rioTalonFactory, ctreError);
         swerveSubsystem = createSwerveSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, pigeon2Factory, ctreError);
 
         applyDefaultCommands();
@@ -80,6 +85,14 @@ public final class QuickDrop implements RobotStateListener {
            return new Indexer(new IndexerIO() {});
        }
    }
+    
+   private Shooter createShooter(TalonFXFactory talonFactory, CtreError ctreError) {
+      if (RobotBase.isReal()) {
+          return new Shooter(new ShooterIOReal(talonFactory, ctreError));
+      } else {
+          return new Shooter(new ShooterIO() {});
+      }
+  }
 
     private SwerveSubsystem createSwerveSubsystem(
         TalonFXFactory canivoreTalonFactory,
