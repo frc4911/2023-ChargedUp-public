@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.cyberknights4911.robot.model.quickdrop.QuickDropPorts;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import libraries.cyberlib.drivers.CtreError;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
 public class IndexerIOReal implements IndexerIO {
@@ -13,14 +14,19 @@ public class IndexerIOReal implements IndexerIO {
     private final WPI_TalonFX motor;
     private final AnalogInput enter;
     private final AnalogInput exit;
+    private final CtreError ctreError;
 
-    public IndexerIOReal(TalonFXFactory talonFXFactory) {
+    public IndexerIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
+        this.ctreError = ctreError;
         motor = talonFXFactory.createTalon(QuickDropPorts.Indexer.MOTOR);
-        motor.configFactoryDefault();
-        motor.setInverted(true);
+        configMotors();
         enter = new AnalogInput(QuickDropPorts.Indexer.BEAM_BREAK_ENTER);
         exit = new AnalogInput(QuickDropPorts.Indexer.BEAM_BREAK_EXIT);
+    }
     
+    private void configMotors() {
+        ctreError.checkError(motor.configFactoryDefault(ctreError.canTimeoutMs()));
+        motor.setInverted(true);
     }
 
     @Override

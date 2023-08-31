@@ -1,16 +1,20 @@
 package com.cyberknights4911.robot.model.quickdrop.collector;
 
-import java.util.function.Supplier;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface CollectorIO {
 
-    static CollectorIO create(boolean isReal, Supplier<CollectorIO> realCollectorSupplier) {
-        if (isReal) {
-            return realCollectorSupplier.get();
-        } else {
-            return new CollectorIO() {};
-        }
+    @AutoLog
+    class CollectorIOInputs {
+        public double velocityRpm = 0.0;
+        public double appliedVolts = 0.0;
+        public double currentAmps = 0.0;
+        public double tempCelcius = 0.0;
+        public boolean isExtended = false;
     }
+
+    /** Updates the set of loggable inputs. */
+    default void updateInputs(CollectorIOInputs inputs) {}
 
     /** Set motor percent output. */
     default void setPercentOutput(double percentOutput) {}

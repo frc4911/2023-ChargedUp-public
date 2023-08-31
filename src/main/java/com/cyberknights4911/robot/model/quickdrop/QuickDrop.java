@@ -52,8 +52,8 @@ public final class QuickDrop implements RobotStateListener {
         binding = new QuickDropControllerBinding();
 
         collectorCamera = new CollectorCamera();
-        collector = createCollector(canivoreTalonFactory);
-        indexer = createIndexer(rioTalonFactory);
+        collector = createCollector(canivoreTalonFactory, ctreError);
+        indexer = createIndexer(rioTalonFactory, ctreError);
         shooter = createShooter(rioTalonFactory, ctreError);
         swerveSubsystem = createSwerveSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, pigeon2Factory, ctreError);
 
@@ -71,17 +71,17 @@ public final class QuickDrop implements RobotStateListener {
         autoHandler.stopCurrentAutonomousCommand();
     }
     
-     private Collector createCollector(TalonFXFactory canivoreTalonFactory) {
+     private Collector createCollector(TalonFXFactory talonFactory, CtreError ctreError) {
         if (RobotBase.isReal()) {
-            return new Collector(new CollectorIOReal(canivoreTalonFactory));
+            return new Collector(new CollectorIOReal(talonFactory, ctreError));
         } else {
             return new Collector(new CollectorIO() {});
         }
     }
     
-    private Indexer createIndexer(TalonFXFactory talonFactory) {
+    private Indexer createIndexer(TalonFXFactory talonFactory, CtreError ctreError) {
        if (RobotBase.isReal()) {
-           return new Indexer(new IndexerIOReal(talonFactory));
+           return new Indexer(new IndexerIOReal(talonFactory, ctreError));
        } else {
            return new Indexer(new IndexerIO() {});
        }
