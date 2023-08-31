@@ -11,45 +11,41 @@ import libraries.cyberlib.drivers.TalonFXFactory;
 public class ShooterIOReal implements ShooterIO {
 
     private final WPI_TalonFX hoodMotor;
-    private final WPI_TalonFX flywheelLeftMotor;
+    private final WPI_TalonFX flywheelRightMotor;
     // private final WPI_TalonFX flywheelRightMotor;
     private final CtreError ctreError;
 
     public ShooterIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
         this.ctreError = ctreError;
         hoodMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.HOOD_MOTOR);
-        flywheelLeftMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_LEFT_MOTOR);
-        // flywheelRightMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_RIGHT_MOTOR);
+        flywheelRightMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_RIGHT_MOTOR);
         configMotors();
     }
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
-        inputs.velocityRpm = flywheelLeftMotor.getSelectedSensorVelocity() * 10 / 2048;
+        inputs.velocityRpm = flywheelRightMotor.getSelectedSensorVelocity() * 10 / 2048;
     }
 
     private void configMotors() {
         hoodMotor.setInverted(true);
-        flywheelLeftMotor.setInverted(true);
 
-        ctreError.checkError(flywheelLeftMotor.configStatorCurrentLimit(
-            QuickDropConstants.Shooter.FLYWHEEL_LEFT_STATOR_LIMIT, ctreError.canTimeoutMs()));
-        // ctreError.checkError(flywheelRightMotor.configStatorCurrentLimit(
-        //     QuickDropConstants.Shooter.FLYWHEEL_RIGHT_STATOR_LIMIT, ctreError.canTimeoutMs()));
+        ctreError.checkError(flywheelRightMotor.configStatorCurrentLimit(
+            QuickDropConstants.Shooter.FLYWHEEL_RIGHT_STATOR_LIMIT, ctreError.canTimeoutMs()));
 
-        ctreError.checkError(flywheelLeftMotor.config_kP(
+        ctreError.checkError(flywheelRightMotor.config_kP(
             0, QuickDropConstants.Shooter.FLYWHEEL_P, ctreError.canTimeoutMs()));
-        ctreError.checkError(flywheelLeftMotor.config_kI(
+        ctreError.checkError(flywheelRightMotor.config_kI(
             0, QuickDropConstants.Shooter.FLYWHEEL_I, ctreError.canTimeoutMs()));
-        ctreError.checkError(flywheelLeftMotor.config_kD(
+        ctreError.checkError(flywheelRightMotor.config_kD(
             0, QuickDropConstants.Shooter.FLYWHEEL_D, ctreError.canTimeoutMs()));
-        ctreError.checkError(flywheelLeftMotor.config_kF(
+        ctreError.checkError(flywheelRightMotor.config_kF(
             0, QuickDropConstants.Shooter.FLYWHEEL_F, ctreError.canTimeoutMs()));
-        ctreError.checkError(flywheelLeftMotor.config_IntegralZone(
+        ctreError.checkError(flywheelRightMotor.config_IntegralZone(
             0, QuickDropConstants.Shooter.FLYWHEEL_INTEGRAL_ZONE, ctreError.canTimeoutMs()));
-        ctreError.checkError(flywheelLeftMotor.configClosedloopRamp(
+        ctreError.checkError(flywheelRightMotor.configClosedloopRamp(
             QuickDropConstants.Shooter.FLYWHEEL_CLOSED_RAMP, ctreError.canTimeoutMs()));
-        ctreError.checkError(flywheelLeftMotor.configAllowableClosedloopError(
+        ctreError.checkError(flywheelRightMotor.configAllowableClosedloopError(
             0, QuickDropConstants.Shooter.FLYWHEEL_CLOSED_RAMP, ctreError.canTimeoutMs()));
 
         // TODO: setup right shooter motor
