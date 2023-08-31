@@ -1,6 +1,7 @@
 package com.cyberknights4911.robot.model.quickdrop;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.cyberknights4911.robot.drive.swerve.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveDriveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleConstants;
@@ -138,4 +139,39 @@ public final class QuickDropConstants {
                 .build();
     }
     
+    public static class Shooter {
+        private Shooter() {}
+        
+        public static final double MIN_SHOOT_DISTANCE = 0; // Fender shot is 0
+        public static final double MAX_SHOOT_DISTANCE = 144; // inches
+
+        public static final double FLYWHEEL_P = 0.175;
+        public static final double FLYWHEEL_I = 0.0;//001;
+        public static final double FLYWHEEL_D = 2.0;
+        public static final double FLYWHEEL_F = 0.05;
+        public static final double FLYWHEEL_CLOSED_RAMP = 1;
+        public static final double FLYWHEEL_CLOSED_ERROR = 25.0;
+        public static final double FLYWHEEL_INTEGRAL_ZONE = 700;
+
+        public static final double POSITION_AT_FENDER = 8000;
+
+        public static final double HOOD_P = 0.7;
+        public static final double HOOD_I = 0.04;
+        public static final double HOOD_D = 10.0;
+        public static final double HOOD_F = 0.0;
+        public static final double HOOD_CLOSED_RAMP = 0.0;
+        public static final double HOOD_CLOSED_ERROR = 15.0;
+        public static final double HOOD_INTEGRAL_ZONE = 200;
+        public static final int HOOD_MOTION_CRUISE_VELOCITY = 10000;
+        public static final int HOOD_MOTION_ACCELERATION = 5400;
+        public static final int HOOD_MOTION_S_CURVE_STRENGTH = 0;
+
+        public static final StatorCurrentLimitConfiguration FLYWHEEL_LEFT_STATOR_LIMIT =
+            new StatorCurrentLimitConfiguration(true, 40.0, 40.0, 0);
+        public static final StatorCurrentLimitConfiguration FLYWHEEL_RIGHT_STATOR_LIMIT =
+            new StatorCurrentLimitConfiguration(true, 40.0, 40.0, 0);
+        public static final StatorCurrentLimitConfiguration HOOD_STATOR_LIMIT =
+            new StatorCurrentLimitConfiguration(true, 30.0, 30.0, 0);
+        
+    }
 }

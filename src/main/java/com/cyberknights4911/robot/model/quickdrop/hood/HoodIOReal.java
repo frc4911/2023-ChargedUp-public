@@ -22,7 +22,7 @@ public final class HoodIOReal implements HoodIO {
     }
 
     private HoodIOReal(TalonFXFactory talonFXFactory) {
-        motor = talonFXFactory.createTalon(QuickDropPorts.Hood.MOTOR);
+        motor = talonFXFactory.createTalon(QuickDropPorts.Shooter.HOOD_MOTOR);
         configMotors();
     }
 

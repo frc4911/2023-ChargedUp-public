@@ -40,10 +40,12 @@ public final class QuickDropPorts {
     }
 
 
-    public static final class Hood {
-        private Hood() {}
+    public static final class Shooter {
+        private Shooter() {}
 
-        public static final int MOTOR = 12;
+        public static final int FLYWHEEL_LEFT_MOTOR = 10;
+        public static final int FLYWHEEL_RIGHT_MOTOR = 11;
+        public static final int HOOD_MOTOR = 12;
     }
 
     public static final class Controller {
