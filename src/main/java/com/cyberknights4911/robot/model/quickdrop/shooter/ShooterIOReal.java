@@ -5,8 +5,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.cyberknights4911.robot.model.quickdrop.QuickDropConstants;
 import com.cyberknights4911.robot.model.quickdrop.QuickDropPorts;
-
-import edu.wpi.first.wpilibj.AnalogInput;
 import libraries.cyberlib.drivers.CtreError;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
@@ -14,29 +12,30 @@ public class ShooterIOReal implements ShooterIO {
 
     private final WPI_TalonFX hoodMotor;
     private final WPI_TalonFX flywheelLeftMotor;
-    private final WPI_TalonFX flywheelRightMotor;
+    // private final WPI_TalonFX flywheelRightMotor;
     private final CtreError ctreError;
 
     public ShooterIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
         this.ctreError = ctreError;
         hoodMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.HOOD_MOTOR);
         flywheelLeftMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_LEFT_MOTOR);
-        flywheelRightMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_RIGHT_MOTOR);
+        // flywheelRightMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_RIGHT_MOTOR);
         configMotors();
     }
-    
-    private void configMotors() {
-        // commonMotorConfig(mFXFlyRight, "Fly Right");
-        // commonMotorConfig(mFXFlyLeft, "Fly Left");
-        // commonMotorConfig(mFXHood, "Hood");
 
+    @Override
+    public void updateInputs(ShooterIOInputs inputs) {
+        inputs.velocityRpm = flywheelLeftMotor.getSelectedSensorVelocity() * 10 / 2048;
+    }
+
+    private void configMotors() {
         hoodMotor.setInverted(true);
         flywheelLeftMotor.setInverted(true);
 
         ctreError.checkError(flywheelLeftMotor.configStatorCurrentLimit(
             QuickDropConstants.Shooter.FLYWHEEL_LEFT_STATOR_LIMIT, ctreError.canTimeoutMs()));
-        ctreError.checkError(flywheelRightMotor.configStatorCurrentLimit(
-            QuickDropConstants.Shooter.FLYWHEEL_RIGHT_STATOR_LIMIT, ctreError.canTimeoutMs()));
+        // ctreError.checkError(flywheelRightMotor.configStatorCurrentLimit(
+        //     QuickDropConstants.Shooter.FLYWHEEL_RIGHT_STATOR_LIMIT, ctreError.canTimeoutMs()));
 
         ctreError.checkError(flywheelLeftMotor.config_kP(
             0, QuickDropConstants.Shooter.FLYWHEEL_P, ctreError.canTimeoutMs()));
