@@ -5,6 +5,7 @@ import com.cyberknights4911.robot.RobotStateListener;
 import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.GyroIORealPigeon;
 import com.cyberknights4911.robot.drive.swerve.SwerveIOReal;
+import com.cyberknights4911.robot.drive.swerve.SwerveModule;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleArgs;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystemArgs;
@@ -18,7 +19,6 @@ import com.cyberknights4911.robot.model.wham.slurpp.SlurppIO;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppIOReal;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppSubsystem;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import libraries.cyberlib.drivers.CANCoderFactory;
 import libraries.cyberlib.drivers.CtreError;
@@ -123,6 +123,11 @@ public final class Wham implements RobotStateListener {
         WhamConstants.Drive.PHYSICAL_SWERVE_MODULE));
       swerveArgs.setGyroIO(new GyroIORealPigeon(pigeon2Factory, WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError));
     }
+    
+    swerveArgs.setFrontLeftSwerveModule(new SwerveModule(frontLeftArgs.build()))
+      .setFrontRightSwerveModule(new SwerveModule(frontRightArgs.build()))
+      .setBackLeftSwerveModule(new SwerveModule(backLeftArgs.build()))
+      .setBackRightSwerveModule(new SwerveModule(backRightArgs.build()));
     return new SwerveSubsystem(swerveArgs.build());
   }
 
