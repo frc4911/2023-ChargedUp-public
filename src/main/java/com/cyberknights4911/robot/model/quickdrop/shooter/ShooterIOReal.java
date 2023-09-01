@@ -8,26 +8,30 @@ import libraries.cyberlib.drivers.CtreError;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
 public final class ShooterIOReal implements ShooterIO {
-    // TODO: determine the hood range (end - start)
-    private static final double HOOD_RANGE_UNITS = 0.0;
+    private static final double HOOD_RANGE_UNITS = 20387.0;
 
     private final WPI_TalonFX hoodMotor;
     private final WPI_TalonFX flywheelRightMotor;
-    // private final WPI_TalonFX flywheelLeftMotor;
+    private final WPI_TalonFX flywheelLeftMotor;
     private final CtreError ctreError;
     private final double hoodStartPosition;
 
-    public ShooterIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
+    public ShooterIOReal(TalonFXFactory rioFXFactory, TalonFXFactory canivoreFXFactory, CtreError ctreError) {
         this.ctreError = ctreError;
-        hoodMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.HOOD_MOTOR);
-        flywheelRightMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_RIGHT_MOTOR);
+        hoodMotor = canivoreFXFactory.createTalon(QuickDropPorts.Shooter.HOOD_MOTOR);
+        flywheelRightMotor = rioFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_RIGHT_MOTOR);
+        flywheelLeftMotor = rioFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_LEFT_MOTOR);
         configMotors();
         hoodStartPosition = hoodMotor.getSelectedSensorPosition();
     }
 
     @Override
     public void updateInputs(ShooterIOInputs inputs) {
+        inputs.appliedVoltsHood = hoodMotor.getMotorOutputVoltage();
+        inputs.appliedVoltsLeft = flywheelLeftMotor.getMotorOutputVoltage();
+        inputs.appliedVoltsRight = flywheelRightMotor.getMotorOutputVoltage();
         inputs.velocityRpm = flywheelRightMotor.getSelectedSensorVelocity() * 10 / 2048;
+        inputs.hoodPosition = hoodMotor.getSelectedSensorPosition();
     }
 
     @Override
@@ -62,7 +66,15 @@ public final class ShooterIOReal implements ShooterIO {
         ctreError.checkError(flywheelRightMotor.configAllowableClosedloopError(
             0, QuickDropConstants.Shooter.FLYWHEEL_CLOSED_RAMP, ctreError.canTimeoutMs()));
 
-        // TODO: setup right shooter motor
+        flywheelLeftMotor.configFactoryDefault();
+        flywheelLeftMotor.follow(flywheelRightMotor);
+        flywheelLeftMotor.setInverted(true);
+        ctreError.checkError(flywheelLeftMotor.configStatorCurrentLimit(
+            QuickDropConstants.Shooter.FLYWHEEL_LEFT_STATOR_LIMIT, ctreError.canTimeoutMs()));
+
+        hoodMotor.configFactoryDefault();
+        ctreError.checkError(hoodMotor.setSelectedSensorPosition(
+            0, 0, ctreError.canTimeoutMs()));
         ctreError.checkError(hoodMotor.config_kP(
             0, QuickDropConstants.Shooter.HOOD_I, ctreError.canTimeoutMs()));
         ctreError.checkError(hoodMotor.config_kI(

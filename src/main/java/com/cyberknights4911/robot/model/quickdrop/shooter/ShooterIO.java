@@ -6,7 +6,12 @@ public interface ShooterIO {
 
     @AutoLog
     class ShooterIOInputs {
+        
+        public double appliedVoltsLeft = 0.0;
+        public double appliedVoltsRight = 0.0;
+        public double appliedVoltsHood = 0.0;
         public double velocityRpm = 0.0;
+        public double hoodPosition = 0.0;
     }
 
     /** Updates the set of loggable inputs. */

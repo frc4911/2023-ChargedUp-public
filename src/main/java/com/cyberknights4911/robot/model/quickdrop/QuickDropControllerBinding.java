@@ -28,6 +28,10 @@ public final class QuickDropControllerBinding implements ButtonBinding<QuickDrop
             case COLLECTOR_RUN_REVERSE: return new Triggers(driverController.leftBumper());
             case INDEXER_RUN: return new Triggers(driverController.a());
             case SHOOTER_BLAST: return new Triggers(driverController.b());
+            case HOOD_POSITION_0: return new Triggers(driverController.povDown());
+            case HOOD_POSITION_25: return new Triggers(driverController.povLeft());
+            case HOOD_POSITION_50: return new Triggers(driverController.povUp());
+            case HOOD_POSITION_100: return new Triggers(driverController.povRight());
             default: return new Triggers(ALWAYS_FALSE);
         }
     }

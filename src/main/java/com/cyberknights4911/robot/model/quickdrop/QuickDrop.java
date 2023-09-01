@@ -54,7 +54,7 @@ public final class QuickDrop implements RobotStateListener {
         collectorCamera = new CollectorCamera();
         collector = createCollector(canivoreTalonFactory, ctreError);
         indexer = createIndexer(rioTalonFactory, ctreError);
-        shooter = createShooter(rioTalonFactory, ctreError);
+        shooter = createShooter(rioTalonFactory, canivoreTalonFactory, ctreError);
         swerveSubsystem = createSwerveSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, pigeon2Factory, ctreError);
 
         applyDefaultCommands();
@@ -87,9 +87,9 @@ public final class QuickDrop implements RobotStateListener {
        }
    }
     
-   private Shooter createShooter(TalonFXFactory talonFactory, CtreError ctreError) {
+   private Shooter createShooter(TalonFXFactory rioFXFactory, TalonFXFactory canivoreFXFactory, CtreError ctreError) {
       if (RobotBase.isReal()) {
-          return new Shooter(new ShooterIOReal(talonFactory, ctreError));
+          return new Shooter(new ShooterIOReal(rioFXFactory, canivoreFXFactory, ctreError));
       } else {
           return new Shooter(new ShooterIO() {});
       }
@@ -226,21 +226,21 @@ public final class QuickDrop implements RobotStateListener {
         binding.triggersFor(QuickDropButtonAction.HOOD_POSITION_25).onTrue(
             Commands.runOnce(
                 () -> {
-                    shooter.setHoodPosition(25);
+                    shooter.setHoodPosition(0.25);
                 }, shooter)
         );
 
         binding.triggersFor(QuickDropButtonAction.HOOD_POSITION_50).onTrue(
             Commands.runOnce(
                 () -> {
-                    shooter.setHoodPosition(50);
+                    shooter.setHoodPosition(0.5);
                 }, shooter)
         );
 
         binding.triggersFor(QuickDropButtonAction.HOOD_POSITION_100).onTrue(
             Commands.runOnce(
                 () -> {
-                    shooter.setHoodPosition(100);
+                    shooter.setHoodPosition(1.0);
                 }, shooter)
         );
     }
