@@ -4,12 +4,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.cyberknights4911.robot.model.quickdrop.QuickDropPorts;
-
 import edu.wpi.first.wpilibj.AnalogInput;
 import libraries.cyberlib.drivers.CtreError;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
-public class IndexerIOReal implements IndexerIO {
+public final class IndexerIOReal implements IndexerIO {
 
     private final WPI_TalonFX motor;
     private final AnalogInput enter;

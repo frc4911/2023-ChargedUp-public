@@ -1,25 +1,28 @@
 package com.cyberknights4911.robot.model.quickdrop.shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.cyberknights4911.robot.model.quickdrop.QuickDropConstants;
 import com.cyberknights4911.robot.model.quickdrop.QuickDropPorts;
 import libraries.cyberlib.drivers.CtreError;
 import libraries.cyberlib.drivers.TalonFXFactory;
 
-public class ShooterIOReal implements ShooterIO {
+public final class ShooterIOReal implements ShooterIO {
+    // TODO: determine the hood range (end - start)
+    private static final double HOOD_RANGE_UNITS = 0.0;
 
     private final WPI_TalonFX hoodMotor;
     private final WPI_TalonFX flywheelRightMotor;
-    // private final WPI_TalonFX flywheelRightMotor;
+    // private final WPI_TalonFX flywheelLeftMotor;
     private final CtreError ctreError;
+    private final double hoodStartPosition;
 
     public ShooterIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
         this.ctreError = ctreError;
         hoodMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.HOOD_MOTOR);
         flywheelRightMotor = talonFXFactory.createTalon(QuickDropPorts.Shooter.FLYWHEEL_RIGHT_MOTOR);
         configMotors();
+        hoodStartPosition = hoodMotor.getSelectedSensorPosition();
     }
 
     @Override
@@ -30,6 +33,12 @@ public class ShooterIOReal implements ShooterIO {
     @Override
     public void setShooterSpeed(double speed) {
         flywheelRightMotor.set(ControlMode.Velocity, speed);
+    }
+
+    @Override
+    public void setHoodPosition(double percent) {
+        double desiredPosition = hoodStartPosition + HOOD_RANGE_UNITS * percent;
+        hoodMotor.set(ControlMode.Position, desiredPosition);
     }
 
     private void configMotors() {
@@ -76,16 +85,5 @@ public class ShooterIOReal implements ShooterIO {
             QuickDropConstants.Shooter.HOOD_MOTION_S_CURVE_STRENGTH, ctreError.canTimeoutMs()));
         ctreError.checkError(hoodMotor.configStatorCurrentLimit(
             QuickDropConstants.Shooter.HOOD_STATOR_LIMIT, ctreError.canTimeoutMs()));
-    }
-
-    @Override
-    public void setPercentOutput(double percentOutput) {
-        hoodMotor.set(ControlMode.PercentOutput, percentOutput);
-    }
-
-    @Override
-    public void stop() {
-        hoodMotor.set(ControlMode.PercentOutput, 0.0);
-        hoodMotor.setNeutralMode(NeutralMode.Brake);
     }
 }

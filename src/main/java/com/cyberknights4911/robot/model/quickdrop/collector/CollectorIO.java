@@ -22,7 +22,9 @@ public interface CollectorIO {
     /** Stop the motor. */
     default void stop() {}
 
+    /** Extend the collecter apparatus. */
     default void extend() {}
-    
+
+    /** Retract the collecter apparatus. */
     default void retract() {}
 }

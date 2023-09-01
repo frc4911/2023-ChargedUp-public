@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public final class Shooter extends SubsystemBase {
-    
     private final ShooterIO shooterIO;
     private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
     
@@ -20,5 +19,9 @@ public final class Shooter extends SubsystemBase {
 
     public void setShooterSpeed(double speed) {
         shooterIO.setShooterSpeed(speed);
+    }
+
+    public void setHoodPosition(double percent) {
+        shooterIO.setHoodPosition(percent);
     }
 }

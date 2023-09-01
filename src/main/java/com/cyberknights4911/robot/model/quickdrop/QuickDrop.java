@@ -209,11 +209,39 @@ public final class QuickDrop implements RobotStateListener {
         Command waitTwo = Commands.waitSeconds(1.0);
         Command stopitnow = Commands.runOnce(
             () -> {
-                indexer.run(0);
+                indexer.stop();
                 shooter.setShooterSpeed(0);
             }, shooter, indexer);
         binding.triggersFor(QuickDropButtonAction.SHOOTER_BLAST).onTrue(
             spinFlywheel.andThen(waitOne).andThen(runIndexer).andThen(waitTwo).andThen(stopitnow)
+        );
+
+        binding.triggersFor(QuickDropButtonAction.HOOD_POSITION_0).onTrue(
+            Commands.runOnce(
+                () -> {
+                    shooter.setHoodPosition(0);
+                }, shooter)
+        );
+
+        binding.triggersFor(QuickDropButtonAction.HOOD_POSITION_25).onTrue(
+            Commands.runOnce(
+                () -> {
+                    shooter.setHoodPosition(25);
+                }, shooter)
+        );
+
+        binding.triggersFor(QuickDropButtonAction.HOOD_POSITION_50).onTrue(
+            Commands.runOnce(
+                () -> {
+                    shooter.setHoodPosition(50);
+                }, shooter)
+        );
+
+        binding.triggersFor(QuickDropButtonAction.HOOD_POSITION_100).onTrue(
+            Commands.runOnce(
+                () -> {
+                    shooter.setHoodPosition(100);
+                }, shooter)
         );
     }
 }

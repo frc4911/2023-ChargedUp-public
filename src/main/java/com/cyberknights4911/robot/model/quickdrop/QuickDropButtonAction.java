@@ -13,4 +13,8 @@ public enum QuickDropButtonAction implements ButtonAction {
     COLLECTOR_RUN_REVERSE,
     INDEXER_RUN,
     SHOOTER_BLAST,
+    HOOD_POSITION_0,
+    HOOD_POSITION_25,
+    HOOD_POSITION_50,
+    HOOD_POSITION_100,
 }

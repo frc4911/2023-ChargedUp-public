@@ -1,11 +1,9 @@
 package com.cyberknights4911.robot.model.quickdrop.collector;
 
 import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public final class Collector extends SubsystemBase {
-
     private final CollectorIO collectorIO;
     private final CollectorIOInputsAutoLogged inputs = new CollectorIOInputsAutoLogged();
 
