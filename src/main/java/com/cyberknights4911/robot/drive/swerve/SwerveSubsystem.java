@@ -53,7 +53,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         for (SwerveModule swerveModule : swerveModules) {
             if (swerveModule == null) {
-                throw new IllegalArgumentException("Four modules required, numbered 0 to 3");
+                throw new IllegalArgumentException("Four modules required");
             }
         }
 
@@ -74,6 +74,7 @@ public class SwerveSubsystem extends SubsystemBase {
         new SwerveDriveOdometry(kinematics, getYaw(), getModulePositions());
     }
 
+    // TODO: re-use existing objects
     public void drive(
             Translation2d translation,
             double rotation,
@@ -96,7 +97,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, swerveDriveConstants.maxSpeed());
 
         for (SwerveModule mod : swerveModules) {
-            mod.setDesiredState(swerveModuleStates[mod.getModuleNumber() - 1], isOpenLoop);
+            mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
         }
     }
 
@@ -109,7 +110,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, swerveDriveConstants.maxSpeed());
         
         for (SwerveModule mod : swerveModules) {
-            mod.setDesiredState(desiredStates[mod.getModuleNumber() - 1], false);
+            mod.setDesiredState(desiredStates[mod.getModuleNumber()], false);
         }
     }
 
@@ -121,6 +122,7 @@ public class SwerveSubsystem extends SubsystemBase {
         poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
+    // TODO: move to wham code
     public CommandBase createAutobalanceCommand() {
         CommandBase balanceCommand =  new AutoBalanceCommand() {
 
@@ -146,14 +148,16 @@ public class SwerveSubsystem extends SubsystemBase {
         return balanceCommand;
     }
 
+    // TODO: re-use existing objects
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (SwerveModule mod : swerveModules) {
-            states[mod.getModuleNumber() - 1] = mod.getState();
+            states[mod.getModuleNumber()] = mod.getState();
         }
         return states;
     }
 
+    // TODO: re-use existing objects
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : swerveModules) {
@@ -166,6 +170,7 @@ public class SwerveSubsystem extends SubsystemBase {
         gyro.setYaw(0);
     }
 
+    // TODO: re-use existing objects
     public Rotation2d getYaw() {
         double yaw = gyro.getYaw();
 

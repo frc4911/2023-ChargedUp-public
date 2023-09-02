@@ -75,19 +75,19 @@ public final class Wham implements RobotStateListener {
     CtreError ctreError
   ) {
     SwerveModuleArgs.Builder frontLeftArgs = SwerveModuleArgs.builder()
-      .setModuleNumber(1)
+      .setModuleNumber(0)
       .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS)
       .setCotsConstants(WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
     SwerveModuleArgs.Builder frontRightArgs = SwerveModuleArgs.builder()
-      .setModuleNumber(2)
+      .setModuleNumber(1)
       .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS)
       .setCotsConstants(WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
     SwerveModuleArgs.Builder backLeftArgs = SwerveModuleArgs.builder()
-      .setModuleNumber(3)
+      .setModuleNumber(2)
       .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS)
       .setCotsConstants(WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
     SwerveModuleArgs.Builder backRightArgs = SwerveModuleArgs.builder()
-      .setModuleNumber(4)
+      .setModuleNumber(3)
       .setSwerveDriveConstants(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS)
       .setCotsConstants(WhamConstants.Drive.PHYSICAL_SWERVE_MODULE);
     SwerveSubsystemArgs.Builder swerveArgs = SwerveSubsystemArgs.builder()

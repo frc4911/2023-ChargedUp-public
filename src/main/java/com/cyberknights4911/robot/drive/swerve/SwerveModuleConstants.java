@@ -1,7 +1,6 @@
 package com.cyberknights4911.robot.drive.swerve;
 
 import com.google.auto.value.AutoValue;
-import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * Holds constants related to individual swerve modules.
@@ -13,7 +12,7 @@ public abstract class SwerveModuleConstants {
     public abstract int driveMotorId();
     public abstract int angleMotorId();
     public abstract int canCoderId();
-    public abstract Rotation2d angleOffset();
+    public abstract double angleOffsetDegrees();
 
     public static Builder builder() {
         return new AutoValue_SwerveModuleConstants.Builder();
@@ -24,7 +23,7 @@ public abstract class SwerveModuleConstants {
         public abstract Builder setDriveMotorId(int value);
         public abstract Builder setAngleMotorId(int value);
         public abstract Builder setCanCoderId(int value);
-        public abstract Builder setAngleOffset(Rotation2d value);
+        public abstract Builder setAngleOffsetDegrees(double value);
         public abstract SwerveModuleConstants build();
     }
 }

@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.cyberknights4911.robot.drive.swerve.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveDriveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleConstants;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 public final class DeadEyeConstants {
@@ -108,7 +107,7 @@ public final class DeadEyeConstants {
         .setDriveMotorId(DeadEyePorts.Drive.FRONT_LEFT_DRIVE)
         .setAngleMotorId(DeadEyePorts.Drive.FRONT_LEFT_STEER)
         .setCanCoderId(DeadEyePorts.Drive.FRONT_LEFT_CANCODER)
-        .setAngleOffset(Rotation2d.fromDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES))
+        .setAngleOffsetDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES)
         .build();
 
     public static final SwerveModuleConstants FRONT_RIGHT = 
@@ -116,7 +115,7 @@ public final class DeadEyeConstants {
         .setDriveMotorId(DeadEyePorts.Drive.FRONT_RIGHT_DRIVE)
         .setAngleMotorId(DeadEyePorts.Drive.FRONT_RIGHT_STEER)
         .setCanCoderId(DeadEyePorts.Drive.FRONT_RIGHT_CANCODER)
-        .setAngleOffset(Rotation2d.fromDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES))
+        .setAngleOffsetDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES)
         .build();
 
     public static final SwerveModuleConstants BACK_LEFT = 
@@ -124,7 +123,7 @@ public final class DeadEyeConstants {
         .setDriveMotorId(DeadEyePorts.Drive.BACK_LEFT_DRIVE)
         .setAngleMotorId(DeadEyePorts.Drive.BACK_LEFT_STEER)
         .setCanCoderId(DeadEyePorts.Drive.BACK_LEFT_CANCODER)
-        .setAngleOffset(Rotation2d.fromDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES))
+        .setAngleOffsetDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES)
         .build();
 
     public static final SwerveModuleConstants BACK_RIGHT = 
@@ -132,7 +131,7 @@ public final class DeadEyeConstants {
         .setDriveMotorId(DeadEyePorts.Drive.BACK_RIGHT_DRIVE)
         .setAngleMotorId(DeadEyePorts.Drive.BACK_RIGHT_STEER)
         .setCanCoderId(DeadEyePorts.Drive.BACK_RIGHT_CANCODER)
-        .setAngleOffset(Rotation2d.fromDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES))
+        .setAngleOffsetDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES)
         .build();
   }
 }

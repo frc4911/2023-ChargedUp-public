@@ -1,7 +1,6 @@
 package com.cyberknights4911.robot.model.quickdrop;
 
 import org.littletonrobotics.junction.LoggedRobot;
-
 import com.cyberknights4911.robot.RobotStateListener;
 import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.GyroIORealPigeon;
@@ -22,7 +21,6 @@ import com.cyberknights4911.robot.model.quickdrop.indexer.IndexerIOReal;
 import com.cyberknights4911.robot.model.quickdrop.shooter.Shooter;
 import com.cyberknights4911.robot.model.quickdrop.shooter.ShooterIO;
 import com.cyberknights4911.robot.model.quickdrop.shooter.ShooterIOReal;
-
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -102,19 +100,19 @@ public final class QuickDrop implements RobotStateListener {
         CtreError ctreError
     ) {
         SwerveModuleArgs.Builder frontLeftArgs = SwerveModuleArgs.builder()
-            .setModuleNumber(1)
+            .setModuleNumber(0)
             .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
             .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder frontRightArgs = SwerveModuleArgs.builder()
-            .setModuleNumber(2)
+            .setModuleNumber(1)
             .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
             .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder backLeftArgs = SwerveModuleArgs.builder()
-            .setModuleNumber(3)
+            .setModuleNumber(2)
             .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
             .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveModuleArgs.Builder backRightArgs = SwerveModuleArgs.builder()
-            .setModuleNumber(4)
+            .setModuleNumber(3)
             .setSwerveDriveConstants(QuickDropConstants.Drive.SWERVE_DRIVE_CONSTANTS)
             .setCotsConstants(QuickDropConstants.Drive.PHYSICAL_SWERVE_MODULE);
         SwerveSubsystemArgs.Builder swerveArgs = SwerveSubsystemArgs.builder()

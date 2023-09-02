@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.cyberknights4911.robot.drive.swerve.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveDriveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleConstants;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 public final class QuickDropConstants {
@@ -111,7 +110,7 @@ public final class QuickDropConstants {
                 .setDriveMotorId(QuickDropPorts.Drive.FRONT_LEFT_DRIVE)
                 .setAngleMotorId(QuickDropPorts.Drive.FRONT_LEFT_STEER)
                 .setCanCoderId(QuickDropPorts.Drive.FRONT_LEFT_CANCODER)
-                .setAngleOffset(Rotation2d.fromDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES))
+                .setAngleOffsetDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES)
                 .build();
 
         public static final SwerveModuleConstants FRONT_RIGHT = 
@@ -119,7 +118,7 @@ public final class QuickDropConstants {
                 .setDriveMotorId(QuickDropPorts.Drive.FRONT_RIGHT_DRIVE)
                 .setAngleMotorId(QuickDropPorts.Drive.FRONT_RIGHT_STEER)
                 .setCanCoderId(QuickDropPorts.Drive.FRONT_RIGHT_CANCODER)
-                .setAngleOffset(Rotation2d.fromDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES))
+                .setAngleOffsetDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES)
                 .build();
 
         public static final SwerveModuleConstants BACK_LEFT = 
@@ -127,7 +126,7 @@ public final class QuickDropConstants {
                 .setDriveMotorId(QuickDropPorts.Drive.BACK_LEFT_DRIVE)
                 .setAngleMotorId(QuickDropPorts.Drive.BACK_LEFT_STEER)
                 .setCanCoderId(QuickDropPorts.Drive.BACK_LEFT_CANCODER)
-                .setAngleOffset(Rotation2d.fromDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES))
+                .setAngleOffsetDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES)
                 .build();
 
         public static final SwerveModuleConstants BACK_RIGHT = 
@@ -135,7 +134,7 @@ public final class QuickDropConstants {
                 .setDriveMotorId(QuickDropPorts.Drive.BACK_RIGHT_DRIVE)
                 .setAngleMotorId(QuickDropPorts.Drive.BACK_RIGHT_STEER)
                 .setCanCoderId(QuickDropPorts.Drive.BACK_RIGHT_CANCODER)
-                .setAngleOffset(Rotation2d.fromDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES))
+                .setAngleOffsetDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES)
                 .build();
     }
     

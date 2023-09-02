@@ -92,7 +92,7 @@ public final class SwerveIOReal implements SwerveIO {
     @Override
     public void resetToAbsolute() {
         double absolutePosition = Conversions.degreesToFalcon(
-            getAngleEncoderDegrees() - swerveModuleConstants.angleOffset().getDegrees(),
+            (360 + getAngleEncoderDegrees() - swerveModuleConstants.angleOffsetDegrees()) % 360,
             cotsConstants.angleGearRatio()
         );
         ctreError.checkError(angleMotor.setSelectedSensorPosition(absolutePosition, /* pidIdx = */ 0, ctreError.canTimeoutMs()));

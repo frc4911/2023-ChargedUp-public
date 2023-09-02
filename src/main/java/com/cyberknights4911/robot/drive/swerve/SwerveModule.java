@@ -79,6 +79,7 @@ public class SwerveModule {
         lastAngle = angle;
     }
 
+    // TODO: re-use existing objects
     private Rotation2d getAngle() {
         return Rotation2d.fromDegrees(
             Conversions.falconToDegrees(
@@ -96,6 +97,7 @@ public class SwerveModule {
         swerveIO.resetToAbsolute();
     }
 
+    // TODO: re-use existing objects
     public SwerveModuleState getState() {
         return new SwerveModuleState(
             Conversions.falconToMPS(

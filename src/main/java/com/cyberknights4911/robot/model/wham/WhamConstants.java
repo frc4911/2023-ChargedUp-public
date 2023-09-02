@@ -12,7 +12,6 @@ import com.cyberknights4911.robot.constants.IntPreference;
 import com.cyberknights4911.robot.drive.swerve.CotsFalconSwerveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveDriveConstants;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleConstants;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 public final class WhamConstants {
@@ -37,10 +36,10 @@ public final class WhamConstants {
     public static final class Drive {
         private Drive() {}
 
-        private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 20.65;
-        private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 159.50;
-        private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 194.00;
-        private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 104.67;
+        private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 21;
+        private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 158;
+        private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 193;
+        private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 104;
 
         private static final double TRACK_WIDTH = Units.inchesToMeters(22.75);
         private static final double WHEEL_BASE = Units.inchesToMeters(22.75);
@@ -130,7 +129,7 @@ public final class WhamConstants {
                 .setDriveMotorId(WhamPorts.Drive.FRONT_LEFT_DRIVE)
                 .setAngleMotorId(WhamPorts.Drive.FRONT_LEFT_STEER)
                 .setCanCoderId(WhamPorts.Drive.FRONT_LEFT_CANCODER)
-                .setAngleOffset(Rotation2d.fromDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES))
+                .setAngleOffsetDegrees(FRONT_LEFT_CANCODER_OFFSET_DEGREES)
                 .build();
 
         public static final SwerveModuleConstants FRONT_RIGHT = 
@@ -138,7 +137,7 @@ public final class WhamConstants {
                 .setDriveMotorId(WhamPorts.Drive.FRONT_RIGHT_DRIVE)
                 .setAngleMotorId(WhamPorts.Drive.FRONT_RIGHT_STEER)
                 .setCanCoderId(WhamPorts.Drive.FRONT_RIGHT_CANCODER)
-                .setAngleOffset(Rotation2d.fromDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES))
+                .setAngleOffsetDegrees(FRONT_RIGHT_CANCODER_OFFSET_DEGREES)
                 .build();
 
         public static final SwerveModuleConstants BACK_LEFT = 
@@ -146,7 +145,7 @@ public final class WhamConstants {
                 .setDriveMotorId(WhamPorts.Drive.BACK_LEFT_DRIVE)
                 .setAngleMotorId(WhamPorts.Drive.BACK_LEFT_STEER)
                 .setCanCoderId(WhamPorts.Drive.BACK_LEFT_CANCODER)
-                .setAngleOffset(Rotation2d.fromDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES))
+                .setAngleOffsetDegrees(BACK_LEFT_CANCODER_OFFSET_DEGREES)
                 .build();
 
         public static final SwerveModuleConstants BACK_RIGHT = 
@@ -154,7 +153,7 @@ public final class WhamConstants {
                 .setDriveMotorId(WhamPorts.Drive.BACK_RIGHT_DRIVE)
                 .setAngleMotorId(WhamPorts.Drive.BACK_RIGHT_STEER)
                 .setCanCoderId(WhamPorts.Drive.BACK_RIGHT_CANCODER)
-                .setAngleOffset(Rotation2d.fromDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES))
+                .setAngleOffsetDegrees(BACK_RIGHT_CANCODER_OFFSET_DEGREES)
                 .build();
     }
 
