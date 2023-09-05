@@ -5,6 +5,7 @@ import com.cyberknights4911.robot.RobotStateListener;
 import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.GyroIORealPigeon;
 import com.cyberknights4911.robot.drive.swerve.SwerveIOReal;
+import com.cyberknights4911.robot.drive.swerve.SwerveModule;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleArgs;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystemArgs;
@@ -98,6 +99,11 @@ public final class DeadEye implements RobotStateListener {
         DeadEyeConstants.Drive.PHYSICAL_SWERVE_MODULE));
       swerveArgs.setGyroIO(new GyroIORealPigeon(pigeon1Factory, DeadEyeConstants.Drive.SWERVE_DRIVE_CONSTANTS, ctreError));
     }
+    
+    swerveArgs.setFrontLeftSwerveModule(new SwerveModule(frontLeftArgs.build()))
+      .setFrontRightSwerveModule(new SwerveModule(frontRightArgs.build()))
+      .setBackLeftSwerveModule(new SwerveModule(backLeftArgs.build()))
+      .setBackRightSwerveModule(new SwerveModule(backRightArgs.build()));
     return new SwerveSubsystem(swerveArgs.build());
   }
   private void applyDefaultCommands() {

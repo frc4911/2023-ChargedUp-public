@@ -14,13 +14,13 @@ public final class DeadEyeConstants {
   public static final class Drive {
     private Drive() {}
 
-      private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 0;
-      private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 0;
-      private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 0;
-      private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 0;
+      private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 355;
+      private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 1;
+      private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 305;
+      private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 112;
 
-      private static final double TRACK_WIDTH = Units.inchesToMeters(22.75);
-      private static final double WHEEL_BASE = Units.inchesToMeters(22.75);
+      private static final double TRACK_WIDTH = Units.inchesToMeters(22.25);
+      private static final double WHEEL_BASE = Units.inchesToMeters(22.375);
 
       private static final boolean INVERT_GYRO = false;
 
