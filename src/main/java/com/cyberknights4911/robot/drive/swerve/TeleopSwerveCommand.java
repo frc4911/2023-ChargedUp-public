@@ -11,7 +11,7 @@ public final class TeleopSwerveCommand extends CommandBase {
     private final DoubleSupplier translationSupplier;
     private final DoubleSupplier strafeSupplier;
     private final DoubleSupplier rotationSupplier;
-    private final BooleanSupplier robotCentricSupplier;
+    private final BooleanSupplier fieldCentricSupplier;
     private final double deadband;
     private final double maxSpeed;
     private final double maxAngularVelocity;
@@ -21,7 +21,7 @@ public final class TeleopSwerveCommand extends CommandBase {
         DoubleSupplier translationSupplier,
         DoubleSupplier strafeSupplier,
         DoubleSupplier rotationSupplier,
-        BooleanSupplier robotCentricSupplier,
+        BooleanSupplier fieldCentricSupplier,
         double maxSpeed,
         double maxAngularVelocity,
         double deadband
@@ -30,7 +30,7 @@ public final class TeleopSwerveCommand extends CommandBase {
         this.translationSupplier = translationSupplier;
         this.strafeSupplier = strafeSupplier;
         this.rotationSupplier = rotationSupplier;
-        this.robotCentricSupplier = robotCentricSupplier;
+        this.fieldCentricSupplier = fieldCentricSupplier;
         this.deadband = deadband;
         this.maxSpeed = maxSpeed;
         this.maxAngularVelocity = maxAngularVelocity;
@@ -49,7 +49,7 @@ public final class TeleopSwerveCommand extends CommandBase {
         swerveSubsystem.drive(
             new Translation2d(translationVal, strafeVal).times(maxSpeed),
             rotationVal * maxAngularVelocity,
-            !robotCentricSupplier.getAsBoolean(),
+            fieldCentricSupplier.getAsBoolean(),
             true
         );
     }

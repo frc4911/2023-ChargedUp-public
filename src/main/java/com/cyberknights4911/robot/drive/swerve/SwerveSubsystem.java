@@ -4,6 +4,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import com.cyberknights4911.robot.control.DriveStickAction;
@@ -198,6 +200,10 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Command createTeleopDriveCommand(StickBinding stickBinding) {
+        return createTeleopDriveCommand(stickBinding, () -> false);
+    }
+
+    public Command createTeleopDriveCommand(StickBinding stickBinding, BooleanSupplier fieldCentricSupplier) {
         DoubleSupplier translationSupplier = stickBinding.supplierFor(DriveStickAction.FORWARD);
         DoubleSupplier strafeSupplier = stickBinding.supplierFor(DriveStickAction.STRAFE);
         DoubleSupplier rotationSupplier = stickBinding.supplierFor(DriveStickAction.ROTATE);
@@ -214,7 +220,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 drive(
                     new Translation2d(translationValue, strafeValue).times(swerveDriveConstants.maxSpeed()),
                     rotationValue * swerveDriveConstants.maxAngularVelocity(),
-                    /* fieldRelative = */ false,
+                    fieldCentricSupplier.getAsBoolean(),
                     /* isOpenLoop = */ true
                 );
             },
