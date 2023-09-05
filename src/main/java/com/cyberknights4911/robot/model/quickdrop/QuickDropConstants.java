@@ -17,10 +17,10 @@ public final class QuickDropConstants {
     public static final class Drive {
         private Drive() {}
 
-        private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 330;
-        private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 182.5;
-        private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 262.7;
-        private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 64.5;
+        private static final double FRONT_LEFT_CANCODER_OFFSET_DEGREES = 150;
+        private static final double FRONT_RIGHT_CANCODER_OFFSET_DEGREES = 3;
+        private static final double BACK_LEFT_CANCODER_OFFSET_DEGREES = 83;
+        private static final double BACK_RIGHT_CANCODER_OFFSET_DEGREES = 244;
 
         private static final double TRACK_WIDTH = Units.inchesToMeters(20.75);
         private static final double WHEEL_BASE = Units.inchesToMeters(23.75);
