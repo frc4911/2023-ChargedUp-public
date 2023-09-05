@@ -161,7 +161,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : swerveModules) {
-            positions[mod.getModuleNumber() - 1] = mod.getPosition();
+            positions[mod.getModuleNumber()] = mod.getPosition();
         }
         return positions;
     }
