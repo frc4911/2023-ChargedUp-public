@@ -200,7 +200,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Command createTeleopDriveCommand(StickBinding stickBinding) {
-        return createTeleopDriveCommand(stickBinding, () -> false);
+        return createTeleopDriveCommand(stickBinding, () -> true);
     }
 
     public Command createTeleopDriveCommand(StickBinding stickBinding, BooleanSupplier fieldCentricSupplier) {
