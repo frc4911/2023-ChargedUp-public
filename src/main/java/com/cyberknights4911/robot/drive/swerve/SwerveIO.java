@@ -1,18 +1,10 @@
 package com.cyberknights4911.robot.drive.swerve;
 
-import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLog;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 
 public interface SwerveIO {
-    static SwerveIO create(boolean isReal, Supplier<SwerveIO> realSwerveSupplier) {
-        if (isReal) {
-            return realSwerveSupplier.get();
-        } else {
-            return new SwerveIO() {};
-        }
-    }
 
     @AutoLog
     class SwerveIOInputs {
@@ -31,39 +23,31 @@ public interface SwerveIO {
     }
   
     /** Updates the set of loggable inputs. */
-    default void updateInputs(SwerveIOInputs inputs) {}
+    void updateInputs(SwerveIOInputs inputs);
 
     /** Reset the angle encoder to absoloute. */
-    default void resetToAbsolute() {}
+    void resetToAbsolute();
   
     /** Set the turn motor to the specified ControlMode and value. */
-    default void setAngle(ControlMode mode, double outputValue) {}
+    void setAngle(ControlMode mode, double outputValue);
 
     /** Set the drive motor to the specified ControlMode and value. */
-    default void setDrive(ControlMode mode, double outputValue) {}
+    void setDrive(ControlMode mode, double outputValue);
     
     /** Set the drive motor to the specified ControlMode, output value, DemandType and demandValue */
-    default void setDrive(
+    void setDrive(
         ControlMode mode, double outputValue, DemandType demandType, double demandValue
-    ) {}
+    );
     
     /** Get drive motor position. */
-    default double getDriveSensorPosition() {
-        return Double.MIN_VALUE;
-    }
+    double getDriveSensorPosition();
 
     /** Get angle motor position. */
-    default double getAngleSensorPosition() {
-        return Double.MIN_VALUE;
-    }
+    double getAngleSensorPosition();
     
     /** Get drive motor velocity. */
-    default double getDriveSensorVelocity() {
-        return Double.MIN_VALUE;
-    }
+    double getDriveSensorVelocity();
 
-    default double getAngleEncoderDegrees() {
-        return Double.MIN_VALUE;
-    }
+    double getAngleEncoderDegrees();
 }
   

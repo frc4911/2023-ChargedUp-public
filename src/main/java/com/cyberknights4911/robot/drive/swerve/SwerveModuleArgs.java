@@ -11,7 +11,7 @@ public abstract class SwerveModuleArgs {
 
     public static Builder builder() {
         return new AutoValue_SwerveModuleArgs.Builder()
-            .setSwerveIO(new SwerveIO() {});
+            .setSwerveIO(new SwerveIOFake());
     }
 
     @AutoValue.Builder

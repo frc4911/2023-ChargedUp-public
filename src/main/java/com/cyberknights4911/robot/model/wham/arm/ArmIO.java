@@ -1,17 +1,8 @@
 package com.cyberknights4911.robot.model.wham.arm;
 
-import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
-    static ArmIO create(boolean isReal, Supplier<ArmIO> realArmSupplier) {
-      if (isReal) {
-        return realArmSupplier.get();
-      } else {
-        return new ArmIO() {};
-      }
-    }
 
     @AutoLog
     class ArmIOInputs {
@@ -33,47 +24,31 @@ public interface ArmIO {
     }
 
     /** Updates the set of loggable inputs. */
-    default void updateInputs(ArmIOInputs inputs) {}
+    void updateInputs(ArmIOInputs inputs);
 
     /** Get wrist encoder degrees. */
-    default double getWristEncoderDegrees() {
-        return 0.0;
-    }
+    double getWristEncoderDegrees();
 
     /** Get shoulder encoder degrees. */
-    default double getShoulderEncoderDegrees() {
-        return 0.0;
-    }
-
-    default boolean isWristEncoderConnected() {
-        return true;
-    }
-
-    default boolean isShoulderEncoderConnected() {
-        return true;
-    }
-
-    default void setShoulderBrakeMode() {}
-
-    default void setWristBrakeMode() {}
+    double getShoulderEncoderDegrees();
 
     /** Set shoulder motors output. */
-    default void setShoulderOutput(double output) {}
+    void setShoulderOutput(double output);
     
     /** Set wrist motor output. */
-    default void setWristOutput(double output) {}
+    void setWristOutput(double output);
 
     /** Set shoulder motors position. */
-    default void setShoulderPosition(double position) {}
+    void setShoulderPosition(double position);
     
     /** Set wrist motor position. */
-    default void setWristPosition(double position) {}
+    void setWristPosition(double position);
 
-    default double offsetWrist() { return 0;}
+    double offsetWrist();
 
-    default double offsetShoulder() {return 0;}
+    double offsetShoulder();
 
-    default double getShoulderTrajectoryPosition() { return 0.0; }
+    double getShoulderTrajectoryPosition();
 
-    default double getWristTrajectoryPosition() { return 0.0; }
+    double getWristTrajectoryPosition();
 }

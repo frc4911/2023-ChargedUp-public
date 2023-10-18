@@ -10,7 +10,6 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import com.cyberknights4911.robot.control.DriveStickAction;
 import com.cyberknights4911.robot.control.StickBinding;
-import com.cyberknights4911.robot.model.wham.drive.AutoBalanceCommand;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Nat;
@@ -124,32 +123,6 @@ public class SwerveSubsystem extends SubsystemBase {
         poseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
     }
 
-    // TODO: move to wham code
-    public CommandBase createAutobalanceCommand() {
-        CommandBase balanceCommand =  new AutoBalanceCommand() {
-
-            @Override
-            public void driveTeleop(Translation2d translation, double rotation, boolean fieldRelative) {
-                drive(translation, rotation, fieldRelative, true);
-            }
-
-            @Override
-            public Translation2d getTilt() {
-                double roll = swerveDriveConstants.invertGyro()
-                    ? 360 - gyro.getRoll()
-                    : gyro.getRoll();
-                double pitch = swerveDriveConstants.invertGyro()
-                    ? 360 - gyro.getPitch()
-                    : gyro.getPitch();
-                
-                Translation2d tilt = new Translation2d(roll, pitch); 
-                return tilt.times(swerveDriveConstants.maxSpeed());
-            }
-        };
-        balanceCommand.addRequirements(this);
-        return balanceCommand;
-    }
-
     // TODO: re-use existing objects
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
@@ -197,6 +170,15 @@ public class SwerveSubsystem extends SubsystemBase {
         for (SwerveModule mod : swerveModules) {
             mod.handlePeriodic();
         }
+    }
+
+    public Command createResetImuCommand() {
+        return Commands.runOnce(
+            () -> {
+              zeroGyro();
+              resetModulesToAbsolute();
+            }
+          );
     }
 
     public Command createTeleopDriveCommand(StickBinding stickBinding) {
