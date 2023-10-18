@@ -13,11 +13,11 @@ import com.cyberknights4911.robot.model.wham.arm.ArmIO;
 import com.cyberknights4911.robot.model.wham.arm.ArmIOReal;
 import com.cyberknights4911.robot.model.wham.arm.ArmPositions;
 import com.cyberknights4911.robot.model.wham.arm.ArmSubsystem;
-import com.cyberknights4911.robot.model.wham.arm.MoveArmMotionMagicCommand;
-import com.cyberknights4911.robot.model.wham.slurpp.SlurppCommand;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppIO;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppIOReal;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppSubsystem;
+import com.cyberknights4911.robot.model.wham.slurpp.CollectConfig.GamePiece;
+
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import libraries.cyberlib.drivers.CANCoderFactory;
@@ -158,55 +158,39 @@ public final class Wham implements RobotStateListener {
   }
 
   private void applyButtonActions() {
-      binding.triggersFor(WhamButtonAction.RESET_IMU).onTrue(
-          Commands.runOnce(
-            () -> {
-              swerveSubsystem.zeroGyro();
-              swerveSubsystem.resetModulesToAbsolute();
-            }
-          )
-        );
+      binding.triggersFor(WhamButtonAction.RESET_IMU)
+        .onTrue(swerveSubsystem.createResetImuCommand());
+
+      binding.triggersFor(WhamButtonAction.SLURPP_FORWARD_FAST)
+        .onTrue(slurppSubsystem.createCollectCommand())
+        .onFalse(slurppSubsystem.createRetainCommand());
   
-      binding.triggersFor(WhamButtonAction.SLURPP_BACKWARD_FAST).whileTrue(
-        new SlurppCommand(slurppSubsystem, -0.85, armSubsystem, true));
+      binding.triggersFor(WhamButtonAction.SLURPP_BACKWARD_FAST)
+        .onTrue(slurppSubsystem.createScoreCommand())
+        .onFalse(slurppSubsystem.createRetainCommand());
+
+      binding.triggersFor(WhamButtonAction.SET_GAMEPIECE_CONE)
+        .onTrue(Commands.runOnce(() -> slurppSubsystem.setGamePiece(GamePiece.CONE)));
+
+      binding.triggersFor(WhamButtonAction.SET_GAMEPIECE_CUBE)
+        .onTrue(Commands.runOnce(() -> slurppSubsystem.setGamePiece(GamePiece.CUBE)));
+
+      binding.triggersFor(WhamButtonAction.COLLECT_SUBSTATION_FRONT)
+        .onTrue(armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.COLLECT_SUBSTATION_FRONT));
   
-      binding.triggersFor(WhamButtonAction.SLURPP_BACKWARD_SLOW).whileTrue(
-        new SlurppCommand(slurppSubsystem, -0.4, armSubsystem, true));
-  
-      binding.triggersFor(WhamButtonAction.SLURPP_FORWARD_FAST).whileTrue(
-          new SlurppCommand(slurppSubsystem, 0.85, armSubsystem, true));
-  
-      binding.triggersFor(WhamButtonAction.SLURPP_FORWARD_SLOW).whileTrue(
-        new SlurppCommand(slurppSubsystem, 0.4, armSubsystem, true));
-  
-      binding.triggersFor(WhamButtonAction.COLLECT_SINGLE_SUBSTATION_FRONT).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.COLLECT_SINGLE_SUBSTATION_FRONT));
-        
-      binding.triggersFor(WhamButtonAction.COLLECT_SUBSTATION_FRONT).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_FRONT));
-  
-      binding.triggersFor(WhamButtonAction.COLLECT_SUBSTATION_BACK).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.COLLECT_SUBSTATION_BACK));
-      
-      binding.triggersFor(WhamButtonAction.COLLECT_FLOOR_BACK_CONE).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CONE));
-      
-      binding.triggersFor(WhamButtonAction.COLLECT_FLOOR_BACK_CUBE).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.COLLECT_FLOOR_BACK_CUBE));
+      binding.triggersFor(WhamButtonAction.COLLECT_SUBSTATION_BACK)
+        .onTrue(armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.COLLECT_SUBSTATION_BACK));
     
-      binding.triggersFor(WhamButtonAction.COLLECT_FLOOR_FRONT_CONE).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CONE));
+      binding.triggersFor(WhamButtonAction.COLLECT_FLOOR_FRONT_CONE)
+        .onTrue(armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CONE));
   
-      binding.triggersFor(WhamButtonAction.COLLECT_FLOOR_FRONT_CUBE).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.COLLECT_FLOOR_FRONT_CUBE));
+      binding.triggersFor(WhamButtonAction.STOW)
+        .onTrue(armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.STOWED));
   
-      binding.triggersFor(WhamButtonAction.STOW).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.STOWED));
+      binding.triggersFor(WhamButtonAction.SCORE_L2)
+        .onTrue(armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.SCORE_L2));
   
-      binding.triggersFor(WhamButtonAction.SCORE_L2).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.SCORE_L2));
-  
-      binding.triggersFor(WhamButtonAction.SCORE_L3).onTrue(
-        MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.SCORE_L3));
+      binding.triggersFor(WhamButtonAction.SCORE_L3)
+        .onTrue(armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.SCORE_L3));
   }
 }

@@ -320,9 +320,18 @@ public final class WhamConstants {
     public static final class Slurpp {
         private Slurpp() {}
 
-    public static final SupplyCurrentLimitConfiguration SLURPP_SUPPLY_LIMIT =
-        new SupplyCurrentLimitConfiguration(true, 35.0, 0, 0);
-    public static final StatorCurrentLimitConfiguration SLURPP_STATOR_LIMIT =
-        new StatorCurrentLimitConfiguration(true, 35.0, 0, 0);
+        public static final DoublePreference SLURPP_FAST_PERCENT = 
+            new DoublePreference("SLURPP_FAST_PERCENT", 0.85);
+        public static final DoublePreference SLURPP_SLOW_PERCENT = 
+            new DoublePreference("SLURPP_SLOW_PERCENT", 0.4);
+        public static final DoublePreference SLURPP_RETAIN_STRONG_PERCENT = 
+            new DoublePreference("SLURPP_RETAIN_STRONG_PERCENT", 0.2);
+        public static final DoublePreference SLURPP_RETAIN_WEAK_PERCENT = 
+            new DoublePreference("SLURPP_RETAIN_WEAK_PERCENT", 0.05);
+
+        public static final SupplyCurrentLimitConfiguration SLURPP_SUPPLY_LIMIT =
+            new SupplyCurrentLimitConfiguration(true, 35.0, 0, 0);
+        public static final StatorCurrentLimitConfiguration SLURPP_STATOR_LIMIT =
+            new StatorCurrentLimitConfiguration(true, 35.0, 0, 0);
     }
 }

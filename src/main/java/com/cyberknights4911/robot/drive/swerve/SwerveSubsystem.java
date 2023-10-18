@@ -199,6 +199,15 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    public Command createResetImuCommand() {
+        return Commands.runOnce(
+            () -> {
+              zeroGyro();
+              resetModulesToAbsolute();
+            }
+          );
+    }
+
     public Command createTeleopDriveCommand(StickBinding stickBinding) {
         return createTeleopDriveCommand(stickBinding, () -> true);
     }

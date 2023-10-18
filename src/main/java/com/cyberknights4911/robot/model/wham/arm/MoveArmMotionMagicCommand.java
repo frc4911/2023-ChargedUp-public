@@ -1,21 +1,17 @@
 package com.cyberknights4911.robot.model.wham.arm;
 
-import com.cyberknights4911.robot.constants.DoublePreference;
 import com.cyberknights4911.robot.model.wham.WhamConstants;
-
+import com.cyberknights4911.robot.model.wham.slurpp.SlurppSubsystem;
+import com.cyberknights4911.robot.model.wham.slurpp.CollectConfig.CollectSide;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 
 public final class MoveArmMotionMagicCommand extends CommandBase {
 
     private final ArmSubsystem armSubsystem;
     private final ArmPositions desiredPosition;
-    private final InitializedListener listener;
-    
+    private final SlurppSubsystem slurppSubsystem;
+
     private final double shoulderErrorThreshold = 1.0;
     private final double wristErrorThreshold = 1.0;
     private final double retryAfter = .5;
@@ -29,11 +25,11 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     private double safePosition;
     private double retryStartTime;
 
-    private MoveArmMotionMagicCommand(
-            ArmSubsystem armSubsystem, ArmPositions desiredPosition, InitializedListener listener) {
+    MoveArmMotionMagicCommand(ArmSubsystem armSubsystem, SlurppSubsystem slurpSubsystem,
+            ArmPositions desiredPosition) {
         this.armSubsystem = armSubsystem;
+        this.slurppSubsystem = slurpSubsystem;
         this.desiredPosition = desiredPosition;
-        this.listener = listener;
 
         addRequirements(armSubsystem);
     }
@@ -50,15 +46,13 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         retryStartTime = Timer.getFPGATimestamp();
 
         double currentArmPosition = armSubsystem.getShoulderPositionDegrees();
-        double desiredWristPosition = desiredPosition.wristPosition.getValue();
+        double desiredWristPosition = desiredPosition.getWristPosition().getValue();
         
         switch (desiredPosition) {
             case STOWED:
             case SCORE_L2:
-            case COLLECT_SINGLE_SUBSTATION_FRONT:
             case COLLECT_SUBSTATION_FRONT:
             case COLLECT_FLOOR_FRONT_CONE:
-            case COLLECT_FLOOR_FRONT_CUBE:
                 if (currentArmPosition > 180) {
                     shouldTuckWrist = true;
                     safePosition = WhamConstants.Arm.SHOULDER_SAFE_ANGLE_FRONT.getValue();
@@ -76,14 +70,6 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
                     safePosition = WhamConstants.Arm.SHOULDER_SAFE_ANGLE_BACK_MIDDLE.getValue();
                 }
                 break;
-            case COLLECT_FLOOR_BACK_CUBE:
-            case COLLECT_FLOOR_BACK_CONE:
-            // TODO: try combining these cases with those immediately above. See if violations are even possible.
-            if (currentArmPosition < 270) {
-                shouldTuckWrist = true;
-                safePosition = WhamConstants.Arm.SHOULDER_SAFE_ANGLE_BACK_BOTTOM.getValue();
-            }
-                break;
             default:
                 shouldTuckWrist = false;
                 break;
@@ -93,10 +79,25 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
             isMovingFinal = false;
         }
 
-        armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
+        armSubsystem.moveShoulder(desiredPosition.getShoulderPosition().getValue());
         armSubsystem.moveWrist(desiredWristPosition);
 
-        listener.onInitialize(this);
+        armSubsystem.setLastCommand(this);
+        updateCollectConfig();
+    }
+
+    private void updateCollectConfig() {
+        switch(desiredPosition) {
+            case COLLECT_SUBSTATION_FRONT:
+            case COLLECT_FLOOR_FRONT_CONE:
+                slurppSubsystem.setCollectSide(CollectSide.FRONT);
+                break;
+            case COLLECT_SUBSTATION_BACK:
+                slurppSubsystem.setCollectSide(CollectSide.BACK);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -104,7 +105,7 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
         double currentShoulderPosition = armSubsystem.getShoulderPositionDegrees();
         // If this is a tucking command, we need to move the wrist AFTER the shoulder is safe
         if (shouldTuckWrist && !isWristTucked && currentShoulderPosition > safePosition) {
-            armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
+            armSubsystem.moveWrist(desiredPosition.getWristPosition().getValue());
             // No need to keep sending the moveWrist call.
             isWristTucked = true;
             isMovingFinal = true;
@@ -122,8 +123,8 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     }
 
     private void checkCurrentMotionFinished() {
-        double shoulderError = Math.abs(armSubsystem.getShoulderTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.shoulderPosition.getValue()));
-        double wristError = Math.abs(armSubsystem.getWristTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.wristPosition.getValue()));
+        double shoulderError = Math.abs(armSubsystem.getShoulderTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.getShoulderPosition().getValue()));
+        double wristError = Math.abs(armSubsystem.getWristTrajectoryPosition() - ArmSubsystem.convertDegreesToCtreTicks(desiredPosition.getWristPosition().getValue()));
         // System.out.println("shoulder error: " + shoulderError);
         // System.out.println("wrist error: " + wristError);
         if (shoulderError < shoulderErrorThreshold && wristError < wristErrorThreshold) {
@@ -143,75 +144,9 @@ public final class MoveArmMotionMagicCommand extends CommandBase {
     }
 
     /** Used in tuning mode to move to the desired positions after modifying them. */
-    private void rerunMoveToPosition() {
+    void rerunMoveToPosition() {
         //System.out.println("rerunMoveToPosition");
-        armSubsystem.moveWrist(desiredPosition.wristPosition.getValue());
-        armSubsystem.moveShoulder(desiredPosition.shoulderPosition.getValue());
-    }
-
-    /**
-     * Creates a new command for moving the arm.
-     */
-    public static MoveArmMotionMagicCommand create(
-            ArmSubsystem armSubsystem, ArmPositions desiredPosition) {
-        return new MoveArmMotionMagicCommand(armSubsystem, desiredPosition, LISTENER);
-    }
-
-    private static final InitializedListener LISTENER = WhamConstants.Arm.IS_TUNING_ENABLED ?
-       new TestMode() : (command) -> {};
-
-    private interface InitializedListener {
-        void onInitialize(MoveArmMotionMagicCommand armCommand);
-    }
-
-    private static class TestMode implements InitializedListener {
-        private MoveArmMotionMagicCommand currentCommand = null;
-
-        private TestMode() {
-            ShuffleboardTab tab = Shuffleboard.getTab("ARM TUNING");
-            tab.add("SHOULDER+", increaseShoulder());
-            tab.add("SHOULDER-", decreaseShoulder());
-            tab.add("WRIST+", increaseWrist());
-            tab.add("WRIST-", decreaseWrist());
-        }
-
-        CommandBase increaseShoulder() {
-            return new ProxyCommand(
-                () -> increase(currentCommand, currentCommand.desiredPosition.shoulderPosition));
-        }
-
-        CommandBase decreaseShoulder() {
-            return new ProxyCommand(
-                () -> decrease(currentCommand, currentCommand.desiredPosition.shoulderPosition));
-        }
-
-        CommandBase increaseWrist() {
-            return new ProxyCommand(
-                () -> increase(currentCommand, currentCommand.desiredPosition.wristPosition));
-        }
-
-        CommandBase decreaseWrist() {
-            return new ProxyCommand(
-                () -> decrease(currentCommand, currentCommand.desiredPosition.wristPosition));
-        }
-
-        private CommandBase increase(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
-            return Commands.runOnce(() -> {
-                doublePreference.setValue(doublePreference.getValue() + 1);
-                currentCommand.rerunMoveToPosition();
-            });
-        }
-
-        private CommandBase decrease(MoveArmMotionMagicCommand currentCommand, DoublePreference doublePreference) {
-            return Commands.runOnce(() -> {
-                doublePreference.setValue(doublePreference.getValue() - 1);
-                currentCommand.rerunMoveToPosition();
-            });
-        }
-
-        @Override
-        public void onInitialize(MoveArmMotionMagicCommand armCommand) {
-            currentCommand = armCommand;
-        }
+        armSubsystem.moveWrist(desiredPosition.getWristPosition().getValue());
+        armSubsystem.moveShoulder(desiredPosition.getShoulderPosition().getValue());
     }
 }
