@@ -13,7 +13,7 @@ public final class RobotSupplier implements Supplier<RobotBase> {
     @Override
     public RobotBase get() {
         // Change the passed arg to change the robot.
-        return new Robot(this::createQuickDrop);
+        return new Robot(this::createWham);
     }
 
     private RobotStateListener createWham() {

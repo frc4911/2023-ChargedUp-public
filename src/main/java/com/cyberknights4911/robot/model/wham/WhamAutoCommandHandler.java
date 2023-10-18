@@ -3,6 +3,7 @@ package com.cyberknights4911.robot.model.wham;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.cyberknights4911.robot.auto.AutoCommandHandler;
@@ -17,6 +18,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -73,6 +75,14 @@ public final class WhamAutoCommandHandler implements AutoCommandHandler {
         loggedDashboardChooser.addDefaultOption("Do Nothing", getNothingCommand());
         loggedDashboardChooser.addDefaultOption("Score and AutoBalance", getAutoBalanceCommand());
         loggedDashboardChooser.addOption("Score Leave and AutoBalance", getBalanceScoreLeaveCommand());
+        loggedDashboardChooser.addOption(
+            "Bordie Score and Exit",
+            getScoreHighCommand()
+            .withTimeout(7.2)
+            .andThen(
+                exitCommunityCommand()
+            )
+            );
         loggedDashboardChooser.addOption("Score 1.5 Substation and Autobalance", getScoreCollectBalanceSubstationCommand());
         loggedDashboardChooser.addOption("Score 2 and AutoBalance", getScore2BalanceCommand());
         loggedDashboardChooser.addOption("Score High", getScoreHighCommand());
@@ -106,6 +116,29 @@ public final class WhamAutoCommandHandler implements AutoCommandHandler {
             eventMap,
             true,
             driveRequirements
+        );
+    }
+    private Command exitCommunityCommand() {
+        return Commands.runOnce(
+            () -> {
+                swerveSubsystem.drive(
+                    new Translation2d(-.4, 0).times(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS.maxSpeed()),
+                    0,
+                    true,
+                    /* isOpenLoop = */ true
+                );
+            }, swerveSubsystem)
+            .andThen(Commands.waitSeconds(2.4))
+            .andThen(
+                Commands.runOnce(
+            () -> {
+                swerveSubsystem.drive(
+                    new Translation2d(0, 0).times(WhamConstants.Drive.SWERVE_DRIVE_CONSTANTS.maxSpeed()),
+                    0,
+                    true,
+                    /* isOpenLoop = */ true
+                );
+            }, swerveSubsystem)
         );
     }
 
@@ -145,10 +178,11 @@ public final class WhamAutoCommandHandler implements AutoCommandHandler {
 
     private Command getScoreHighCommand() {
         HashMap<String, Command> eventMap = new HashMap<>();
-        Command scoreConeOne = MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.SCORE_L3)
+        Command scoreConeOne = 
+            new SlurppCommand(slurppSubsystem, -0.85, armSubsystem, true).withTimeout(.5)
+            .andThen(MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.SCORE_L3))
             .andThen(Commands.waitSeconds(2.0))
-            .andThen(new SlurppCommand(slurppSubsystem, -0.85, armSubsystem, true)
-            .withTimeout(.5));
+            .andThen(new SlurppCommand(slurppSubsystem, -0.85, armSubsystem, true).withTimeout(.5));
         Command stowOne = MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.STOWED);
 
         eventMap.put("scoreConeOne", scoreConeOne);

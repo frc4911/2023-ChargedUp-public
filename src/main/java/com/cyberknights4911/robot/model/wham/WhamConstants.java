@@ -160,7 +160,7 @@ public final class WhamConstants {
     public static class Arm {
         private Arm() {}
 
-        public static final boolean IS_TUNING_ENABLED = false;
+        public static final boolean IS_TUNING_ENABLED = true;
 
         public static BooleanPreference SHOULD_USE_GRAVITY_FEED_FORWARD =
             new BooleanPreference("USE_GRAVITY_FEED_FORWARD", true);
