@@ -44,7 +44,7 @@ public final class Wham implements RobotStateListener {
     slurppSubsystem = createSlurppSubsystem(canivoreTalonFactory, ctreError);
     armSubsystem = createArmSubsystem(canivoreTalonFactory, canivoreCANCoderFactory, ctreError);
     swerveSubsystem = createSwerveSubsystem(roboRioTalonFactory, roboRioCANCoderFactory, pigeon2Factory, ctreError);
-    autoHandler = new WhamAutoCommandHandler(armSubsystem, slurppSubsystem, swerveSubsystem);
+    autoHandler = new BlockPartyAutos(armSubsystem, slurppSubsystem, swerveSubsystem);
     binding = new WhamControllerBinding();
 
     applyDefaultCommands();
