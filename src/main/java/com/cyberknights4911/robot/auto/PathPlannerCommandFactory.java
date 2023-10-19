@@ -1,14 +1,11 @@
 package com.cyberknights4911.robot.auto;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -44,33 +41,32 @@ public final class PathPlannerCommandFactory {
         Consumer<Pose2d> resetPose,
         SwerveDriveKinematics kinematics,
         Consumer<SwerveModuleState[]> outputModuleStates,
+        PIDConstants translationConstants,
+        PIDConstants rotationConstants,
         Subsystem... driveRequirements
     ) {
         this.poseSupplier = poseSupplier;
         this.resetPose = resetPose;
         this.kinematics = kinematics;
         this.outputModuleStates = outputModuleStates;
+        this.translationConstants = translationConstants;
+        this.rotationConstants = rotationConstants;
         this.driveRequirements = driveRequirements;
-        
-        // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        translationConstants = new PIDConstants(5.0, 0.0, 0.0);
-        // PID constants to correct for rotation error (used to create the rotation controller)
-        rotationConstants = new PIDConstants(5.0, 0.0, 0.0);
     }
 
     /**
-     * Create a complete autonomous command group. This will reset the robot pose at the begininng
+     * Create a complete autonomous command group. This will reset the robot pose at the beginning
      * of the first path, follow paths, trigger events during path following, and run commands
      * between paths with stop events.
      * 
-     * @param pathGroup Path group to follow during the auto
+     * @param path Path group to follow during the auto
      * @param eventMap Map of event marker names to the commands that should run when reaching that
      *     marker.
      * @return Autonomous PathPlanner command
      */
     public Command createAutoCommand(
-        List<PathPlannerTrajectory> pathGroup,
-        HashMap<String, Command> eventMap
+        PathPlannerTrajectory path,
+        Map<String, Command> eventMap
     ) {
         return new SwerveAutoBuilder(
             poseSupplier,
@@ -81,6 +77,6 @@ public final class PathPlannerCommandFactory {
             outputModuleStates,
             eventMap,
             driveRequirements
-        ).fullAuto(pathGroup);
+        ).fullAuto(path);
     }
 }

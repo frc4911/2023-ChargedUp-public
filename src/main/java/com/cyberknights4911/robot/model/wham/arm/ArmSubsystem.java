@@ -40,20 +40,14 @@ public final class ArmSubsystem extends SubsystemBase {
         lastCommand = command;
     }
 
-    public boolean moveShoulder(double desiredShoulderPosition) {
+    public void moveShoulder(double desiredShoulderPosition) {
         armIO.setShoulderPosition(convertDegreesToCtreTicks(desiredShoulderPosition));
-        return true;
     }
 
-    public boolean moveWrist(double desiredWristPosition) {
+    public void moveWrist(double desiredWristPosition) {
         armIO.setWristPosition(convertDegreesToCtreTicks(desiredWristPosition));
-        return true;
     }
 
-    public void resetCANCoders() {
-        armIO.offsetShoulder();
-        armIO.offsetWrist();
-    }
     @Override
     public void periodic() {
         armIO.updateInputs(inputs);

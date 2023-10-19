@@ -41,12 +41,6 @@ public final class WhamPorts {
         public static final int MOTOR = 20;
     }
 
-    public static final class Climber {
-        private Climber() {}
-
-        public static final int SOLENOID = 1;
-    }
-
     public static final class Controller {
         private Controller() {}
 

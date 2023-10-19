@@ -9,12 +9,10 @@ import com.cyberknights4911.robot.drive.swerve.SwerveModule;
 import com.cyberknights4911.robot.drive.swerve.SwerveModuleArgs;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystemArgs;
-import com.cyberknights4911.robot.model.wham.arm.ArmIO;
 import com.cyberknights4911.robot.model.wham.arm.ArmIOFake;
 import com.cyberknights4911.robot.model.wham.arm.ArmIOReal;
 import com.cyberknights4911.robot.model.wham.arm.ArmPositions;
 import com.cyberknights4911.robot.model.wham.arm.ArmSubsystem;
-import com.cyberknights4911.robot.model.wham.slurpp.SlurppIO;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppIOFake;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppIOReal;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppSubsystem;
@@ -134,6 +132,11 @@ public final class Wham implements RobotStateListener {
   }
 
   @Override
+  public void onTeleopInit(LoggedRobot robot) {
+    armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.STOWED).schedule();
+  }
+
+  @Override
   public void onAutonomousInit(LoggedRobot robot) {
     autoHandler.startCurrentAutonomousCommand();
   }
@@ -144,16 +147,6 @@ public final class Wham implements RobotStateListener {
   }
 
   private void applyDefaultCommands() {
-  // armSubsystem.setDefaultCommand(
-  //   MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.STOWED)
-  // );
-
-  // slurppSubsystem.setDefaultCommand(
-  //   Commands.runOnce(() -> {
-  //     slurppSubsystem.holdCurrentPosition();
-  //   }, slurppSubsystem)
-  // );
-  
       swerveSubsystem.setDefaultCommand(
           swerveSubsystem.createTeleopDriveCommand(binding)
       );

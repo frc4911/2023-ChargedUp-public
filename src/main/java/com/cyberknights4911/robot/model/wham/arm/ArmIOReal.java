@@ -191,17 +191,6 @@ public final class ArmIOReal implements ArmIO {
         wristMotor.set(ControlMode.MotionMagic, position);
     }
 
-    // Set output should not be generally used, but are left here for testing
-    @Override
-    public void setWristOutput(double output) {
-        wristMotor.set(ControlMode.PercentOutput, output);
-    }
-
-    @Override
-    public void setShoulderOutput(double output) {
-        shoulderMotor1.set(ControlMode.PercentOutput, output);
-    }
-
     @Override
     public double getShoulderTrajectoryPosition() {
         return shoulderMotor1.getActiveTrajectoryPosition();
@@ -212,17 +201,4 @@ public final class ArmIOReal implements ArmIO {
         return wristMotor.getActiveTrajectoryPosition();
     }
 
-    @Override
-    public double offsetWrist() {
-        double offset = WhamConstants.Arm.WRIST_CANCODER_OFFSET.getValue() - (getShoulderEncoderDegrees() - WhamConstants.Arm.STOWED_WRIST.getValue());
-        WhamConstants.Arm.WRIST_CANCODER_OFFSET.setValue(offset);
-        return offset;
-    }
-
-    @Override
-    public double offsetShoulder() {
-        double offset = WhamConstants.Arm.SHOULDER_CANCODER_OFFSET.getValue() - (getShoulderEncoderDegrees() - WhamConstants.Arm.STOWED_SHOULDER.getValue());
-        WhamConstants.Arm.SHOULDER_CANCODER_OFFSET.setValue(offset);
-        return offset;
-    }
 }

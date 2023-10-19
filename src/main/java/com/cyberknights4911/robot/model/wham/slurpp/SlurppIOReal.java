@@ -58,11 +58,6 @@ public final class SlurppIOReal implements SlurppIO {
     }
 
     @Override
-    public void holdCurrentPosition() {
-        motor.set(ControlMode.Position, lastStoppedPosition);
-    }
-
-    @Override
     public CollectSide getCollectSide() {
         return collectSide;
     }

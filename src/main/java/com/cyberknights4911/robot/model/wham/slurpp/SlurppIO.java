@@ -24,18 +24,15 @@ public interface SlurppIO {
     /** Stop the motor. */
     void stop();
 
-    /** Hold current position. */
-    void holdCurrentPosition();
-    
     /**
      * Sets the game piece type that slurpp is dealing with. This, along with
-     * {@link setCollectSide}, ensures that the driver/operator can always use the same
+     * {@link #setCollectSide}, ensures that the driver/operator can always use the same
      * trigger/bumper for collect.
      */
     void setGamePiece(CollectConfig.GamePiece gamePiece);
 
     /**
-     * Sets the collect side (front or back) of the robot. This, along with {@link setGamePiece},
+     * Sets the collect side (front or back) of the robot. This, along with {@link #setGamePiece},
      * ensures that the driver/operator can always use the same trigger/bumper for collect.
      */
     void setCollectSide(CollectConfig.CollectSide collectSide);

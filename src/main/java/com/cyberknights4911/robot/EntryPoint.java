@@ -6,7 +6,6 @@ public final class EntryPoint {
   private EntryPoint() {}
 
   public static void main(String... args) {
-    RobotSupplier robotSupplier = new RobotSupplier();
-    RobotBase.startRobot(robotSupplier::get);
+    RobotBase.startRobot(new RobotSupplier());
   }
 }

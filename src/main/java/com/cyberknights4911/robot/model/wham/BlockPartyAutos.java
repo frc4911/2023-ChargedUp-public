@@ -2,8 +2,7 @@ package com.cyberknights4911.robot.model.wham;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import com.cyberknights4911.robot.auto.PathPlannerCommandFactory;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
@@ -13,26 +12,16 @@ import com.cyberknights4911.robot.model.wham.slurpp.SlurppSubsystem;
 import com.cyberknights4911.robot.model.wham.slurpp.CollectConfig.GamePiece;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class BlockPartyAutos implements AutoCommandHandler {
 
+    private final PathPlannerCommandFactory pathFactory;
     private final ArmSubsystem armSubsystem;
     private final SlurppSubsystem slurppSubsystem;
     private final SwerveSubsystem swerveSubsystem;
     private final LoggedDashboardChooser<Command> chooser;
-    private final Supplier<Pose2d> poseSupplier;
-    private final Consumer<Pose2d> resetPose;
-    private final PIDConstants translationConstants;
-    private final PIDConstants rotationConstants;
-    private final SwerveDriveKinematics kinematics;
-    private final Consumer<SwerveModuleState[]> outputModuleStates;
     
     private Command currentAutoCommand;
 
@@ -41,17 +30,21 @@ public class BlockPartyAutos implements AutoCommandHandler {
         this.armSubsystem = armSubsystem;
         this.slurppSubsystem = slurppSubsystem;
         this.swerveSubsystem = swerveSubsystem;
-        
+
         // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        translationConstants = new PIDConstants(4.3, 0, 0.0);
-
+        PIDConstants translationConstants = new PIDConstants(4.3, 0, 0.0);
         // PID constants to correct for rotation error (used to create the rotation controller)
-        rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
+        PIDConstants rotationConstants = new PIDConstants(2.0, 0.0, 0.0);
 
-        poseSupplier = swerveSubsystem::getPose;
-        resetPose = swerveSubsystem::setPose;
-        kinematics = swerveSubsystem.getKinematics();
-        outputModuleStates = swerveSubsystem::setSwerveModuleStates;
+        pathFactory = new PathPlannerCommandFactory(
+            swerveSubsystem::getPose,
+            swerveSubsystem::setPose,
+            swerveSubsystem.getKinematics(),
+            swerveSubsystem::setSwerveModuleStates,
+            translationConstants,
+            rotationConstants,
+            swerveSubsystem
+        );
 
         chooser = new LoggedDashboardChooser<Command>("Auto Routine");
         chooser.addDefaultOption("Nothing", Commands.runOnce(() -> {}));
@@ -82,21 +75,12 @@ public class BlockPartyAutos implements AutoCommandHandler {
             .andThen(slurppSubsystem.createStopCommand());
     }
 
-    private SwerveAutoBuilder swerveAutoBuilder(Map<String, Command> eventMap) {
-        return new SwerveAutoBuilder(
-            poseSupplier,
-            resetPose,
-            kinematics,
-            translationConstants,
-            rotationConstants,
-            outputModuleStates,
-            eventMap,
-            swerveSubsystem);
-    }
-
-    private Command pathCommand(Map<String, Command> eventMap, String pathName, double maxSpeed, double maxAcceleration) {
-        return swerveAutoBuilder(eventMap)
-            .fullAuto(PathPlanner.loadPath(pathName, maxSpeed, maxAcceleration));
+    private Command pathCommand(Map<String, Command> eventMap, String pathName, double maxSpeed,
+            double maxAcceleration) {
+        return pathFactory.createAutoCommand(
+            PathPlanner.loadPath(pathName, maxSpeed, maxAcceleration),
+            eventMap
+        );
     }
 
     private Command scoreAndStow() {
@@ -108,6 +92,8 @@ public class BlockPartyAutos implements AutoCommandHandler {
         Map<String, Command> events = new HashMap<>();
 
         Command pathCommand = pathCommand(events, "pathname", 3, 1.5);
+
+        // This command stows the arm as the robot begins moving
         Command driveAndStow = armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.STOWED)
             .alongWith(pathCommand);
 

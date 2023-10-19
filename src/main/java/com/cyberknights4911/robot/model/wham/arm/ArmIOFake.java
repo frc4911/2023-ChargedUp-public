@@ -16,26 +16,10 @@ public final class ArmIOFake implements ArmIO {
     }
 
     @Override
-    public void setShoulderOutput(double output) {}
-
-    @Override
-    public void setWristOutput(double output) {}
-
-    @Override
     public void setShoulderPosition(double position) {}
 
     @Override
     public void setWristPosition(double position) {}
-
-    @Override
-    public double offsetWrist() {
-        return 0;
-    }
-
-    @Override
-    public double offsetShoulder() {
-        return 0;
-    }
 
     @Override
     public double getShoulderTrajectoryPosition() {

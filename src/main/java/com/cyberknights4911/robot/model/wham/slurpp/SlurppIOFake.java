@@ -15,9 +15,6 @@ public final class SlurppIOFake implements SlurppIO {
     public void stop() {}
 
     @Override
-    public void holdCurrentPosition() {}
-
-    @Override
     public void setGamePiece(GamePiece gamePiece) {}
 
     @Override

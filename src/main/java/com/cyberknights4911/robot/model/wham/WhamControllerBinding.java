@@ -36,13 +36,13 @@ public final class WhamControllerBinding implements ButtonBinding<WhamButtonActi
             case RESET_IMU: return new Triggers(driverController.y());
             case SLURPP_BACKWARD_FAST: return new Triggers(driverController.rightTrigger());
             case SLURPP_FORWARD_FAST: return new Triggers( driverController.leftTrigger());
-            case CLIMB_WHEEL_LOCK: return new Triggers(ALWAYS_FALSE); // Never implemented
             case STOW: return new Triggers(operatorController.povDown(), driverController.povDown());
             case SCORE_L3: return new Triggers(operatorController.leftBumper(), driverController.x());
             case SCORE_L2: return new Triggers(operatorController.rightBumper(), driverController.a());
             case COLLECT_SUBSTATION_FRONT: return new Triggers(operatorController.povRight(), driverController.povLeft());
             case COLLECT_SUBSTATION_BACK: return new Triggers(operatorController.povLeft(), driverController.povRight());
             case COLLECT_FLOOR_FRONT_CONE: return new Triggers(operatorController.a(), driverController.povUp());
+            case CLIMB_WHEEL_LOCK: // Never implemented
             default: return new Triggers(ALWAYS_FALSE);
         }
     }

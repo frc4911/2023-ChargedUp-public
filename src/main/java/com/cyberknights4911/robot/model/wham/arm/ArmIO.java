@@ -32,21 +32,11 @@ public interface ArmIO {
     /** Get shoulder encoder degrees. */
     double getShoulderEncoderDegrees();
 
-    /** Set shoulder motors output. */
-    void setShoulderOutput(double output);
-    
-    /** Set wrist motor output. */
-    void setWristOutput(double output);
-
     /** Set shoulder motors position. */
     void setShoulderPosition(double position);
     
     /** Set wrist motor position. */
     void setWristPosition(double position);
-
-    double offsetWrist();
-
-    double offsetShoulder();
 
     double getShoulderTrajectoryPosition();
 

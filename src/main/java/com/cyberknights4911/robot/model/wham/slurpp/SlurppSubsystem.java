@@ -14,9 +14,6 @@ public final class SlurppSubsystem extends SubsystemBase {
     private final SlurppIO slurppIO;
     private final SlurppIOInputsAutoLogged inputs = new SlurppIOInputsAutoLogged();
 
-    private CollectConfig.GamePiece gamePiece = CollectConfig.GamePiece.CONE;
-    private CollectConfig.CollectSide collectSide = CollectConfig.CollectSide.FRONT;
-
     public SlurppSubsystem(SlurppIO splurppIO) {
         super();
         this.slurppIO = splurppIO;
@@ -53,10 +50,6 @@ public final class SlurppSubsystem extends SubsystemBase {
         slurppIO.stop();
     }
 
-    public void holdCurrentPosition() {
-        slurppIO.holdCurrentPosition();
-    }
-
     public CommandBase createCollectCommand() {
         return Commands.runOnce(() -> {
             slurpp(CollectConfig.collectSpeed(slurppIO.getGamePiece(), slurppIO.getCollectSide()));
@@ -76,8 +69,6 @@ public final class SlurppSubsystem extends SubsystemBase {
     }
     
     public CommandBase createStopCommand() {
-        return Commands.runOnce(() -> {
-            stop();
-        }, this);
+        return Commands.runOnce(this::stop, this);
     }
 }
