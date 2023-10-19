@@ -1,16 +1,8 @@
 package com.cyberknights4911.robot.drive.swerve;
 
-import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface GyroIO {
-    static GyroIO create(boolean isReal, Supplier<GyroIO> realGyroSupplier) {
-        if (isReal) {
-            return realGyroSupplier.get();
-        } else {
-            return new GyroIO() {};
-        }
-    }
 
     @AutoLog
     class GyroIOInputs {
@@ -19,23 +11,17 @@ public interface GyroIO {
       public double velocityRadPerSec = 0.0;
     }
   
-    default void updateInputs(GyroIOInputs inputs) {}
+    void updateInputs(GyroIOInputs inputs);
 
     /** Get the turn rotation */
-    default double getYaw() {
-        return 0.0;
-    }
+    double getYaw();
 
     /** Get the pitch rotation */
-    default double getPitch() {
-        return 0.0;
-    }
+    double getPitch();
 
     /** Get the roll rotation */
-    default double getRoll() {
-        return 0.0;
-    }
+    double getRoll();
 
     /** Reset the sensor yaw rotation */
-    default void setYaw(double angleInDegrees) {}
+    void setYaw(double angleInDegrees);
 }

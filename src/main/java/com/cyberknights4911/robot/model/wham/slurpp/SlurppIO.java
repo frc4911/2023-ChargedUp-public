@@ -1,17 +1,8 @@
 package com.cyberknights4911.robot.model.wham.slurpp;
 
-import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLog;
 
 public interface SlurppIO {
-  static SlurppIO create(boolean isReal, Supplier<SlurppIO> realSlurppSupplier) {
-    if (isReal) {
-      return realSlurppSupplier.get();
-    } else {
-      return new SlurppIO() {};
-    }
-  }
 
     @AutoLog
     class SlurppIOInputs {
@@ -20,17 +11,42 @@ public interface SlurppIO {
       public double appliedVolts = 0.0;
       public double currentAmps = 0.0;
       public double tempCelcius = 0.0;
+      public String gamePiece = "";
+      public String collectSide = "";
     }
 
     /** Updates the set of loggable inputs. */
-    default void updateInputs(SlurppIOInputs inputs) {}
+    void updateInputs(SlurppIOInputs inputs);
 
     /** Set motor percent output. */
-    default void setPercentOutput(double percentOutput) {}
+    void setPercentOutput(double percentOutput);
 
     /** Stop the motor. */
-    default void stop() {}
+    void stop();
 
     /** Hold current position. */
-    default void holdCurrentPosition() {}
+    void holdCurrentPosition();
+    
+    /**
+     * Sets the game piece type that slurpp is dealing with. This, along with
+     * {@link setCollectSide}, ensures that the driver/operator can always use the same
+     * trigger/bumper for collect.
+     */
+    void setGamePiece(CollectConfig.GamePiece gamePiece);
+
+    /**
+     * Sets the collect side (front or back) of the robot. This, along with {@link setGamePiece},
+     * ensures that the driver/operator can always use the same trigger/bumper for collect.
+     */
+    void setCollectSide(CollectConfig.CollectSide collectSide);
+
+    /**
+     * Gets the game piece type that slurpp is dealing with.
+     */
+    CollectConfig.GamePiece getGamePiece();
+
+    /**
+     * Gets the collect side (front or back) of the robot.
+     */
+    CollectConfig.CollectSide getCollectSide();
 }

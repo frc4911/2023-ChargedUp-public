@@ -10,7 +10,6 @@ public enum WhamButtonAction implements ButtonAction {
     SLURPP_BACKWARD_FAST,
     SLURPP_FORWARD_FAST,
     CLIMB_WHEEL_LOCK,
-    RESET_WHEELS,
     STOW,
     COLLECT_SUBSTATION_BACK,
     COLLECT_SUBSTATION_FRONT,

@@ -6,6 +6,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.cyberknights4911.robot.model.wham.WhamConstants;
 import com.cyberknights4911.robot.model.wham.WhamPorts.Slurpp;
+import com.cyberknights4911.robot.model.wham.slurpp.CollectConfig.CollectSide;
+import com.cyberknights4911.robot.model.wham.slurpp.CollectConfig.GamePiece;
 import edu.wpi.first.math.util.Units;
 import libraries.cyberlib.drivers.CtreError;
 import libraries.cyberlib.drivers.TalonFXFactory;
@@ -17,6 +19,8 @@ public final class SlurppIOReal implements SlurppIO {
     private final WPI_TalonFX motor;
 
     private double lastStoppedPosition = 0;
+    private CollectConfig.GamePiece gamePiece = CollectConfig.GamePiece.CONE;
+    private CollectConfig.CollectSide collectSide = CollectConfig.CollectSide.FRONT;
 
     public SlurppIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
         motor = talonFXFactory.createTalon(Slurpp.MOTOR);
@@ -37,6 +41,8 @@ public final class SlurppIOReal implements SlurppIO {
         inputs.appliedVolts = motor.getMotorOutputVoltage();
         inputs.currentAmps = motor.getSupplyCurrent();
         inputs.tempCelcius = motor.getTemperature();
+        inputs.gamePiece = String.valueOf(gamePiece);
+        inputs.collectSide = String.valueOf(collectSide);
     }
 
     @Override
@@ -55,4 +61,25 @@ public final class SlurppIOReal implements SlurppIO {
     public void holdCurrentPosition() {
         motor.set(ControlMode.Position, lastStoppedPosition);
     }
+
+    @Override
+    public CollectSide getCollectSide() {
+        return collectSide;
+    }
+
+    @Override
+    public GamePiece getGamePiece() {
+        return gamePiece;
+    }
+
+    @Override
+    public void setCollectSide(CollectSide collectSide) {
+        this.collectSide = collectSide;
+    }
+
+    @Override
+    public void setGamePiece(GamePiece gamePiece) {
+        this.gamePiece = gamePiece;
+    }
+    
 }

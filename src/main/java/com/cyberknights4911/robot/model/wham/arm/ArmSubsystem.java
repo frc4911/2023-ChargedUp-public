@@ -25,37 +25,18 @@ public final class ArmSubsystem extends SubsystemBase {
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
     private final TestMode testMode = new TestMode();
 
-    private MoveArmMotionMagicCommand lastCommand = null;
+    private MoveArmCommand lastCommand = null;
 
     public ArmSubsystem(ArmIO armIO) {
         super();
         this.armIO = armIO;
-        reset();
 
         if (WhamConstants.Arm.IS_TUNING_ENABLED) {
             testMode.setupTestMode();
         }
     }
 
-    public void reset() {
-    }
-
-    public void setBrakeMode() {
-        setShoulderBrakeMode();
-        setWristBrakeMode();
-    }
-
-    public void setShoulderBrakeMode() {
-        armIO.setShoulderOutput(0);
-        armIO.setShoulderBrakeMode();
-    }
-
-    public void setWristBrakeMode() {
-        armIO.setWristOutput(0);
-        armIO.setWristBrakeMode();
-    }
-
-    public void setLastCommand(MoveArmMotionMagicCommand command) {
+    public void setLastCommand(MoveArmCommand command) {
         lastCommand = command;
     }
 
@@ -92,7 +73,7 @@ public final class ArmSubsystem extends SubsystemBase {
     }
 
     public Command createArmCommand(SlurppSubsystem slurppSubsystem, ArmPositions desiredPosition) {
-        return new MoveArmMotionMagicCommand(this, slurppSubsystem, desiredPosition);
+        return new MoveArmCommand(this, slurppSubsystem, desiredPosition);
     }
 
     public static double convertDegreesToCtreTicks(double degrees) {
@@ -117,32 +98,32 @@ public final class ArmSubsystem extends SubsystemBase {
 
         CommandBase increaseShoulder() {
             return new ProxyCommand(
-                () -> increase(lastCommand, lastCommand.getDesiredPosition().getShoulderPosition()));
+                () -> increase(lastCommand, lastCommand.getShoulderPosition()));
         }
 
         CommandBase decreaseShoulder() {
             return new ProxyCommand(
-                () -> decrease(lastCommand, lastCommand.getDesiredPosition().getShoulderPosition()));
+                () -> decrease(lastCommand, lastCommand.getShoulderPosition()));
         }
 
         CommandBase increaseWrist() {
             return new ProxyCommand(
-                () -> increase(lastCommand, lastCommand.getDesiredPosition().getWristPosition()));
+                () -> increase(lastCommand, lastCommand.getWristPosition()));
         }
 
         CommandBase decreaseWrist() {
             return new ProxyCommand(
-                () -> decrease(lastCommand, lastCommand.getDesiredPosition().getWristPosition()));
+                () -> decrease(lastCommand, lastCommand.getWristPosition()));
         }
 
-        private CommandBase increase(MoveArmMotionMagicCommand lastCommand, DoublePreference doublePreference) {
+        private CommandBase increase(MoveArmCommand lastCommand, DoublePreference doublePreference) {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() + 1);
                 lastCommand.rerunMoveToPosition();
             });
         }
 
-        private CommandBase decrease(MoveArmMotionMagicCommand lastCommand, DoublePreference doublePreference) {
+        private CommandBase decrease(MoveArmCommand lastCommand, DoublePreference doublePreference) {
             return Commands.runOnce(() -> {
                 doublePreference.setValue(doublePreference.getValue() - 1);
                 lastCommand.rerunMoveToPosition();

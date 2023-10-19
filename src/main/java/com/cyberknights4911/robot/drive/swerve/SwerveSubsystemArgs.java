@@ -13,7 +13,7 @@ public abstract class SwerveSubsystemArgs {
 
     public static Builder builder() {
         return new AutoValue_SwerveSubsystemArgs.Builder()
-            .setGyroIO(new GyroIO() {});
+            .setGyroIO(new GyroIOFake());
     }
 
     @AutoValue.Builder

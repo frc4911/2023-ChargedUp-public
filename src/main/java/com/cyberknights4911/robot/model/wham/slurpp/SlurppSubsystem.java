@@ -1,7 +1,6 @@
 package com.cyberknights4911.robot.model.wham.slurpp;
 
 import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,11 +29,19 @@ public final class SlurppSubsystem extends SubsystemBase {
     }
 
     public void setGamePiece(CollectConfig.GamePiece gamePiece) {
-        this.gamePiece = gamePiece;
+        slurppIO.setGamePiece(gamePiece);
     }
 
     public void setCollectSide(CollectConfig.CollectSide collectSide) {
-        this.collectSide = collectSide;
+        slurppIO.setCollectSide(collectSide);
+    }
+
+    public CollectConfig.GamePiece getGamePiece() {
+        return slurppIO.getGamePiece();
+    }
+
+    public CollectConfig.CollectSide getCollectSide() {
+        return slurppIO.getCollectSide();
     }
 
     /** "Slurpp" up a game piece. */
@@ -52,19 +59,19 @@ public final class SlurppSubsystem extends SubsystemBase {
 
     public CommandBase createCollectCommand() {
         return Commands.runOnce(() -> {
-            slurpp(CollectConfig.collectSpeed(gamePiece, collectSide));
+            slurpp(CollectConfig.collectSpeed(slurppIO.getGamePiece(), slurppIO.getCollectSide()));
         }, this);
     }
 
     public CommandBase createScoreCommand() {
         return Commands.runOnce(() -> {
-            slurpp(CollectConfig.scoreSpeed(gamePiece, collectSide));
+            slurpp(CollectConfig.scoreSpeed(slurppIO.getGamePiece(), slurppIO.getCollectSide()));
         }, this);
     }
 
     public CommandBase createRetainCommand() {
         return Commands.runOnce(() -> {
-            slurpp(CollectConfig.retainSpeed(gamePiece, collectSide));
+            slurpp(CollectConfig.retainSpeed(slurppIO.getGamePiece(), slurppIO.getCollectSide()));
         }, this);
     }
     

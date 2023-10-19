@@ -10,10 +10,12 @@ import com.cyberknights4911.robot.drive.swerve.SwerveModuleArgs;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystem;
 import com.cyberknights4911.robot.drive.swerve.SwerveSubsystemArgs;
 import com.cyberknights4911.robot.model.wham.arm.ArmIO;
+import com.cyberknights4911.robot.model.wham.arm.ArmIOFake;
 import com.cyberknights4911.robot.model.wham.arm.ArmIOReal;
 import com.cyberknights4911.robot.model.wham.arm.ArmPositions;
 import com.cyberknights4911.robot.model.wham.arm.ArmSubsystem;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppIO;
+import com.cyberknights4911.robot.model.wham.slurpp.SlurppIOFake;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppIOReal;
 import com.cyberknights4911.robot.model.wham.slurpp.SlurppSubsystem;
 import com.cyberknights4911.robot.model.wham.slurpp.CollectConfig.GamePiece;
@@ -56,7 +58,7 @@ public final class Wham implements RobotStateListener {
     if (RobotBase.isReal()) {
       return new ArmSubsystem(new ArmIOReal(canivoreTalonFactory, canivoreCANCoderFactory, ctreError));
     } else {
-      return new ArmSubsystem(new ArmIO() {});
+      return new ArmSubsystem(new ArmIOFake());
     }
   }
 
@@ -64,7 +66,7 @@ public final class Wham implements RobotStateListener {
     if (RobotBase.isReal()) {
       return new SlurppSubsystem(new SlurppIOReal(canivoreTalonFactory, ctreError));
     } else {
-      return new SlurppSubsystem(new SlurppIO() {});
+      return new SlurppSubsystem(new SlurppIOFake());
     }
   }
 
