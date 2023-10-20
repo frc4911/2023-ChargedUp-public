@@ -31,15 +31,11 @@ public class BlockPartyAutos implements AutoCommandHandler {
     
     private Command currentAutoCommand;
 
-    
-
     public BlockPartyAutos(ArmSubsystem armSubsystem, SlurppSubsystem slurppSubsystem,
             SwerveSubsystem swerveSubsystem) {
         this.armSubsystem = armSubsystem;
         this.slurppSubsystem = slurppSubsystem;
         this.swerveSubsystem = swerveSubsystem;
-
-        
 
         loggedDashboardChooser = new LoggedDashboardChooser<Command>("Auto Routine");
         
