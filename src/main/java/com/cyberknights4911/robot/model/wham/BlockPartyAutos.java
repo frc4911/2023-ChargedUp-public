@@ -75,6 +75,9 @@ public class BlockPartyAutos implements AutoCommandHandler {
             .andThen(slurppSubsystem.createStopCommand());
     }
 
+    /**
+     * Builds a command that follows a path.
+     */
     private Command pathCommand(Map<String, Command> eventMap, String pathName, double maxSpeed,
             double maxAcceleration) {
         return pathFactory.createAutoCommand(
@@ -83,11 +86,17 @@ public class BlockPartyAutos implements AutoCommandHandler {
         );
     }
 
+    /**
+     * Scores a high cone and then stows the arm. That's it.
+     */
     private Command scoreAndStow() {
         return scoreHighOnly()
             .andThen(armSubsystem.createArmCommand(slurppSubsystem, ArmPositions.STOWED));
     }
 
+    /**
+     * Scores a high cone, stows the arm and exits community.
+     */
     private Command scoreExit() {
         Map<String, Command> events = new HashMap<>();
 
@@ -100,18 +109,32 @@ public class BlockPartyAutos implements AutoCommandHandler {
         return scoreHighOnly().andThen(driveAndStow);
     }
 
+    /**
+     * Scores a high cone. Stows the arm while exiting community. Finishes with an autobalance.
+     */
     private Command scoreBalance() {
         return Commands.runOnce(() -> {});
     }
 
+    /**
+     * Scores a high cone. Stows the arm while exiting community. Finishes by collecting a second cone.
+     */
     private Command scoreCollect() {
         return Commands.runOnce(() -> {});
     }
 
+    /**
+     * Scores a high cone. Stows the arm while exiting community. Collects a second cone. Scores
+     * second cone mid. Stows the arm.
+     */
     private Command scoreCollectBalance() {
         return Commands.runOnce(() -> {});
     }
 
+    /**
+     * Scores a high cone. Stows the arm while exiting community. Collects a second cone. Scores
+     * second cone mid. Stows the arm while exiting community.
+     */
     private Command scoreCollectScoreExit() {
         return Commands.runOnce(() -> {});
     }
