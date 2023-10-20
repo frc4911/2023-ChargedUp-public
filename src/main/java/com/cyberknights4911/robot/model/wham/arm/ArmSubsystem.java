@@ -2,6 +2,10 @@ package com.cyberknights4911.robot.model.wham.arm;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -15,11 +19,17 @@ public final class ArmSubsystem extends SubsystemBase {
 
     private final ArmIO armIO;
     private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
+    private final Mechanism2d mechanism2d = new Mechanism2d(3, 3);
+    private final MechanismRoot2d root = mechanism2d.getRoot("root", 1.5, 0);
+    private final MechanismLigament2d yeet = new MechanismLigament2d( "yeet", 1, 0);
+    private final MechanismLigament2d slurpp = new MechanismLigament2d("slurpp", 0.25, 0);
 
     public ArmSubsystem(ArmIO armIO) {
         super();
         this.armIO = armIO;
         reset();
+        root.append(yeet);
+        yeet.append(slurpp);
     }
 
     public void reset() {
@@ -58,6 +68,13 @@ public final class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         armIO.updateInputs(inputs);
         Logger.getInstance().processInputs("Arm", inputs);
+        yeet.setAngle(getShoulderPositionDegrees());
+        slurpp.setAngle(getWristPositionDegrees());
+        Logger.getInstance().recordOutput("Arm", mechanism2d);
+    }
+
+    private double getWristPositionDegrees() {
+        return armIO.getWristEncoderDegrees();
     }
 
     public double getShoulderPositionDegrees() {
