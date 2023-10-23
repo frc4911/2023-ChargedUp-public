@@ -1,6 +1,8 @@
 package com.cyberknights4911.robot.model.quickdrop;
 
 import org.littletonrobotics.junction.LoggedRobot;
+
+import com.cyberknights4911.robot.Robot;
 import com.cyberknights4911.robot.RobotStateListener;
 import com.cyberknights4911.robot.auto.AutoCommandHandler;
 import com.cyberknights4911.robot.drive.swerve.GyroIORealPigeon;
@@ -78,7 +80,7 @@ public final class QuickDrop implements RobotStateListener {
     }
     
     private Indexer createIndexer(TalonFXFactory talonFactory, CtreError ctreError) {
-       if (RobotBase.isReal()) {
+       if (false) {
            return new Indexer(new IndexerIOReal(talonFactory, ctreError));
        } else {
            return new Indexer(new IndexerIO() {});
@@ -86,7 +88,7 @@ public final class QuickDrop implements RobotStateListener {
    }
     
    private Shooter createShooter(TalonFXFactory rioFXFactory, TalonFXFactory canivoreFXFactory, CtreError ctreError) {
-      if (RobotBase.isReal()) {
+      if (false) {
           return new Shooter(new ShooterIOReal(rioFXFactory, canivoreFXFactory, ctreError));
       } else {
           return new Shooter(new ShooterIO() {});
