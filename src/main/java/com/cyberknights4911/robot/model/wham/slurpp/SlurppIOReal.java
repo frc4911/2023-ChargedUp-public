@@ -20,7 +20,7 @@ public final class SlurppIOReal implements SlurppIO {
 
     public SlurppIOReal(TalonFXFactory talonFXFactory, CtreError ctreError) {
         motor = talonFXFactory.createTalon(Slurpp.MOTOR);
-        motor.setInverted(false);
+        motor.setInverted(true);
         ctreError.checkError(motor.configStatorCurrentLimit(WhamConstants.Slurpp.SLURPP_STATOR_LIMIT, ctreError.canTimeoutMs()));
         ctreError.checkError(motor.configSupplyCurrentLimit(WhamConstants.Slurpp.SLURPP_SUPPLY_LIMIT, ctreError.canTimeoutMs()));
         ctreError.checkError(motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0 , ctreError.canTimeoutMs()));

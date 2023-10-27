@@ -73,31 +73,31 @@ public final class WhamAutoCommandHandler implements AutoCommandHandler {
         //Score and AutoBalance
         //Score Collect and Autobalance
         loggedDashboardChooser.addDefaultOption("Do Nothing", getNothingCommand());
-        loggedDashboardChooser.addDefaultOption("Score and AutoBalance", getAutoBalanceCommand());
-        loggedDashboardChooser.addOption("Score Leave and AutoBalance", getBalanceScoreLeaveCommand());
-        loggedDashboardChooser.addOption(
-            "Bordie Score and Exit",
-            getScoreHighCommand()
-            .withTimeout(7.2)
-            .andThen(
-                exitCommunityCommand()
-            )
-            );
-        loggedDashboardChooser.addOption("Score 1.5 Substation and Autobalance", getScoreCollectBalanceSubstationCommand());
-        loggedDashboardChooser.addOption("Score 2 and AutoBalance", getScore2BalanceCommand());
+        // loggedDashboardChooser.addDefaultOption("Score and AutoBalance", getAutoBalanceCommand());
+        // loggedDashboardChooser.addOption("Score Leave and AutoBalance", getBalanceScoreLeaveCommand());
+        // loggedDashboardChooser.addOption(
+            // "Bordie Score and Exit",
+            // getScoreHighCommand()
+            // .withTimeout(7.2)
+            // .andThen(
+            //     exitCommunityCommand()
+            // )
+            // );
+        // loggedDashboardChooser.addOption("Score 1.5 Substation and Autobalance", getScoreCollectBalanceSubstationCommand());
+        // loggedDashboardChooser.addOption("Score 2 and AutoBalance", getScore2BalanceCommand());
         loggedDashboardChooser.addOption("Score High", getScoreHighCommand());
-        loggedDashboardChooser.addOption("Score Low", getScoreLowCommand());
-        loggedDashboardChooser.addOption("Score And Leave", getScoreHighCommand());
-        loggedDashboardChooser.addOption("Score High and Leave Guard Side", getScoreLeaveGuardCommand());
-        loggedDashboardChooser.addOption("Score High and Leave Substation Side", getScoreLeaveSubstationCommand());
-        loggedDashboardChooser.addOption("Score 2 Substation Side", getScore2SubstationCommand());
-        loggedDashboardChooser.addOption("Score 2 Guard Side", getScore2GuardrailCommand());
-        loggedDashboardChooser.addOption("Score 3 Substation Side", getScore3Substation());
-        loggedDashboardChooser.addOption("Score 3 Guard Side", getScore3GuardrailCommand());
+        // loggedDashboardChooser.addOption("Score Low", getScoreLowCommand());
+        // loggedDashboardChooser.addOption("Score And Leave", getScoreHighAndLeaveCommand());
+        // loggedDashboardChooser.addOption("Score High and Leave Guard Side", getScoreLeaveGuardCommand());
+        // loggedDashboardChooser.addOption("Score High and Leave Substation Side", getScoreLeaveSubstationCommand());
+        // loggedDashboardChooser.addOption("Score 2 Substation Side", getScore2SubstationCommand());
+        // loggedDashboardChooser.addOption("Score 2 Guard Side", getScore2GuardrailCommand());
+        // loggedDashboardChooser.addOption("Score 3 Substation Side", getScore3Substation());
+        // loggedDashboardChooser.addOption("Score 3 Guard Side", getScore3GuardrailCommand());
 
-        loggedDashboardChooser.addOption("Riley Test", getRileyTest());
-        loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
-        loggedDashboardChooser.addOption("TranslationTest", getTranslationTestCommand());
+        // loggedDashboardChooser.addOption("Riley Test", getRileyTest());
+        // loggedDashboardChooser.addOption("RotationTest", getRotationTestCommand());
+        // loggedDashboardChooser.addOption("TranslationTest", getTranslationTestCommand());
         // loggedDashboardChooser.addOption("Test", getTestCommand());
 
     }
@@ -172,6 +172,28 @@ public final class WhamAutoCommandHandler implements AutoCommandHandler {
         
 
         Command autoCommand = Commands.none();
+
+        return autoCommand;
+    }
+
+    private Command getScoreHighAndLeaveCommand() {
+        HashMap<String, Command> eventMap = new HashMap<>();
+        Command scoreConeOne = 
+            new SlurppCommand(slurppSubsystem, -0.85, armSubsystem, true).withTimeout(.5)
+            .andThen(MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.SCORE_L3))
+            .andThen(Commands.waitSeconds(2.0))
+            .andThen(new SlurppCommand(slurppSubsystem, -0.85, armSubsystem, true).withTimeout(.5));
+        Command stowOne = MoveArmMotionMagicCommand.create(armSubsystem, ArmPositions.STOWED);
+
+        eventMap.put("scoreConeOne", scoreConeOne);
+        eventMap.put("stowOne",stowOne);
+
+        Command autoCommand = createSwerveAutoBuilder(
+            eventMap,
+            swerveSubsystem
+        ).fullAuto(
+            PathPlanner.loadPathGroup("SCO3EX", new PathConstraints(3, 4))
+        );
 
         return autoCommand;
     }
